@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Flame, LogIn, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, LogIn, AlertCircle, Clock, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/lib/auth-context';
+import igniteLogo from '@/assets/ignite-logo.png';
 
 const schema = z.object({
     email: z.string().email('Enter a valid email'),
@@ -26,6 +27,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
 
     const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/ambassador/dashboard';
+    const [statusBanner, setStatusBanner] = useState<'pending' | 'rejected' | null>(null);
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -33,12 +35,20 @@ export default function LoginPage() {
 
     const onSubmit = async (data: FormData) => {
         setError('');
+        setStatusBanner(null);
         setLoading(true);
         try {
             await login(data.email, data.password);
             navigate(from, { replace: true });
         } catch (e) {
-            setError(e instanceof Error ? e.message : 'Login failed');
+            const msg = e instanceof Error ? e.message : 'Login failed';
+            if (msg.includes('PENDING_APPROVAL') || msg.includes('under review')) {
+                setStatusBanner('pending');
+            } else if (msg.includes('REJECTED') || msg.includes('not approved')) {
+                setStatusBanner('rejected');
+            } else {
+                setError(msg);
+            }
         } finally {
             setLoading(false);
         }
@@ -61,10 +71,8 @@ export default function LoginPage() {
                 {/* Card */}
                 <div className="glass-card rounded-2xl p-8 border border-border/50 shadow-2xl">
                     {/* Logo */}
-                    <div className="flex items-center gap-2 mb-8">
-                        <div className="w-9 h-9 bg-primary/20 rounded-xl flex items-center justify-center">
-                            <Flame className="w-5 h-5 text-primary" />
-                        </div>
+                    <div className="flex items-center gap-2.5 mb-8">
+                        <img src={igniteLogo} alt="Ignite Room" className="h-8 w-auto" />
                         <Link to="/" className="text-xl font-bold text-gradient">Ignite Room</Link>
                     </div>
 
@@ -80,6 +88,22 @@ export default function LoginPage() {
                         <p>Admin: <span className="text-foreground">admin@ignitehub.com</span> / <span className="text-foreground">admin123</span></p>
                     </div>
 
+                    {statusBanner === 'pending' && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
+                            className="mb-4 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30"
+                        >
+                            <div className="flex gap-2 mb-1"><Clock className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" /><p className="text-sm font-medium text-amber-300">Application Under Review</p></div>
+                            <p className="text-xs text-amber-400/80 ml-6">Your application is pending admin approval. You'll be able to log in once approved.</p>
+                        </motion.div>
+                    )}
+                    {statusBanner === 'rejected' && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
+                            className="mb-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30"
+                        >
+                            <div className="flex gap-2 mb-1"><XCircle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" /><p className="text-sm font-medium text-destructive">Application Not Approved</p></div>
+                            <p className="text-xs text-destructive/80 ml-6">Contact <a href="mailto:hello@igniteroom.in" className="underline">hello@igniteroom.in</a> for details.</p>
+                        </motion.div>
+                    )}
                     {error && (
                         <motion.div
                             initial={{ opacity: 0, height: 0 }}

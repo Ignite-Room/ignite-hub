@@ -13,7 +13,9 @@ import ReferralChart from './components/ReferralChart';
 import SubmissionsTable from './components/SubmissionsTable';
 import StatsCard from './components/StatsCard';
 
-const SITE_URL = 'https://ignite-room.com';
+import igniteLogo from '@/assets/ignite-logo.png';
+
+const SITE_URL = window.location.origin;
 
 export default function AmbassadorDashboard() {
     const { user, logout } = useAuth();
@@ -22,22 +24,29 @@ export default function AmbassadorDashboard() {
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [chartData, setChartData] = useState<DailyReferral[]>([]);
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+    const [loadError, setLoadError] = useState(false);
 
     const referralLink = user ? `${SITE_URL}/ref/${user.referralCode}` : '';
     const localLink = user ? `${window.location.origin}/ref/${user.referralCode}` : '';
 
     const loadData = useCallback(async () => {
         if (!user) return;
-        const [statsData, subs, chart, lb] = await Promise.all([
-            api.getMyStats(user.id),
-            api.getMySubmissions(user.id),
-            api.getDailyReferrals(user.id),
-            api.getLeaderboard(),
-        ]);
-        setStats(statsData);
-        setSubmissions(subs.slice(0, 8));
-        setChartData(chart);
-        setLeaderboard(lb);
+        setLoadError(false);
+        try {
+            const [statsData, subs, chart, lb] = await Promise.all([
+                api.getMyStats(user.id),
+                api.getMySubmissions(user.id),
+                api.getDailyReferrals(user.id),
+                api.getLeaderboard(),
+            ]);
+            setStats(statsData ?? { totalReferrals: 0, verifiedTasks: 0, externalReferrals: 0, rank: 0 });
+            setSubmissions((subs ?? []).slice(0, 8));
+            setChartData(chart ?? []);
+            setLeaderboard(lb ?? []);
+        } catch (e) {
+            console.error('[Dashboard] Failed to load data:', e);
+            setLoadError(true);
+        }
     }, [user]);
 
     useEffect(() => {
@@ -71,10 +80,8 @@ export default function AmbassadorDashboard() {
             {/* Header */}
             <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
-                            <Flame className="w-4 h-4 text-primary" />
-                        </div>
+                    <div className="flex items-center gap-2.5">
+                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto" />
                         <span className="font-bold text-gradient text-lg hidden sm:block">Ignite Room</span>
                     </div>
 

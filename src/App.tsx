@@ -25,6 +25,7 @@ import Contact from "./pages/Contact";
 import AmbassadorLanding from "./pages/ambassador/AmbassadorLanding";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
+import PendingApprovalPage from "./pages/auth/PendingApprovalPage";
 import AmbassadorDashboard from "./pages/dashboard/AmbassadorDashboard";
 import ReferralLanding from "./pages/referral/ReferralLanding";
 import LeaderboardPage from "./pages/leaderboard/LeaderboardPage";
@@ -61,6 +62,7 @@ const App = () => (
             {/* Auth */}
             <Route path="/ambassador/login" element={<LoginPage />} />
             <Route path="/ambassador/signup" element={<SignupPage />} />
+            <Route path="/ambassador/pending" element={<PendingApprovalPage />} />
 
             {/* Protected ambassador pages */}
             <Route path="/ambassador/dashboard" element={
