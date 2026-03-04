@@ -7,7 +7,10 @@ export interface User {
   email: string;
   phone: string;
   referralCode: string;
-  role: 'ambassador' | 'admin';
+  role: 'AMBASSADOR' | 'ADMIN' | 'ambassador' | 'admin';
+  accountStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  college?: string;
+  enrollmentId?: string;
   createdAt: string;
 }
 
@@ -55,12 +58,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('ignite_user', JSON.stringify(res.user));
   };
 
-  const signup = async (data: SignupData) => {
-    const res = await api.signup(data);
-    setToken(res.token);
-    setUser(res.user);
-    localStorage.setItem('ignite_token', res.token);
-    localStorage.setItem('ignite_user', JSON.stringify(res.user));
+  const signup = async (_data: SignupData) => {
+    // Signup now goes to approval flow — no token returned
+    // New SignupPage handles this directly without going through auth context
+    throw new Error('Use SignupPage directly — signup now requires admin approval.');
   };
 
   const logout = () => {
@@ -78,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       signup,
       logout,
-      isAdmin: user?.role === 'admin',
+      isAdmin: user?.role === 'ADMIN' || user?.role === 'admin',
       isAuthenticated: !!user,
     }}>
       {children}

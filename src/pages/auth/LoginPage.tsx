@@ -81,12 +81,6 @@ export default function LoginPage() {
                         <p className="text-muted-foreground text-sm">Sign in to your ambassador dashboard</p>
                     </div>
 
-                    {/* Demo credentials */}
-                    <div className="mb-5 p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs text-muted-foreground">
-                        <p className="font-medium text-primary mb-1">Demo credentials</p>
-                        <p>Ambassador: <span className="text-foreground">satyam@example.com</span> / <span className="text-foreground">password123</span></p>
-                        <p>Admin: <span className="text-foreground">admin@ignitehub.com</span> / <span className="text-foreground">admin123</span></p>
-                    </div>
 
                     {statusBanner === 'pending' && (
                         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
