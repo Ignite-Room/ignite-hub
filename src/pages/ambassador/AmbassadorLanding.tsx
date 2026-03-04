@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
     Flame, Trophy, Star, Users, ArrowRight, Zap,
-    CheckCircle2, TrendingUp, Gift, Globe
+    CheckCircle2, Gift
 } from 'lucide-react';
+import igniteLogo from '@/assets/ignite-logo.png';
 import { Button } from '@/components/ui/button';
 
 const perks = [
@@ -39,8 +40,12 @@ export default function AmbassadorLanding() {
             {/* ── Navbar ─────────────────────────────────────────────────── */}
             <nav className="relative z-50 border-b border-border/40 bg-background/70 backdrop-blur-xl sticky top-0">
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-2 group">
-                        <Flame className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                    <Link to="/" className="flex items-center gap-2.5 group">
+                        <img
+                            src={igniteLogo}
+                            alt="Ignite Room"
+                            className="h-8 w-auto group-hover:scale-105 transition-transform"
+                        />
                         <span className="font-bold tracking-tight text-gradient">Ignite Room</span>
                     </Link>
                     <div className="flex items-center gap-2">
@@ -276,7 +281,7 @@ export default function AmbassadorLanding() {
             <footer className="relative z-10 border-t border-border/30 py-8 px-4">
                 <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
-                        <Flame className="w-4 h-4 text-primary" />
+                        <img src={igniteLogo} alt="Ignite Room" className="h-5 w-auto" />
                         <span>© 2026 Ignite Room. All rights reserved.</span>
                     </div>
                     <div className="flex gap-5">
