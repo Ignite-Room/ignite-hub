@@ -152,6 +152,9 @@ export default function LoginPage() {
                                 </div>
                                 <span className="text-sm text-muted-foreground">Remember me for 30 days</span>
                             </label>
+                            <Link to="/ambassador/forgot-password" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                                Forgot password?
+                            </Link>
                         </div>
 
                         <Button type="submit" className="w-full h-11 bg-primary hover:bg-primary/90 text-white font-semibold gap-2 mt-1" disabled={loading}>

@@ -111,6 +111,10 @@ export default function AmbassadorDashboard() {
                     </div>
 
                     <nav className="flex items-center gap-2 sm:gap-4">
+                        <Link to="/contact" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mr-1 sm:mr-0">
+                            <MessageCircle className="w-4 h-4" />
+                            <span className="hidden sm:inline">Support</span>
+                        </Link>
                         <Link to="/ambassador/leaderboard" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                             <Trophy className="w-4 h-4" />
                             <span className="hidden sm:inline">Leaderboard</span>

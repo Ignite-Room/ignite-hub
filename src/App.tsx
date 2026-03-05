@@ -31,6 +31,7 @@ import AmbassadorDashboard from "./pages/dashboard/AmbassadorDashboard";
 import ReferralLanding from "./pages/referral/ReferralLanding";
 import LeaderboardPage from "./pages/leaderboard/LeaderboardPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="/ambassador/login" element={<LoginPage />} />
             <Route path="/ambassador/signup" element={<SignupPage />} />
             <Route path="/ambassador/pending" element={<PendingApprovalPage />} />
+            <Route path="/ambassador/forgot-password" element={<ForgotPasswordPage />} />
 
             {/* Protected ambassador pages */}
             <Route path="/ambassador/dashboard" element={

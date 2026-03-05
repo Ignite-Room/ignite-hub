@@ -69,6 +69,22 @@ export const api = {
         });
     },
 
+    async forgotPassword(email: string) {
+        if (USE_MOCK) return; // mock not supported for this side flow yet
+        return real<{ ok: boolean; message: string }>('/auth/forgot-password', {
+            method: 'POST',
+            body: JSON.stringify({ email }),
+        });
+    },
+
+    async resetPassword(email: string, token: string, newPassword: string) {
+        if (USE_MOCK) return; // mock not supported
+        return real<{ ok: boolean; message: string }>('/auth/reset-password', {
+            method: 'POST',
+            body: JSON.stringify({ email, token, newPassword }),
+        });
+    },
+
     // ── Referrals ──────────────────────────────────────────────────────────
     async getAmbassadorByCode(code: string) {
         if (USE_MOCK) return MockAPI.getAmbassadorByCode(code);
