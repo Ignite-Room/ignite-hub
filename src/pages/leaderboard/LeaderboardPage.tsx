@@ -7,7 +7,7 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth-context';
 import type { LeaderboardEntry } from '@/lib/mock-api';
 
-const Logo3DBackground = lazy(() => import('@/components/Logo3DBackground'));
+const Logo3DStatic = lazy(() => import('@/components/Logo3DStatic'));
 
 const REFRESH_INTERVAL = 60000;
 
@@ -48,7 +48,7 @@ export default function LeaderboardPage() {
         <div className="min-h-screen bg-background relative overflow-hidden">
             {/* 3D Logo Background — fixed, non-interactive */}
             <Suspense fallback={null}>
-                <Logo3DBackground staticMode />
+                <Logo3DStatic />
             </Suspense>
 
             {/* Background */}
