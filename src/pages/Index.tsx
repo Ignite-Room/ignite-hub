@@ -5,6 +5,7 @@ import AboutSection from '@/components/sections/AboutSection';
 // import ActiveEventSection from '@/components/sections/ActiveEventSection'; // re-enable for next live event
 import EventsSection from '@/components/sections/EventsSection';
 import AppSection from '@/components/sections/AppSection';
+import AmbassadorSection from '@/components/sections/AmbassadorSection';
 import CollaborationsSection from '@/components/sections/CollaborationsSection';
 import Footer from '@/components/Footer';
 
@@ -28,6 +29,7 @@ const Index = () => {
         <AboutSection />
         {/* <ActiveEventSection /> — re-enable when next event goes live */}
         <EventsSection />
+        <AmbassadorSection />
         <AppSection />
         <CollaborationsSection />
       </main>

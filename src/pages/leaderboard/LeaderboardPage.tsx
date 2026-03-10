@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Trophy, Flame, RefreshCw, Star, Users, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { useAuth } from '@/lib/auth-context';
 import type { LeaderboardEntry } from '@/lib/mock-api';
 
 const REFRESH_INTERVAL = 60000;
@@ -16,6 +17,7 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 export default function LeaderboardPage() {
+    const { isAuthenticated, isAdmin } = useAuth();
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
@@ -63,9 +65,17 @@ export default function LeaderboardPage() {
                             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                             Refresh
                         </Button>
-                        <Link to="/ambassador/login">
-                            <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">Ambassador Login</Button>
-                        </Link>
+                        {isAuthenticated ? (
+                            <Link to={isAdmin ? '/ambassador/admin' : '/ambassador/dashboard'}>
+                                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">
+                                    {isAdmin ? 'Admin Panel' : 'My Dashboard'}
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link to="/ambassador/login">
+                                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">Ambassador Login</Button>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </header>

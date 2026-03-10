@@ -56,11 +56,11 @@ async function realForm<T>(path: string, formData: FormData): Promise<T> {
 // ═════════════════════════════════════════════════════════════════════════
 export const api = {
     // ── Auth ───────────────────────────────────────────────────────────────
-    async login(email: string, password: string) {
+    async login(email: string, password: string, rememberMe = false) {
         if (USE_MOCK) return MockAPI.login(email, password);
         return real<{ token: string; user: User }>('/auth/login', {
             method: 'POST',
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, rememberMe }),
         });
     },
 
