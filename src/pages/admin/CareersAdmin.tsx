@@ -224,12 +224,6 @@ function RoleModal({
     );
 }
 
-// Cloudinary raw resource URLs serve PDFs with Content-Disposition: attachment.
-// Routing through Google Docs Viewer sidesteps this entirely for reliable viewing.
-function docsViewerUrl(rawUrl: string, embedded = false): string {
-    const base = `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
-    return embedded ? `${base}&embedded=true` : base;
-}
 
 // ─── Application Review Panel ─────────────────────────────────────────────────
 
@@ -238,6 +232,39 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
     const [note, setNote] = useState(app.adminNote || '');
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
+    const [blobUrl, setBlobUrl] = useState<string | null>(null);
+    const [pdfLoading, setPdfLoading] = useState(true);
+    const [pdfError, setPdfError] = useState(false);
+
+    useEffect(() => {
+        let objectUrl: string;
+        setPdfLoading(true);
+        setPdfError(false);
+        setBlobUrl(null);
+        const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
+        fetch(`${API_URL}/admin/careers/applications/${app.id}/resume?disposition=inline`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => {
+                if (!r.ok) throw new Error(`${r.status}`);
+                return r.blob();
+            })
+            .then((blob) => {
+                objectUrl = URL.createObjectURL(blob);
+                setBlobUrl(objectUrl);
+            })
+            .catch(() => setPdfError(true))
+            .finally(() => setPdfLoading(false));
+        return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
+    }, [app.id]);
+
+    const handleDownload = () => {
+        if (!blobUrl) return;
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `${app.name.replace(/\s+/g, '_')}_resume.pdf`;
+        a.click();
+    };
 
     const handleSave = async () => {
         setSaving(true);
@@ -330,31 +357,30 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                     {/* Resume */}
                     <section>
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Resume</h3>
-                        <div className="overflow-hidden rounded-xl border border-border/40 bg-secondary/10" style={{ height: '420px' }}>
-                            <iframe
-                                src={docsViewerUrl(app.resumeUrl, true)}
-                                title="Resume"
-                                className="h-full w-full"
-                                allow="fullscreen"
-                            />
+                        <div className="overflow-hidden rounded-xl border border-border/40 bg-secondary/10 flex items-center justify-center" style={{ height: '420px' }}>
+                            {pdfLoading ? (
+                                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                            ) : pdfError || !blobUrl ? (
+                                <p className="text-sm text-muted-foreground">Could not load PDF preview.</p>
+                            ) : (
+                                <iframe src={blobUrl} title="Resume" className="h-full w-full" />
+                            )}
                         </div>
                         <div className="mt-3 flex gap-2">
-                            <a
-                                href={docsViewerUrl(app.resumeUrl)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors"
+                            <button
+                                disabled={!blobUrl}
+                                onClick={() => blobUrl && window.open(blobUrl, '_blank')}
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                                 <ExternalLink className="h-4 w-4 text-primary" /> Open in tab
-                            </a>
-                            <a
-                                href={app.resumeUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-border hover:bg-secondary/60 transition-colors"
+                            </button>
+                            <button
+                                disabled={!blobUrl}
+                                onClick={handleDownload}
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-border hover:bg-secondary/60 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                                 <Download className="h-4 w-4" /> Download
-                            </a>
+                            </button>
                         </div>
                     </section>
 

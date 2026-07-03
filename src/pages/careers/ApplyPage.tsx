@@ -382,37 +382,36 @@ export default function ApplyPage() {
                                             name="followedSocials"
                                             control={control}
                                             render={({ field }) => (
-                                                <label className="flex cursor-pointer items-start gap-3">
-                                                    <div className="mt-0.5 flex-shrink-0">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="sr-only"
-                                                            checked={!!field.value}
-                                                            onChange={(e) => field.onChange(e.target.checked || undefined)}
-                                                        />
-                                                        <div
-                                                            className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-colors ${field.value ? 'border-primary bg-primary' : 'border-border/60 bg-secondary/50'}`}
-                                                            onClick={() => field.onChange(field.value ? undefined : true)}
-                                                        >
-                                                            {field.value && (
-                                                                <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none">
-                                                                    <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                                </svg>
-                                                            )}
+                                                <div>
+                                                    <label className="flex cursor-pointer items-start gap-3">
+                                                        <div className="relative mt-0.5 h-5 w-5 flex-shrink-0">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="absolute inset-0 h-full w-full cursor-pointer opacity-0 z-10"
+                                                                checked={!!field.value}
+                                                                onChange={(e) => field.onChange(e.target.checked ? true : undefined)}
+                                                            />
+                                                            <div className={`pointer-events-none flex h-5 w-5 items-center justify-center rounded border-2 transition-colors ${field.value ? 'border-primary bg-primary' : 'border-border/60 bg-secondary/50'}`}>
+                                                                {field.value && (
+                                                                    <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none">
+                                                                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                                    </svg>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <span className="text-sm leading-relaxed text-muted-foreground">
-                                                        I follow Ignite Room on{' '}
-                                                        <a href="https://www.instagram.com/igniteroom.india/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>Instagram</a>
-                                                        {' '}and{' '}
-                                                        <a href="https://www.linkedin.com/company/ignite-room/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>LinkedIn</a>
-                                                    </span>
-                                                </label>
+                                                        <span className="text-sm leading-relaxed text-muted-foreground">
+                                                            I follow Ignite Room on{' '}
+                                                            <a href="https://www.instagram.com/igniteroom.india/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>Instagram</a>
+                                                            {' '}and{' '}
+                                                            <a href="https://www.linkedin.com/company/ignite-room/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>LinkedIn</a>
+                                                        </span>
+                                                    </label>
+                                                    {errors.followedSocials && (
+                                                        <p className="mt-1 pl-8 text-xs text-destructive">{errors.followedSocials.message}</p>
+                                                    )}
+                                                </div>
                                             )}
                                         />
-                                        {errors.followedSocials && (
-                                            <p className="pl-8 text-xs text-destructive">{errors.followedSocials.message}</p>
-                                        )}
 
                                         <div className="h-px bg-border/30" />
 
@@ -421,41 +420,40 @@ export default function ApplyPage() {
                                             name="agreedToTerms"
                                             control={control}
                                             render={({ field }) => (
-                                                <label className="flex cursor-pointer items-start gap-3">
-                                                    <div className="mt-0.5 flex-shrink-0">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="sr-only"
-                                                            checked={!!field.value}
-                                                            onChange={(e) => field.onChange(e.target.checked || undefined)}
-                                                        />
-                                                        <div
-                                                            className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-colors ${field.value ? 'border-primary bg-primary' : 'border-border/60 bg-secondary/50'}`}
-                                                            onClick={() => field.onChange(field.value ? undefined : true)}
-                                                        >
-                                                            {field.value && (
-                                                                <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none">
-                                                                    <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                                </svg>
-                                                            )}
+                                                <div>
+                                                    <label className="flex cursor-pointer items-start gap-3">
+                                                        <div className="relative mt-0.5 h-5 w-5 flex-shrink-0">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="absolute inset-0 h-full w-full cursor-pointer opacity-0 z-10"
+                                                                checked={!!field.value}
+                                                                onChange={(e) => field.onChange(e.target.checked ? true : undefined)}
+                                                            />
+                                                            <div className={`pointer-events-none flex h-5 w-5 items-center justify-center rounded border-2 transition-colors ${field.value ? 'border-primary bg-primary' : 'border-border/60 bg-secondary/50'}`}>
+                                                                {field.value && (
+                                                                    <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none">
+                                                                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                                    </svg>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <span className="text-sm leading-relaxed text-muted-foreground">
-                                                        I have read and agree to the{' '}
-                                                        <button
-                                                            type="button"
-                                                            className="font-medium text-primary hover:underline"
-                                                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setTermsOpen(true); }}
-                                                        >
-                                                            Application Terms &amp; Conditions
-                                                        </button>
-                                                    </span>
-                                                </label>
+                                                        <span className="text-sm leading-relaxed text-muted-foreground">
+                                                            I have read and agree to the{' '}
+                                                            <button
+                                                                type="button"
+                                                                className="font-medium text-primary hover:underline relative z-20"
+                                                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setTermsOpen(true); }}
+                                                            >
+                                                                Application Terms &amp; Conditions
+                                                            </button>
+                                                        </span>
+                                                    </label>
+                                                    {errors.agreedToTerms && (
+                                                        <p className="mt-1 pl-8 text-xs text-destructive">{errors.agreedToTerms.message}</p>
+                                                    )}
+                                                </div>
                                             )}
                                         />
-                                        {errors.agreedToTerms && (
-                                            <p className="pl-8 text-xs text-destructive">{errors.agreedToTerms.message}</p>
-                                        )}
                                     </div>
 
                                     <Button type="submit" size="lg" disabled={loading} className="group w-full">
