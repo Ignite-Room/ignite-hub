@@ -11,6 +11,7 @@ const navLinks = [
   { name: 'Events', href: '#events' },
   { name: 'Ambassador', href: '#ambassador' },
   { name: 'App', href: '#app' },
+  { name: 'Careers', href: '/careers' },
 ];
 
 export default function Navbar() {

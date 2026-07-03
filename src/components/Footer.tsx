@@ -8,6 +8,7 @@ const footerLinks = {
     { name: 'About Us', href: '#about' },
     { name: 'Events', href: '#events' },
     { name: 'Join Us', href: '/join-us' },
+    { name: 'Careers', href: '/careers' },
   ],
   resources: [
     // { name: 'Blog', href: '/blog' },

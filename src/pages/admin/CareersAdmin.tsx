@@ -47,7 +47,7 @@ interface Role {
 interface Application {
     id: string; roleId: string; name: string; email: string; phone: string;
     college: string; yearOfStudy: string | null; githubUrl: string | null;
-    portfolioUrl: string | null; coverLetter: string;
+    portfolioUrl: string | null; projectUrl: string | null; coverLetter: string;
     resumeUrl: string; status: AppStatus; adminNote: string | null;
     reviewedAt: string | null; createdAt: string;
     role: { title: string; slug: string; type: JobType };
@@ -295,7 +295,7 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                     </section>
 
                     {/* Links */}
-                    {(app.githubUrl || app.portfolioUrl) && (
+                    {(app.githubUrl || app.portfolioUrl || app.projectUrl) && (
                         <section>
                             <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Links</h3>
                             <div className="flex flex-wrap gap-2">
@@ -307,6 +307,11 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                                 {app.portfolioUrl && (
                                     <a href={app.portfolioUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-secondary/40 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
                                         Portfolio <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                )}
+                                {app.projectUrl && (
+                                    <a href={app.projectUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs text-primary hover:bg-primary/20 transition-colors">
+                                        Best Project <ExternalLink className="h-3 w-3" />
                                     </a>
                                 )}
                             </div>
