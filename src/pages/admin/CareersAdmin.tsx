@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     ArrowLeft, Briefcase, CheckCircle2, ChevronDown, Download, ExternalLink,
-    FileText, Loader2, MapPin, Pencil, Plus, Search, Trash2, X,
+    FileText, Loader2, Mail, MapPin, Pencil, Plus, Search, Trash2, UserCheck, UserX, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -233,11 +233,19 @@ function RoleModal({
 
 // ─── Application Review Panel ─────────────────────────────────────────────────
 
-function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: () => void; onUpdate: (a: Application) => void }) {
+function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
+    app: Application; onClose: () => void;
+    onUpdate: (a: Application) => void;
+    onDelete: (id: string) => void;
+}) {
     const [status, setStatus] = useState<AppStatus>(app.status);
     const [note, setNote] = useState(app.adminNote || '');
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
+    const [emailSending, setEmailSending] = useState<'shortlist' | 'rejection' | null>(null);
+    const [emailSent, setEmailSent] = useState<'shortlist' | 'rejection' | null>(null);
+    const [emailError, setEmailError] = useState('');
+    const [deleteConfirmLocal, setDeleteConfirmLocal] = useState(false);
     const handleDownload = async () => {
         try {
             const r = await fetch(app.resumeUrl);
@@ -250,6 +258,22 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
             setTimeout(() => URL.revokeObjectURL(url), 1000);
         } catch {
             window.open(app.resumeUrl, '_blank');
+        }
+    };
+
+    const handleSendEmail = async (type: 'shortlist' | 'rejection') => {
+        setEmailSending(type);
+        setEmailError('');
+        try {
+            await adminFetch(`applications/${app.id}/send-email`, {
+                method: 'POST',
+                body: JSON.stringify({ type }),
+            });
+            setEmailSent(type);
+        } catch (e) {
+            setEmailError(e instanceof Error ? e.message : 'Failed to send email');
+        } finally {
+            setEmailSending(null);
         }
     };
 
@@ -398,6 +422,72 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                             </Button>
                         </div>
                     </section>
+
+                    <div className="h-px bg-border/40" />
+
+                    {/* Notify Candidate */}
+                    <section>
+                        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Notify Candidate</h3>
+                        {emailSent ? (
+                            <div className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+                                <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+                                {emailSent === 'shortlist' ? 'Shortlist email sent to candidate.' : 'Rejection email sent to candidate.'}
+                            </div>
+                        ) : (
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleSendEmail('shortlist')}
+                                    disabled={!!emailSending}
+                                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 text-sm font-medium text-emerald-400 hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {emailSending === 'shortlist' ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserCheck className="h-4 w-4" />}
+                                    Shortlist
+                                </button>
+                                <button
+                                    onClick={() => handleSendEmail('rejection')}
+                                    disabled={!!emailSending}
+                                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {emailSending === 'rejection' ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserX className="h-4 w-4" />}
+                                    Reject
+                                </button>
+                            </div>
+                        )}
+                        {emailError && <p className="mt-2 text-xs text-destructive">{emailError}</p>}
+                        <p className="mt-2 text-xs text-muted-foreground/40">Sends an email directly to {app.email}</p>
+                    </section>
+
+                    <div className="h-px bg-border/40" />
+
+                    {/* Delete */}
+                    <section className="pb-2">
+                        {!deleteConfirmLocal ? (
+                            <button
+                                onClick={() => setDeleteConfirmLocal(true)}
+                                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/40 hover:text-destructive transition-colors"
+                            >
+                                <Trash2 className="h-3.5 w-3.5" /> Delete this application
+                            </button>
+                        ) : (
+                            <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+                                <p className="mb-3 text-sm text-muted-foreground">This will permanently delete the application. Cannot be undone.</p>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => onDelete(app.id)}
+                                        className="flex-1 rounded-md bg-destructive px-3 py-1.5 text-sm font-medium text-white hover:bg-destructive/90 transition-colors"
+                                    >
+                                        Yes, delete
+                                    </button>
+                                    <button
+                                        onClick={() => setDeleteConfirmLocal(false)}
+                                        className="flex-1 rounded-md border border-border/50 px-3 py-1.5 text-sm text-muted-foreground hover:bg-secondary transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </section>
                 </div>
             </motion.div>
         </div>
@@ -498,6 +588,40 @@ export default function CareersAdmin() {
         showToast('Application updated');
     };
 
+    const handleDeleteApp = async (id: string) => {
+        try {
+            await adminFetch(`applications/${id}`, { method: 'DELETE' });
+            setApplications((prev) => prev.filter((a) => a.id !== id));
+            setAppTotal((t) => t - 1);
+            setReviewApp(null);
+            showToast('Application deleted');
+        } catch {
+            showToast('Failed to delete application');
+        }
+    };
+
+    const handleExportCSV = async () => {
+        try {
+            const params = new URLSearchParams();
+            if (filter.roleId) params.set('roleId', filter.roleId);
+            if (filter.status) params.set('status', filter.status);
+            const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
+            const r = await fetch(`${API_URL}/admin/careers/applications/export-csv?${params}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!r.ok) throw new Error('Export failed');
+            const blob = await r.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `applications_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch {
+            showToast('Failed to export CSV');
+        }
+    };
+
     const totalOpen = roles.filter((r) => r.isOpen).length;
     const totalApps = roles.reduce((s, r) => s + (r._count?.applications ?? 0), 0);
 
@@ -548,6 +672,7 @@ export default function CareersAdmin() {
                         app={reviewApp}
                         onClose={() => setReviewApp(null)}
                         onUpdate={handleAppUpdate}
+                        onDelete={handleDeleteApp}
                     />
                 )}
             </AnimatePresence>
@@ -706,7 +831,7 @@ export default function CareersAdmin() {
                 {tab === 'applications' && (
                     <div>
                         {/* Filters */}
-                        <div className="mb-5 flex flex-wrap gap-3">
+                        <div className="mb-5 flex flex-wrap items-center gap-3">
                             <div className="relative flex-1 min-w-[180px]">
                                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                 <Input
@@ -736,6 +861,12 @@ export default function CareersAdmin() {
                                     ))}
                                 </SelectContent>
                             </Select>
+                            <button
+                                onClick={handleExportCSV}
+                                className="ml-auto inline-flex items-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-muted-foreground hover:border-border hover:text-foreground transition-colors"
+                            >
+                                <Download className="h-4 w-4" /> Export CSV
+                            </button>
                         </div>
 
                         {loading ? (
