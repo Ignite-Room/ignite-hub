@@ -55,12 +55,14 @@ export default function RoleDetailPage() {
         const dl = new Date(deadline);
         if (dl < now) return { label: 'Deadline passed', urgent: false };
         const hoursLeft = (dl.getTime() - now.getTime()) / 36e5;
-        if (hoursLeft < 24) return { label: 'Closes today — apply now', urgent: true };
-        if (hoursLeft < 48) return { label: 'Closes tomorrow', urgent: true };
+        const timeIST = dl.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
+        const dateIST = dl.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short' });
+        if (hoursLeft < 24) return { label: `Closes today at ${timeIST} IST — apply now`, urgent: true };
+        if (hoursLeft < 48) return { label: `Closes tomorrow at ${timeIST} IST`, urgent: true };
         const daysLeft = Math.ceil(hoursLeft / 24);
-        if (daysLeft <= 5) return { label: `Closes in ${daysLeft} days`, urgent: true };
+        if (daysLeft <= 5) return { label: `Closes ${dateIST} at ${timeIST} IST`, urgent: true };
         return {
-            label: `Apply by ${dl.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+            label: `Closes ${dateIST} at ${timeIST} IST`,
             urgent: false,
         };
     }

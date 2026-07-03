@@ -75,6 +75,12 @@ const BLANK_ROLE_FORM = {
     isOpen: true, deadline: '',
 };
 
+// Convert UTC ISO to "YYYY-MM-DDTHH:MM" in IST for datetime-local input
+function toISTLocal(iso: string): string {
+    const ist = new Date(new Date(iso).getTime() + 330 * 60 * 1000);
+    return ist.toISOString().slice(0, 16);
+}
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: AppStatus }) {
@@ -109,7 +115,7 @@ function RoleModal({
 }) {
     const [form, setForm] = useState(
         initial
-            ? { ...initial, skills: initial.skills.join(', '), deadline: initial.deadline ? initial.deadline.slice(0, 10) : '' }
+            ? { ...initial, skills: initial.skills.join(', '), deadline: initial.deadline ? toISTLocal(initial.deadline) : '' }
             : BLANK_ROLE_FORM
     );
     const [saving, setSaving] = useState(false);
@@ -124,7 +130,7 @@ function RoleModal({
         try {
             const payload = {
                 ...form,
-                deadline: form.deadline ? new Date(form.deadline).toISOString() : '',
+                deadline: form.deadline ? `${form.deadline}:00+05:30` : '',
             };
             let saved: Role;
             if (initial) {
@@ -185,8 +191,8 @@ function RoleModal({
                             <Input value={form.location} onChange={(e) => set('location', e.target.value)} placeholder="Remote / Mumbai / Hybrid" required className="bg-secondary/50 border-border/50 focus:border-primary/50 h-10" />
                         </div>
                         <div>
-                            <Label className="mb-1.5 block text-sm text-muted-foreground">Application Deadline <span className="text-muted-foreground/50">(optional)</span></Label>
-                            <Input type="date" value={form.deadline} onChange={(e) => set('deadline', e.target.value)} className="bg-secondary/50 border-border/50 focus:border-primary/50 h-10" />
+                            <Label className="mb-1.5 block text-sm text-muted-foreground">Application Deadline <span className="text-muted-foreground/50">(IST, optional)</span></Label>
+                            <Input type="datetime-local" value={form.deadline} onChange={(e) => set('deadline', e.target.value)} className="bg-secondary/50 border-border/50 focus:border-primary/50 h-10" />
                         </div>
                         <div className="flex items-center gap-3">
                             <Label className="text-sm text-muted-foreground">Open for Applications</Label>
@@ -232,47 +238,19 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
     const [note, setNote] = useState(app.adminNote || '');
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
-    const [blobUrl, setBlobUrl] = useState<string | null>(null);
-    const [pdfLoading, setPdfLoading] = useState(true);
-    const [pdfError, setPdfError] = useState(false);
-
-    useEffect(() => {
-        let objectUrl: string;
-        setPdfLoading(true);
-        setPdfError(false);
-        setBlobUrl(null);
-        const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
-        fetch(`${API_URL}/admin/careers/applications/${app.id}/resume`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((r) => {
-                if (!r.ok) throw new Error(`${r.status}`);
-                return r.blob();
-            })
-            .then((blob) => {
-                objectUrl = URL.createObjectURL(blob);
-                setBlobUrl(objectUrl);
-            })
-            .catch((e) => { console.error('[PDF load]', e); setPdfError(true); })
-            .finally(() => setPdfLoading(false));
-        return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
-    }, [app.id]);
-
-    const handleDownload = () => {
-        const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
-        fetch(`${API_URL}/admin/careers/applications/${app.id}/resume?disposition=attachment`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((r) => r.blob())
-            .then((blob) => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${app.name.replace(/\s+/g, '_')}_resume.pdf`;
-                a.click();
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
-            })
-            .catch(() => window.open(app.resumeUrl, '_blank'));
+    const handleDownload = async () => {
+        try {
+            const r = await fetch(app.resumeUrl);
+            const blob = await r.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${app.name.replace(/\s+/g, '_')}_resume.pdf`;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } catch {
+            window.open(app.resumeUrl, '_blank');
+        }
     };
 
     const handleSave = async () => {
@@ -366,21 +344,12 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                     {/* Resume */}
                     <section>
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Resume</h3>
-                        <div className="overflow-hidden rounded-xl border border-border/40 bg-secondary/10 flex items-center justify-center" style={{ height: '420px' }}>
-                            {pdfLoading ? (
-                                <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                            ) : pdfError || !blobUrl ? (
-                                <div className="flex flex-col items-center gap-3 p-6 text-center">
-                                    <FileText className="h-8 w-8 text-muted-foreground/30" />
-                                    <p className="text-sm text-muted-foreground">Preview unavailable. Use the links below.</p>
-                                </div>
-                            ) : (
-                                <iframe src={blobUrl} title="Resume" className="h-full w-full" />
-                            )}
+                        <div className="overflow-hidden rounded-xl border border-border/40 bg-secondary/10" style={{ height: '420px' }}>
+                            <iframe src={app.resumeUrl} title="Resume" className="h-full w-full" />
                         </div>
                         <div className="mt-3 flex gap-2">
                             <button
-                                onClick={() => blobUrl ? window.open(blobUrl, '_blank') : window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(app.resumeUrl)}`, '_blank')}
+                                onClick={() => window.open(app.resumeUrl, '_blank')}
                                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors"
                             >
                                 <ExternalLink className="h-4 w-4 text-primary" /> Open in tab
