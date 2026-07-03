@@ -22,7 +22,10 @@ import Newsletter from "./pages/Newsletter";
 import FAQs from "./pages/FAQs";
 import Contact from "./pages/Contact";
 import AppComingSoon from "./pages/AppComingSoon";
-import InternApplication from "./pages/InternApplication";
+import CareersPage from "./pages/careers/CareersPage";
+import RoleDetailPage from "./pages/careers/RoleDetailPage";
+import ApplyPage from "./pages/careers/ApplyPage";
+import CareersAdmin from "./pages/admin/CareersAdmin";
 
 // Ambassador platform pages
 import AmbassadorLanding from "./pages/ambassador/AmbassadorLanding";
@@ -62,7 +65,9 @@ const App = () => (
             <Route path="/accessibility" element={<Accessibility />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/app" element={<AppComingSoon />} />
-            <Route path="/careers/app-dev-intern" element={<InternApplication />} />
+            <Route path="/careers" element={<CareersPage />} />
+            <Route path="/careers/:slug" element={<RoleDetailPage />} />
+            <Route path="/careers/:slug/apply" element={<ApplyPage />} />
 
             {/* ── Ambassador Platform (all under /ambassador) ───── */}
             {/* Landing page */}
@@ -88,6 +93,9 @@ const App = () => (
             } />
             <Route path="/ambassador/admin/external-verification" element={
               <AdminRoute><ExternalVerificationPage /></AdminRoute>
+            } />
+            <Route path="/ambassador/admin/careers" element={
+              <AdminRoute><CareersAdmin /></AdminRoute>
             } />
 
             {/* Public pages */}

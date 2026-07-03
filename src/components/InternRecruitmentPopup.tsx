@@ -23,7 +23,7 @@ export default function InternRecruitmentPopup() {
 
     const apply = () => {
         dismiss();
-        navigate('/careers/app-dev-intern');
+        navigate('/careers');
     };
 
     return (
