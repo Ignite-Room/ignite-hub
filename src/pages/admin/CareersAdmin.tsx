@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowLeft, Briefcase, CheckCircle2, ChevronDown, ExternalLink,
+    ArrowLeft, Briefcase, CheckCircle2, ChevronDown, Download, ExternalLink,
     FileText, Loader2, MapPin, Pencil, Plus, Search, Trash2, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -224,6 +224,12 @@ function RoleModal({
     );
 }
 
+// Cloudinary raw uploads serve with Content-Disposition: attachment by default.
+// Adding fl_attachment:false forces inline serving so the browser opens the PDF.
+function toInlineUrl(url: string): string {
+    return url.replace('/raw/upload/', '/raw/upload/fl_attachment:false/');
+}
+
 // ─── Application Review Panel ─────────────────────────────────────────────────
 
 function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: () => void; onUpdate: (a: Application) => void }) {
@@ -317,14 +323,33 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
 
                     {/* Resume */}
                     <section>
-                        <a
-                            href={app.resumeUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-4 py-2.5 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors"
-                        >
-                            <FileText className="h-4 w-4 text-primary" /> View Resume (PDF)
-                        </a>
+                        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Resume</h3>
+                        {/* Embedded PDF viewer — fl_attachment:false forces inline serving */}
+                        <div className="overflow-hidden rounded-xl border border-border/40 bg-secondary/10" style={{ height: '420px' }}>
+                            <iframe
+                                src={toInlineUrl(app.resumeUrl)}
+                                title="Resume"
+                                className="h-full w-full"
+                                allow="fullscreen"
+                            />
+                        </div>
+                        <div className="mt-3 flex gap-2">
+                            <a
+                                href={toInlineUrl(app.resumeUrl)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors"
+                            >
+                                <ExternalLink className="h-4 w-4 text-primary" /> Open in tab
+                            </a>
+                            <a
+                                href={app.resumeUrl}
+                                download
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-border hover:bg-secondary/60 transition-colors"
+                            >
+                                <Download className="h-4 w-4" /> Download
+                            </a>
+                        </div>
                     </section>
 
                     <div className="h-px bg-border/40" />
