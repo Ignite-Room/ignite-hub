@@ -242,7 +242,7 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
         setPdfError(false);
         setBlobUrl(null);
         const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
-        fetch(`${API_URL}/admin/careers/applications/${app.id}/resume?disposition=inline`, {
+        fetch(`${API_URL}/admin/careers/applications/${app.id}/resume`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((r) => {
@@ -253,17 +253,26 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                 objectUrl = URL.createObjectURL(blob);
                 setBlobUrl(objectUrl);
             })
-            .catch(() => setPdfError(true))
+            .catch((e) => { console.error('[PDF load]', e); setPdfError(true); })
             .finally(() => setPdfLoading(false));
         return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
     }, [app.id]);
 
     const handleDownload = () => {
-        if (!blobUrl) return;
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = `${app.name.replace(/\s+/g, '_')}_resume.pdf`;
-        a.click();
+        const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
+        fetch(`${API_URL}/admin/careers/applications/${app.id}/resume?disposition=attachment`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then((r) => r.blob())
+            .then((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${app.name.replace(/\s+/g, '_')}_resume.pdf`;
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            })
+            .catch(() => window.open(app.resumeUrl, '_blank'));
     };
 
     const handleSave = async () => {
@@ -361,23 +370,24 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                             {pdfLoading ? (
                                 <Loader2 className="h-5 w-5 animate-spin text-primary" />
                             ) : pdfError || !blobUrl ? (
-                                <p className="text-sm text-muted-foreground">Could not load PDF preview.</p>
+                                <div className="flex flex-col items-center gap-3 p-6 text-center">
+                                    <FileText className="h-8 w-8 text-muted-foreground/30" />
+                                    <p className="text-sm text-muted-foreground">Preview unavailable. Use the links below.</p>
+                                </div>
                             ) : (
                                 <iframe src={blobUrl} title="Resume" className="h-full w-full" />
                             )}
                         </div>
                         <div className="mt-3 flex gap-2">
                             <button
-                                disabled={!blobUrl}
-                                onClick={() => blobUrl && window.open(blobUrl, '_blank')}
-                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                onClick={() => blobUrl ? window.open(blobUrl, '_blank') : window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(app.resumeUrl)}`, '_blank')}
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors"
                             >
                                 <ExternalLink className="h-4 w-4 text-primary" /> Open in tab
                             </button>
                             <button
-                                disabled={!blobUrl}
                                 onClick={handleDownload}
-                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-border hover:bg-secondary/60 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-border hover:bg-secondary/60 transition-colors"
                             >
                                 <Download className="h-4 w-4" /> Download
                             </button>
