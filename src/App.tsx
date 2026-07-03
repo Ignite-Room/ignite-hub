@@ -22,6 +22,7 @@ import Newsletter from "./pages/Newsletter";
 import FAQs from "./pages/FAQs";
 import Contact from "./pages/Contact";
 import AppComingSoon from "./pages/AppComingSoon";
+import InternApplication from "./pages/InternApplication";
 
 // Ambassador platform pages
 import AmbassadorLanding from "./pages/ambassador/AmbassadorLanding";
@@ -61,6 +62,7 @@ const App = () => (
             <Route path="/accessibility" element={<Accessibility />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/app" element={<AppComingSoon />} />
+            <Route path="/careers/app-dev-intern" element={<InternApplication />} />
 
             {/* ── Ambassador Platform (all under /ambassador) ───── */}
             {/* Landing page */}
