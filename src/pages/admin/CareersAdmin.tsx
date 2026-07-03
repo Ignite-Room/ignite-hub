@@ -224,10 +224,11 @@ function RoleModal({
     );
 }
 
-// Cloudinary raw uploads serve with Content-Disposition: attachment by default.
-// Adding fl_attachment:false forces inline serving so the browser opens the PDF.
-function toInlineUrl(url: string): string {
-    return url.replace('/raw/upload/', '/raw/upload/fl_attachment:false/');
+// Cloudinary raw resource URLs serve PDFs with Content-Disposition: attachment.
+// Routing through Google Docs Viewer sidesteps this entirely for reliable viewing.
+function docsViewerUrl(rawUrl: string, embedded = false): string {
+    const base = `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
+    return embedded ? `${base}&embedded=true` : base;
 }
 
 // ─── Application Review Panel ─────────────────────────────────────────────────
@@ -329,10 +330,9 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                     {/* Resume */}
                     <section>
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Resume</h3>
-                        {/* Embedded PDF viewer — fl_attachment:false forces inline serving */}
                         <div className="overflow-hidden rounded-xl border border-border/40 bg-secondary/10" style={{ height: '420px' }}>
                             <iframe
-                                src={toInlineUrl(app.resumeUrl)}
+                                src={docsViewerUrl(app.resumeUrl, true)}
                                 title="Resume"
                                 className="h-full w-full"
                                 allow="fullscreen"
@@ -340,7 +340,7 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                         </div>
                         <div className="mt-3 flex gap-2">
                             <a
-                                href={toInlineUrl(app.resumeUrl)}
+                                href={docsViewerUrl(app.resumeUrl)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors"
@@ -349,7 +349,8 @@ function ReviewPanel({ app, onClose, onUpdate }: { app: Application; onClose: ()
                             </a>
                             <a
                                 href={app.resumeUrl}
-                                download
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border/50 bg-secondary/40 px-3 py-2 text-sm font-medium text-foreground hover:border-border hover:bg-secondary/60 transition-colors"
                             >
                                 <Download className="h-4 w-4" /> Download

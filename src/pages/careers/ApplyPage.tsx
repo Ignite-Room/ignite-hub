@@ -403,7 +403,7 @@ export default function ApplyPage() {
                                                     </div>
                                                     <span className="text-sm leading-relaxed text-muted-foreground">
                                                         I follow Ignite Room on{' '}
-                                                        <a href="https://www.instagram.com/ignite.room/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>Instagram</a>
+                                                        <a href="https://www.instagram.com/igniteroom.india/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>Instagram</a>
                                                         {' '}and{' '}
                                                         <a href="https://www.linkedin.com/company/ignite-room/" target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>LinkedIn</a>
                                                     </span>

@@ -27,7 +27,7 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/ignite.room/' },
+  { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/igniteroom.india/' },
   { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/company/ignite-room/' },
   { name: 'GitHub', icon: Github, href: 'https://github.com/Ignite-Room' },
   { name: 'Email', icon: Mail, href: 'mailto:admin@igniteroom.in' },
