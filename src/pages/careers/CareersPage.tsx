@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, MapPin, Clock, Loader2 } from 'lucide-react';
+import { ArrowRight, MapPin, Clock, CalendarDays, Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -34,8 +34,24 @@ const TYPE_COLOR: Record<Role['type'], string> = {
     CONTRACT: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
 };
 
+function deadlineInfo(deadline: string | null): { label: string; cls: string } | null {
+    if (!deadline) return null;
+    const now = new Date();
+    const dl = new Date(deadline);
+    if (dl < now) return { label: 'Deadline passed', cls: 'text-muted-foreground/40 line-through' };
+    const hoursLeft = (dl.getTime() - now.getTime()) / 36e5;
+    if (hoursLeft < 24) return { label: 'Closes today', cls: 'text-orange-400 font-medium' };
+    if (hoursLeft < 48) return { label: 'Closes tomorrow', cls: 'text-amber-400 font-medium' };
+    const daysLeft = Math.ceil(hoursLeft / 24);
+    if (daysLeft <= 5) return { label: `Closes in ${daysLeft} days`, cls: 'text-amber-500/80' };
+    return {
+        label: `Closes ${dl.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`,
+        cls: 'text-muted-foreground',
+    };
+}
+
 function RoleCard({ role, index }: { role: Role; index: number }) {
-    const pastDeadline = role.deadline && new Date(role.deadline) < new Date();
+    const dl = deadlineInfo(role.deadline);
 
     return (
         <motion.div
@@ -55,17 +71,21 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
                 </div>
             </div>
 
-            <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5">
+            <div className="flex flex-wrap gap-3 text-sm">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
                     <MapPin className="h-3.5 w-3.5" />
                     {role.location}
                 </span>
-                {role.deadline && (
-                    <span className={`flex items-center gap-1.5 ${pastDeadline ? 'text-destructive/70' : ''}`}>
+                {dl && (
+                    <span className={`flex items-center gap-1.5 ${dl.cls}`}>
                         <Clock className="h-3.5 w-3.5" />
-                        {pastDeadline ? 'Deadline passed' : `Closes ${new Date(role.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`}
+                        {dl.label}
                     </span>
                 )}
+                <span className="flex items-center gap-1.5 text-muted-foreground/50">
+                    <CalendarDays className="h-3.5 w-3.5" />
+                    Posted {new Date(role.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </span>
             </div>
 
             {role.skills.length > 0 && (
@@ -84,7 +104,7 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
             )}
 
             <div className="mt-auto pt-2">
-                <Button asChild size="sm" className="group w-full" disabled={!!pastDeadline}>
+                <Button asChild size="sm" className="group w-full" disabled={!!(role.deadline && new Date(role.deadline) < new Date())}>
                     <Link to={`/careers/${role.slug}`}>
                         View & Apply
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

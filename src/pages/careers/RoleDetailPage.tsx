@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Clock, Loader2, MapPin } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CalendarDays, Clock, Loader2, MapPin } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ interface Role {
     skills: string[];
     isOpen: boolean;
     deadline: string | null;
+    createdAt: string;
 }
 
 const TYPE_LABEL: Record<Role['type'], string> = {
@@ -48,6 +49,21 @@ export default function RoleDetailPage() {
 
     const pastDeadline = role?.deadline && new Date(role.deadline) < new Date();
     const canApply = role?.isOpen && !pastDeadline;
+
+    function deadlineDisplay(deadline: string): { label: string; urgent: boolean } {
+        const now = new Date();
+        const dl = new Date(deadline);
+        if (dl < now) return { label: 'Deadline passed', urgent: false };
+        const hoursLeft = (dl.getTime() - now.getTime()) / 36e5;
+        if (hoursLeft < 24) return { label: 'Closes today — apply now', urgent: true };
+        if (hoursLeft < 48) return { label: 'Closes tomorrow', urgent: true };
+        const daysLeft = Math.ceil(hoursLeft / 24);
+        if (daysLeft <= 5) return { label: `Closes in ${daysLeft} days`, urgent: true };
+        return {
+            label: `Apply by ${dl.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+            urgent: false,
+        };
+    }
 
     if (loading) {
         return (
@@ -95,17 +111,21 @@ export default function RoleDetailPage() {
                             <span className="flex items-center gap-1.5">
                                 <MapPin className="h-4 w-4" /> {role.location}
                             </span>
-                            {role.deadline && (
-                                <span className={`flex items-center gap-1.5 ${pastDeadline ? 'text-destructive/70' : ''}`}>
-                                    <Clock className="h-4 w-4" />
-                                    {pastDeadline
-                                        ? 'Deadline passed'
-                                        : `Apply by ${new Date(role.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`}
-                                </span>
-                            )}
+                            {role.deadline && (() => {
+                                const { label, urgent } = deadlineDisplay(role.deadline);
+                                return (
+                                    <span className={`flex items-center gap-1.5 font-medium ${pastDeadline ? 'text-muted-foreground/40 line-through' : urgent ? 'text-amber-400' : ''}`}>
+                                        <Clock className="h-4 w-4" /> {label}
+                                    </span>
+                                );
+                            })()}
                             {!role.isOpen && (
                                 <span className="text-muted-foreground/50">Applications closed</span>
                             )}
+                            <span className="flex items-center gap-1.5 text-muted-foreground/50">
+                                <CalendarDays className="h-4 w-4" />
+                                Posted {new Date(role.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            </span>
                         </div>
                     </div>
 
