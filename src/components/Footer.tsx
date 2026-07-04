@@ -129,6 +129,15 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                {/* Plain anchor: /chess is a separately deployed app, not a client-side route */}
+                <a
+                  href="/chess"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Play Chess ↗
+                </a>
+              </li>
             </ul>
           </div>
 

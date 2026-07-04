@@ -17,6 +17,14 @@
       "destination": "https://hackarena2-delta.vercel.app/:path*"
     },
     {
+      "source": "/chess",
+      "destination": "https://chess3d-snowy.vercel.app/chess"
+    },
+    {
+      "source": "/chess/:path*",
+      "destination": "https://chess3d-snowy.vercel.app/chess/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
