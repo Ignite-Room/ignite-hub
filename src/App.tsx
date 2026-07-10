@@ -26,6 +26,7 @@ import CareersPage from "./pages/careers/CareersPage";
 import RoleDetailPage from "./pages/careers/RoleDetailPage";
 import ApplyPage from "./pages/careers/ApplyPage";
 import CareersAdmin from "./pages/admin/CareersAdmin";
+import ChallengePage from "./pages/careers/ChallengePage";
 
 // Ambassador platform pages
 import AmbassadorLanding from "./pages/ambassador/AmbassadorLanding";
@@ -68,6 +69,7 @@ const App = () => (
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/careers/:slug" element={<RoleDetailPage />} />
             <Route path="/careers/:slug/apply" element={<ApplyPage />} />
+            <Route path="/careers/challenge/:token" element={<ChallengePage />} />
 
             {/* ── Ambassador Platform (all under /ambassador) ───── */}
             {/* Landing page */}

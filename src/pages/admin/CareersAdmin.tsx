@@ -36,6 +36,7 @@ async function adminFetch(path: string, options: RequestInit = {}) {
 
 type JobType = 'INTERNSHIP' | 'FULL_TIME' | 'PART_TIME' | 'CONTRACT';
 type AppStatus = 'PENDING' | 'UNDER_REVIEW' | 'SHORTLISTED' | 'INTERVIEW_SCHEDULED' | 'OFFERED' | 'HIRED' | 'REJECTED';
+type InviteStatus = 'INVITED' | 'SUBMITTED' | 'PASSED' | 'FAILED';
 
 interface Role {
     id: string; slug: string; title: string; type: JobType; location: string;
@@ -51,6 +52,22 @@ interface Application {
     resumeUrl: string; status: AppStatus; adminNote: string | null;
     reviewedAt: string | null; createdAt: string;
     role: { title: string; slug: string; type: JobType };
+}
+
+interface Challenge {
+    id: string; roleId: string | null; title: string; description: string;
+    deadline: string | null; createdAt: string;
+    role: { title: string; slug: string } | null;
+    _count: { invites: number };
+    inviteStats: { INVITED: number; SUBMITTED: number; PASSED: number; FAILED: number };
+}
+
+interface ChallengeInvite {
+    id: string; token: string; status: InviteStatus;
+    sentAt: string; submittedAt: string | null;
+    repoUrl: string | null; liveUrl: string | null; notes: string | null;
+    adminNote: string | null; reviewedAt: string | null;
+    application: { id: string; name: string; email: string; phone: string; college: string; yearOfStudy: string | null };
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -496,7 +513,7 @@ function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-type Tab = 'roles' | 'applications';
+type Tab = 'roles' | 'applications' | 'challenges';
 
 export default function CareersAdmin() {
     const { user, logout } = useAuth();
@@ -511,6 +528,12 @@ export default function CareersAdmin() {
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
     const [filter, setFilter] = useState({ roleId: '', status: '', search: '' });
     const [appPage, setAppPage] = useState(1);
+    const [challenges, setChallenges] = useState<Challenge[]>([]);
+    const [challengeModal, setChallengeModal] = useState<{ open: boolean; challenge?: Challenge }>({ open: false });
+    const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
+    const [challengeInvites, setChallengeInvites] = useState<ChallengeInvite[]>([]);
+    const [inviteLoading, setInviteLoading] = useState(false);
+    const [sendingChallenge, setSendingChallenge] = useState(false);
 
     const showToast = (msg: string) => { setToast(msg); };
 
@@ -622,6 +645,66 @@ export default function CareersAdmin() {
         }
     };
 
+    const loadChallenges = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await fetch(`${API_URL}/admin/challenges`, { headers: { 'Content-Type': 'application/json', ...authHeader() } }).then((r) => r.json());
+            setChallenges(data);
+        } catch { showToast('Failed to load challenges'); }
+        finally { setLoading(false); }
+    }, []);
+
+    const loadChallengeInvites = async (challengeId: string) => {
+        setInviteLoading(true);
+        try {
+            const data = await fetch(`${API_URL}/admin/challenges/${challengeId}/invites`, { headers: { ...authHeader() } }).then((r) => r.json());
+            setChallengeInvites(data);
+        } catch { showToast('Failed to load submissions'); }
+        finally { setInviteLoading(false); }
+    };
+
+    const handleSelectChallenge = (c: Challenge) => {
+        setSelectedChallenge(c);
+        loadChallengeInvites(c.id);
+    };
+
+    const handleSendChallenge = async (challengeId: string) => {
+        setSendingChallenge(true);
+        try {
+            const res = await fetch(`${API_URL}/admin/challenges/${challengeId}/send`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeader() },
+            }).then((r) => r.json());
+            if (res.sent === 0) { showToast(res.message || 'No new candidates to send to'); }
+            else { showToast(`Challenge sent to ${res.sent} candidate${res.sent !== 1 ? 's' : ''}`); }
+            loadChallenges();
+            if (selectedChallenge?.id === challengeId) loadChallengeInvites(challengeId);
+        } catch { showToast('Failed to send challenge'); }
+        finally { setSendingChallenge(false); }
+    };
+
+    const handleReviewInvite = async (challengeId: string, inviteId: string, status: 'PASSED' | 'FAILED', adminNote: string) => {
+        try {
+            const updated = await fetch(`${API_URL}/admin/challenges/${challengeId}/invites/${inviteId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', ...authHeader() },
+                body: JSON.stringify({ status, adminNote }),
+            }).then((r) => r.json());
+            setChallengeInvites((prev) => prev.map((i) => (i.id === inviteId ? updated : i)));
+            showToast(status === 'PASSED' ? 'Marked as passed' : 'Marked as failed');
+        } catch { showToast('Failed to update'); }
+    };
+
+    const handleDeleteChallenge = async (id: string) => {
+        try {
+            await fetch(`${API_URL}/admin/challenges/${id}`, { method: 'DELETE', headers: { ...authHeader() } });
+            setChallenges((prev) => prev.filter((c) => c.id !== id));
+            if (selectedChallenge?.id === id) setSelectedChallenge(null);
+            showToast('Challenge deleted');
+        } catch { showToast('Failed to delete challenge'); }
+    };
+
+    useEffect(() => { if (tab === 'challenges') loadChallenges(); }, [tab, loadChallenges]);
+
     const totalOpen = roles.filter((r) => r.isOpen).length;
     const totalApps = roles.reduce((s, r) => s + (r._count?.applications ?? 0), 0);
 
@@ -714,7 +797,7 @@ export default function CareersAdmin() {
 
                 {/* Tab bar */}
                 <div className="mb-6 flex gap-1 rounded-xl border border-border/40 bg-secondary/30 p-1">
-                    {(['roles', 'applications'] as Tab[]).map((t) => (
+                    {(['roles', 'applications', 'challenges'] as Tab[]).map((t) => (
                         <button
                             key={t}
                             onClick={() => setTab(t)}
@@ -722,10 +805,13 @@ export default function CareersAdmin() {
                                 tab === t ? 'bg-background text-foreground shadow-sm border border-border/50' : 'text-muted-foreground hover:text-foreground'
                             }`}
                         >
-                            {t === 'roles' ? <Briefcase className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
-                            {t === 'roles' ? 'Roles' : 'Applications'}
+                            {t === 'roles' ? <Briefcase className="h-4 w-4" /> : t === 'applications' ? <FileText className="h-4 w-4" /> : <Mail className="h-4 w-4" />}
+                            {t === 'roles' ? 'Roles' : t === 'applications' ? 'Applications' : 'Challenges'}
                             {t === 'applications' && appTotal > 0 && (
                                 <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{appTotal}</span>
+                            )}
+                            {t === 'challenges' && challenges.length > 0 && (
+                                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{challenges.length}</span>
                             )}
                         </button>
                     ))}
@@ -927,7 +1013,317 @@ export default function CareersAdmin() {
                         )}
                     </div>
                 )}
+
+                {/* ── Challenges tab ────────────────────────────────────────── */}
+                {tab === 'challenges' && (
+                    <div className="flex gap-6">
+                        {/* Left: challenge list */}
+                        <div className={`${selectedChallenge ? 'hidden lg:block lg:w-80 lg:flex-shrink-0' : 'w-full'}`}>
+                            <div className="mb-5 flex items-center justify-between">
+                                <h2 className="font-heading text-base font-semibold text-foreground">Challenges</h2>
+                                <Button size="sm" onClick={() => setChallengeModal({ open: true })}>
+                                    <Plus className="h-4 w-4" /> New Challenge
+                                </Button>
+                            </div>
+                            {loading ? (
+                                <div className="flex justify-center py-20"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
+                            ) : challenges.length === 0 ? (
+                                <div className="flex flex-col items-center gap-3 py-20 text-center">
+                                    <Mail className="h-10 w-10 text-muted-foreground/30" />
+                                    <p className="text-sm text-muted-foreground">No challenges yet.</p>
+                                    <Button size="sm" variant="outline" onClick={() => setChallengeModal({ open: true })}>
+                                        <Plus className="h-4 w-4" /> Create Challenge
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {challenges.map((c) => (
+                                        <div
+                                            key={c.id}
+                                            onClick={() => handleSelectChallenge(c)}
+                                            className={`cursor-pointer rounded-xl border p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 ${
+                                                selectedChallenge?.id === c.id ? 'border-primary/40 bg-primary/5' : 'border-border/50 bg-secondary/20'
+                                            }`}
+                                        >
+                                            <div className="mb-2 flex items-start justify-between gap-2">
+                                                <p className="font-medium text-foreground text-sm">{c.title}</p>
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0 text-muted-foreground hover:text-destructive"
+                                                    onClick={(e) => { e.stopPropagation(); handleDeleteChallenge(c.id); }}>
+                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                </Button>
+                                            </div>
+                                            {c.role && <p className="mb-3 text-xs text-muted-foreground">{c.role.title}</p>}
+                                            <div className="flex gap-3 text-xs text-muted-foreground">
+                                                <span>{c.inviteStats.INVITED + c.inviteStats.SUBMITTED + c.inviteStats.PASSED + c.inviteStats.FAILED} invited</span>
+                                                <span className="text-amber-400">{c.inviteStats.SUBMITTED} submitted</span>
+                                                <span className="text-emerald-400">{c.inviteStats.PASSED} passed</span>
+                                            </div>
+                                            {c.deadline && (
+                                                <p className={`mt-2 text-xs ${new Date(c.deadline) < new Date() ? 'text-muted-foreground/40' : 'text-amber-400/80'}`}>
+                                                    Deadline: {new Date(c.deadline).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short' })}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Right: challenge detail */}
+                        {selectedChallenge && (
+                            <div className="flex-1 min-w-0">
+                                <div className="mb-5 flex items-center justify-between gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <button onClick={() => setSelectedChallenge(null)} className="lg:hidden text-muted-foreground hover:text-foreground">
+                                            <ArrowLeft className="h-4 w-4" />
+                                        </button>
+                                        <div>
+                                            <h2 className="font-heading text-base font-semibold text-foreground">{selectedChallenge.title}</h2>
+                                            {selectedChallenge.role && <p className="text-xs text-muted-foreground">{selectedChallenge.role.title}</p>}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="sm" onClick={() => setChallengeModal({ open: true, challenge: selectedChallenge })}>
+                                            <Pencil className="h-3.5 w-3.5" /> Edit
+                                        </Button>
+                                        <Button size="sm" disabled={sendingChallenge || !selectedChallenge.roleId}
+                                            onClick={() => handleSendChallenge(selectedChallenge.id)}>
+                                            {sendingChallenge ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Mail className="h-3.5 w-3.5" />}
+                                            Send to Shortlisted
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                {!selectedChallenge.roleId && (
+                                    <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/20 px-4 py-3 text-sm text-amber-400">
+                                        Link this challenge to a role (edit) to enable sending.
+                                    </div>
+                                )}
+
+                                {/* Invites list */}
+                                {inviteLoading ? (
+                                    <div className="flex justify-center py-20"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
+                                ) : challengeInvites.length === 0 ? (
+                                    <div className="py-16 text-center text-sm text-muted-foreground">
+                                        No invites sent yet. Click "Send to Shortlisted" to send the challenge to all shortlisted candidates.
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {challengeInvites.map((invite) => (
+                                            <ChallengeInviteCard
+                                                key={invite.id}
+                                                invite={invite}
+                                                challengeId={selectedChallenge.id}
+                                                onReview={handleReviewInvite}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Challenge modal */}
+                <AnimatePresence>
+                    {challengeModal.open && (
+                        <ChallengeModal
+                            initial={challengeModal.challenge}
+                            roles={roles}
+                            onClose={() => setChallengeModal({ open: false })}
+                            onSave={(saved) => {
+                                if (challengeModal.challenge) {
+                                    setChallenges((prev) => prev.map((c) => (c.id === saved.id ? { ...saved, _count: c._count, inviteStats: c.inviteStats } : c)));
+                                    if (selectedChallenge?.id === saved.id) setSelectedChallenge({ ...saved, _count: selectedChallenge._count, inviteStats: selectedChallenge.inviteStats });
+                                    showToast('Challenge updated');
+                                } else {
+                                    setChallenges((prev) => [saved, ...prev]);
+                                    showToast('Challenge created');
+                                }
+                                setChallengeModal({ open: false });
+                            }}
+                        />
+                    )}
+                </AnimatePresence>
             </main>
+        </div>
+    );
+}
+
+// ─── Challenge Modal ───────────────────────────────────────────────────────────
+
+function ChallengeModal({ initial, roles, onClose, onSave }: {
+    initial?: Challenge; roles: Role[];
+    onClose: () => void; onSave: (c: Challenge) => void;
+}) {
+    const [form, setForm] = useState({
+        title: initial?.title || '',
+        description: initial?.description || '',
+        roleId: initial?.roleId || '',
+        deadline: initial?.deadline ? toISTLocal(initial.deadline) : '',
+    });
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleSave = async () => {
+        setSaving(true); setError('');
+        try {
+            const payload = { ...form, deadline: form.deadline ? `${form.deadline}:00+05:30` : '' };
+            const url = initial ? `${API_URL}/admin/challenges/${initial.id}` : `${API_URL}/admin/challenges`;
+            const r = await fetch(url, {
+                method: initial ? 'PATCH' : 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeader() },
+                body: JSON.stringify(payload),
+            });
+            const body = await r.json();
+            if (!r.ok) throw new Error(body.message);
+            onSave(body);
+        } catch (e) { setError(e instanceof Error ? e.message : 'Save failed'); }
+        finally { setSaving(false); }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+                className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                <div className="mb-5 flex items-center justify-between">
+                    <h2 className="font-heading text-lg font-semibold text-foreground">{initial ? 'Edit Challenge' : 'New Challenge'}</h2>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
+                </div>
+                <div className="space-y-4">
+                    <div>
+                        <Label className="mb-1.5 block text-sm text-muted-foreground">Title</Label>
+                        <Input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} className="bg-secondary/50 border-border/50 h-10" placeholder="e.g. Build a To-Do App with React" />
+                    </div>
+                    <div>
+                        <Label className="mb-1.5 block text-sm text-muted-foreground">Brief / Description</Label>
+                        <Textarea value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+                            rows={6} className="bg-secondary/50 border-border/50 resize-none"
+                            placeholder="Describe the challenge, requirements, what you're evaluating, and any constraints…" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label className="mb-1.5 block text-sm text-muted-foreground">Linked Role <span className="text-muted-foreground/40">(optional)</span></Label>
+                            <Select value={form.roleId || 'none'} onValueChange={(v) => setForm((p) => ({ ...p, roleId: v === 'none' ? '' : v }))}>
+                                <SelectTrigger className="h-10 bg-secondary/50 border-border/50"><SelectValue placeholder="None" /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="none">None</SelectItem>
+                                    {roles.map((r) => <SelectItem key={r.id} value={r.id}>{r.title}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div>
+                            <Label className="mb-1.5 block text-sm text-muted-foreground">Deadline <span className="text-muted-foreground/40">(IST)</span></Label>
+                            <Input type="datetime-local" value={form.deadline} onChange={(e) => setForm((p) => ({ ...p, deadline: e.target.value }))} className="bg-secondary/50 border-border/50 h-10" />
+                        </div>
+                    </div>
+                    {error && <p className="text-xs text-destructive">{error}</p>}
+                    <Button onClick={handleSave} disabled={saving || !form.title || !form.description} className="w-full">
+                        {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : initial ? 'Save Changes' : 'Create Challenge'}
+                    </Button>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+// ─── Challenge Invite Card ─────────────────────────────────────────────────────
+
+const INVITE_STATUS: Record<InviteStatus, { label: string; color: string }> = {
+    INVITED:   { label: 'Invited',   color: 'bg-secondary text-muted-foreground' },
+    SUBMITTED: { label: 'Submitted', color: 'bg-amber-500/10 text-amber-400' },
+    PASSED:    { label: 'Passed',    color: 'bg-emerald-500/10 text-emerald-400' },
+    FAILED:    { label: 'Failed',    color: 'bg-red-500/10 text-red-400' },
+};
+
+function ChallengeInviteCard({ invite, challengeId, onReview }: {
+    invite: ChallengeInvite; challengeId: string;
+    onReview: (challengeId: string, inviteId: string, status: 'PASSED' | 'FAILED', note: string) => void;
+}) {
+    const [expanded, setExpanded] = useState(false);
+    const [note, setNote] = useState(invite.adminNote || '');
+    const [reviewing, setReviewing] = useState(false);
+    const meta = INVITE_STATUS[invite.status];
+
+    const review = async (status: 'PASSED' | 'FAILED') => {
+        setReviewing(true);
+        await onReview(challengeId, invite.id, status, note);
+        setReviewing(false);
+    };
+
+    return (
+        <div className="rounded-xl border border-border/50 bg-secondary/10 overflow-hidden">
+            <div className="flex items-center gap-4 p-4 cursor-pointer hover:bg-secondary/20 transition-colors" onClick={() => setExpanded((p) => !p)}>
+                <div className="flex-1 min-w-0">
+                    <p className="font-medium text-foreground text-sm">{invite.application.name}</p>
+                    <p className="text-xs text-muted-foreground">{invite.application.email} &bull; {invite.application.college}</p>
+                </div>
+                <span className={`flex-shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${meta.color}`}>{meta.label}</span>
+                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${expanded ? 'rotate-180' : ''}`} />
+            </div>
+
+            {expanded && (
+                <div className="border-t border-border/40 p-4 space-y-4">
+                    {invite.status === 'INVITED' ? (
+                        <p className="text-sm text-muted-foreground/60 text-center py-4">Waiting for submission…</p>
+                    ) : (
+                        <>
+                            <div className="flex flex-wrap gap-2">
+                                {invite.repoUrl && (
+                                    <a href={invite.repoUrl} target="_blank" rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-secondary/40 px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/40 transition-colors">
+                                        <ExternalLink className="h-3.5 w-3.5 text-primary" /> Repository
+                                    </a>
+                                )}
+                                {invite.liveUrl && (
+                                    <a href={invite.liveUrl} target="_blank" rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-secondary/40 px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/40 transition-colors">
+                                        <ExternalLink className="h-3.5 w-3.5 text-primary" /> Live Demo
+                                    </a>
+                                )}
+                            </div>
+                            {invite.notes && (
+                                <div className="rounded-lg bg-secondary/30 border border-border/30 p-3">
+                                    <p className="mb-1 text-xs text-muted-foreground/60">Notes from candidate</p>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">{invite.notes}</p>
+                                </div>
+                            )}
+                            {(invite.status === 'SUBMITTED' || invite.status === 'PASSED' || invite.status === 'FAILED') && (
+                                <div className="space-y-3">
+                                    <div>
+                                        <Label className="mb-1.5 block text-xs text-muted-foreground/60">Internal note</Label>
+                                        <Textarea value={note} onChange={(e) => setNote(e.target.value)}
+                                            rows={2} placeholder="Optional note for your own records…"
+                                            className="bg-secondary/50 border-border/50 resize-none text-sm" />
+                                    </div>
+                                    {invite.status === 'SUBMITTED' && (
+                                        <div className="flex gap-2">
+                                            <Button size="sm" disabled={reviewing}
+                                                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+                                                onClick={() => review('PASSED')}>
+                                                {reviewing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserCheck className="h-3.5 w-3.5" />}
+                                                Pass
+                                            </Button>
+                                            <Button size="sm" variant="outline" disabled={reviewing}
+                                                className="flex-1 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                                                onClick={() => review('FAILED')}>
+                                                {reviewing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserX className="h-3.5 w-3.5" />}
+                                                Fail
+                                            </Button>
+                                        </div>
+                                    )}
+                                    {(invite.status === 'PASSED' || invite.status === 'FAILED') && (
+                                        <Button size="sm" variant="outline" className="w-full text-xs text-muted-foreground"
+                                            onClick={() => review(invite.status === 'PASSED' ? 'FAILED' : 'PASSED')}>
+                                            Change to {invite.status === 'PASSED' ? 'Failed' : 'Passed'}
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
