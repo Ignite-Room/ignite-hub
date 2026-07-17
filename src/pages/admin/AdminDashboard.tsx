@@ -335,6 +335,11 @@ export default function AdminDashboard() {
                                 <FileText className="w-4 h-4" /> <span className="hidden sm:inline">Careers</span>
                             </Button>
                         </Link>
+                        <Link to="/ambassador/admin/mail">
+                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                                <Send className="w-4 h-4" /> <span className="hidden sm:inline">Mail Center</span>
+                            </Button>
+                        </Link>
                         <Link to="/ambassador/admin/external-verification">
                             <Button variant="ghost" size="sm" className="gap-1.5 text-primary hover:text-primary/80">
                                 <CheckCircle2 className="w-4 h-4" /> <span className="hidden sm:inline">External Verification</span>
