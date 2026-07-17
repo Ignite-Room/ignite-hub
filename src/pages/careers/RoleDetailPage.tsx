@@ -40,8 +40,10 @@ export default function RoleDetailPage() {
         if (!slug) return;
         fetch(`${API_URL}/careers/${slug}`)
             .then(async (r) => {
-                if (r.status === 404) { setNotFound(true); return; }
-                setRole(await r.json());
+                if (!r.ok) { setNotFound(true); return; }
+                const data = await r.json();
+                if (!data || typeof data !== 'object' || !Array.isArray(data.skills)) { setNotFound(true); return; }
+                setRole(data);
             })
             .catch(() => setNotFound(true))
             .finally(() => setLoading(false));

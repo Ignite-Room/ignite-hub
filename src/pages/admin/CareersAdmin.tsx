@@ -32,6 +32,18 @@ async function adminFetch(path: string, options: RequestInit = {}) {
     return res.json();
 }
 
+// Generic authenticated JSON fetch for /api/admin/* endpoints outside careers/.
+// Throws on non-2xx so callers never set state to an error object.
+async function apiFetch(path: string, options: RequestInit = {}) {
+    const res = await fetch(`${API_URL}${path}`, {
+        ...options,
+        headers: { 'Content-Type': 'application/json', ...authHeader(), ...(options.headers || {}) },
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.message || `HTTP ${res.status}`);
+    return body;
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type JobType = 'INTERNSHIP' | 'FULL_TIME' | 'PART_TIME' | 'CONTRACT';
@@ -674,8 +686,8 @@ export default function CareersAdmin() {
     const loadChallenges = useCallback(async () => {
         setLoading(true);
         try {
-            const data = await fetch(`${API_URL}/admin/challenges`, { headers: { 'Content-Type': 'application/json', ...authHeader() } }).then((r) => r.json());
-            setChallenges(data);
+            const data = await apiFetch('/admin/challenges');
+            setChallenges(Array.isArray(data) ? data : []);
         } catch { showToast('Failed to load challenges'); }
         finally { setLoading(false); }
     }, []);
@@ -683,9 +695,9 @@ export default function CareersAdmin() {
     const loadChallengeInvites = async (challengeId: string) => {
         setInviteLoading(true);
         try {
-            const data = await fetch(`${API_URL}/admin/challenges/${challengeId}/invites`, { headers: { ...authHeader() } }).then((r) => r.json());
-            setChallengeInvites(data);
-        } catch { showToast('Failed to load submissions'); }
+            const data = await apiFetch(`/admin/challenges/${challengeId}/invites`);
+            setChallengeInvites(Array.isArray(data) ? data : []);
+        } catch { showToast('Failed to load submissions'); setChallengeInvites([]); }
         finally { setInviteLoading(false); }
     };
 
@@ -697,27 +709,24 @@ export default function CareersAdmin() {
     const handleSendChallenge = async (challengeId: string) => {
         setSendingChallenge(true);
         try {
-            const res = await fetch(`${API_URL}/admin/challenges/${challengeId}/send`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeader() },
-            }).then((r) => r.json());
+            const res = await apiFetch(`/admin/challenges/${challengeId}/send`, { method: 'POST' });
             if (res.sent === 0) { showToast(res.message || 'No new candidates to send to'); }
             else { showToast(`Challenge sent to ${res.sent} candidate${res.sent !== 1 ? 's' : ''}`); }
             loadChallenges();
             if (selectedChallenge?.id === challengeId) loadChallengeInvites(challengeId);
-        } catch { showToast('Failed to send challenge'); }
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to send challenge'); }
         finally { setSendingChallenge(false); }
     };
 
     const handleReviewInvite = async (challengeId: string, inviteId: string, status: 'PASSED' | 'FAILED', adminNote: string) => {
         try {
-            const updated = await fetch(`${API_URL}/admin/challenges/${challengeId}/invites/${inviteId}`, {
+            const updated = await apiFetch(`/admin/challenges/${challengeId}/invites/${inviteId}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', ...authHeader() },
                 body: JSON.stringify({ status, adminNote }),
-            }).then((r) => r.json());
+            });
             setChallengeInvites((prev) => prev.map((i) => (i.id === inviteId ? updated : i)));
             showToast(status === 'PASSED' ? 'Marked as passed' : 'Marked as failed');
-        } catch { showToast('Failed to update'); }
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to update'); }
     };
 
     const handleDeleteChallenge = async (id: string) => {
@@ -734,8 +743,8 @@ export default function CareersAdmin() {
     const loadInterviews = useCallback(async () => {
         setLoading(true);
         try {
-            const data = await fetch(`${API_URL}/admin/interviews`, { headers: { ...authHeader() } }).then((r) => r.json());
-            setInterviews(data);
+            const data = await apiFetch('/admin/interviews');
+            setInterviews(Array.isArray(data) ? data : []);
         } catch { showToast('Failed to load interviews'); }
         finally { setLoading(false); }
     }, []);
@@ -743,50 +752,55 @@ export default function CareersAdmin() {
     const loadInterviewInvites = async (interviewId: string) => {
         setInterviewInviteLoading(true);
         try {
-            const data = await fetch(`${API_URL}/admin/interviews/${interviewId}/invites`, { headers: { ...authHeader() } }).then((r) => r.json());
-            setInterviewInvites(data);
-        } catch { showToast('Failed to load candidates'); }
+            const data = await apiFetch(`/admin/interviews/${interviewId}/invites`);
+            setInterviewInvites(Array.isArray(data) ? data : []);
+        } catch { showToast('Failed to load candidates'); setInterviewInvites([]); }
         finally { setInterviewInviteLoading(false); }
     };
 
     const handleSelectInterview = async (iv: Interview) => {
-        const full = await fetch(`${API_URL}/admin/interviews/${iv.id}`, { headers: { ...authHeader() } }).then((r) => r.json());
-        setSelectedInterview({ ...iv, slots: full.slots });
+        try {
+            const full = await apiFetch(`/admin/interviews/${iv.id}`);
+            setSelectedInterview({ ...iv, slots: Array.isArray(full.slots) ? full.slots : [] });
+        } catch {
+            showToast('Failed to load interview details');
+            setSelectedInterview({ ...iv, slots: [] });
+        }
         loadInterviewInvites(iv.id);
     };
 
     const handleDeleteInterview = async (id: string) => {
         try {
-            await fetch(`${API_URL}/admin/interviews/${id}`, { method: 'DELETE', headers: { ...authHeader() } });
+            await apiFetch(`/admin/interviews/${id}`, { method: 'DELETE' });
             setInterviews((prev) => prev.filter((i) => i.id !== id));
             if (selectedInterview?.id === id) setSelectedInterview(null);
             showToast('Interview deleted');
-        } catch { showToast('Failed to delete interview'); }
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to delete interview'); }
     };
 
     const handleAddCandidates = async (applicationIds: string[]) => {
         if (!selectedInterview) return;
         try {
-            const res = await fetch(`${API_URL}/admin/interviews/${selectedInterview.id}/invites`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeader() },
+            const res = await apiFetch(`/admin/interviews/${selectedInterview.id}/invites`, {
+                method: 'POST',
                 body: JSON.stringify({ applicationIds }),
-            }).then((r) => r.json());
+            });
             if (res.sent === 0 && res.total === 0) showToast(res.message || 'No new candidates added');
             else showToast(`Invited ${res.sent}/${res.total} candidate${res.total !== 1 ? 's' : ''}`);
             loadInterviewInvites(selectedInterview.id);
             loadInterviews();
-        } catch { showToast('Failed to add candidates'); }
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to add candidates'); }
     };
 
     const handleReviewInterviewInvite = async (interviewId: string, inviteId: string, status: 'COMPLETED' | 'NO_SHOW' | 'CANCELLED') => {
         try {
-            const updated = await fetch(`${API_URL}/admin/interviews/${interviewId}/invites/${inviteId}`, {
-                method: 'PATCH', headers: { 'Content-Type': 'application/json', ...authHeader() },
+            const updated = await apiFetch(`/admin/interviews/${interviewId}/invites/${inviteId}`, {
+                method: 'PATCH',
                 body: JSON.stringify({ status }),
-            }).then((r) => r.json());
+            });
             setInterviewInvites((prev) => prev.map((i) => (i.id === inviteId ? updated : i)));
             showToast('Updated');
-        } catch { showToast('Failed to update'); }
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to update'); }
     };
 
     useEffect(() => { if (tab === 'interviews') loadInterviews(); }, [tab, loadInterviews]);
@@ -1606,14 +1620,20 @@ function InterviewModal({ initial, roles, onClose, onSave }: {
             // If editing and there are new pending slots, add them one by one
             if (initial && pendingSlots.length > 0) {
                 for (const s of pendingSlots) {
-                    await fetch(`${API_URL}/admin/interviews/${initial.id}/slots`, {
+                    const slotRes = await fetch(`${API_URL}/admin/interviews/${initial.id}/slots`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', ...authHeader() },
                         body: JSON.stringify({ startTime: `${s}:00+05:30`, capacity: 1 }),
                     });
+                    if (!slotRes.ok) {
+                        const slotBody = await slotRes.json().catch(() => ({}));
+                        throw new Error(slotBody.message || 'Failed to add a time slot');
+                    }
                 }
-                const refreshed = await fetch(`${API_URL}/admin/interviews/${initial.id}`, { headers: { ...authHeader() } }).then((r2) => r2.json());
-                onSave({ ...body, slots: refreshed.slots, _count: { ...body._count, slots: refreshed.slots.length } });
+                const refreshRes = await fetch(`${API_URL}/admin/interviews/${initial.id}`, { headers: { ...authHeader() } });
+                const refreshed = await refreshRes.json().catch(() => ({}));
+                const slots = refreshRes.ok && Array.isArray(refreshed.slots) ? refreshed.slots : (initial.slots || []);
+                onSave({ ...body, slots, _count: { ...body._count, slots: slots.length } });
             } else {
                 onSave(body);
             }

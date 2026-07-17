@@ -19,6 +19,17 @@ function authHeader() {
     return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+// Authenticated JSON fetch — throws on non-2xx so callers never set state to an error object.
+async function apiFetch(path: string, options: RequestInit = {}) {
+    const res = await fetch(`${API_URL}${path}`, {
+        ...options,
+        headers: { 'Content-Type': 'application/json', ...authHeader(), ...(options.headers || {}) },
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.message || `HTTP ${res.status}`);
+    return body;
+}
+
 type MailMode = 'simple' | 'personalized';
 
 interface Recipient { email: string; name?: string }
@@ -59,8 +70,9 @@ function ImportModal({ onClose, onImport }: { onClose: () => void; onImport: (ro
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetch(`${API_URL}/admin/careers/roles`, { headers: { ...authHeader() } })
-            .then((r) => r.json()).then(setRoles).catch(() => {});
+        apiFetch('/admin/careers/roles')
+            .then((data) => setRoles(Array.isArray(data) ? data : []))
+            .catch(() => setRoles([]));
     }, []);
 
     const load = useCallback(async () => {
@@ -70,9 +82,9 @@ function ImportModal({ onClose, onImport }: { onClose: () => void; onImport: (ro
             if (roleId) params.set('roleId', roleId);
             if (status) params.set('status', status);
             params.set('limit', '100');
-            const data = await fetch(`${API_URL}/admin/careers/applications?${params}`, { headers: { ...authHeader() } }).then((r) => r.json());
-            setApps(data.applications || []);
-        } catch { /* ignore */ }
+            const data = await apiFetch(`/admin/careers/applications?${params}`);
+            setApps(Array.isArray(data.applications) ? data.applications : []);
+        } catch { setApps([]); }
         finally { setLoading(false); }
     }, [roleId, status]);
 
@@ -182,9 +194,9 @@ export default function MailCenter() {
     const loadLogs = useCallback(async () => {
         setLogsLoading(true);
         try {
-            const data = await fetch(`${API_URL}/admin/mail/log?limit=100`, { headers: { ...authHeader() } }).then((r) => r.json());
-            setLogs(data);
-        } catch { /* ignore */ }
+            const data = await apiFetch('/admin/mail/log?limit=100');
+            setLogs(Array.isArray(data) ? data : []);
+        } catch { setLogs([]); }
         finally { setLogsLoading(false); }
     }, []);
 
@@ -196,15 +208,15 @@ export default function MailCenter() {
         setSimpleSending(true);
         setSimpleResult(null);
         try {
-            const res = await fetch(`${API_URL}/admin/mail/send`, {
+            const res = await apiFetch('/admin/mail/send', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', ...authHeader() },
                 body: JSON.stringify({ mode: 'simple', recipients: emails.map((email) => ({ email })), subject: simpleSubject, body: simpleBody }),
-            }).then((r) => r.json());
-            setSimpleResult(res);
-            showToast(`Sent to ${res.sent}/${res.total} recipient${res.total !== 1 ? 's' : ''}`);
-        } catch {
-            showToast('Failed to send');
+            });
+            const result = { sent: res.sent ?? 0, total: res.total ?? emails.length, errors: Array.isArray(res.errors) ? res.errors : [] };
+            setSimpleResult(result);
+            showToast(`Sent to ${result.sent}/${result.total} recipient${result.total !== 1 ? 's' : ''}`);
+        } catch (e) {
+            showToast(e instanceof Error ? e.message : 'Failed to send');
         } finally {
             setSimpleSending(false);
         }
@@ -247,15 +259,15 @@ export default function MailCenter() {
         setPSending(true);
         setPResult(null);
         try {
-            const res = await fetch(`${API_URL}/admin/mail/send`, {
+            const res = await apiFetch('/admin/mail/send', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', ...authHeader() },
                 body: JSON.stringify({ mode: 'personalized', recipients: valid, subject: pSubject, body: pBody }),
-            }).then((r) => r.json());
-            setPResult(res);
-            showToast(`Sent to ${res.sent}/${res.total} recipient${res.total !== 1 ? 's' : ''}`);
-        } catch {
-            showToast('Failed to send');
+            });
+            const result = { sent: res.sent ?? 0, total: res.total ?? valid.length, errors: Array.isArray(res.errors) ? res.errors : [] };
+            setPResult(result);
+            showToast(`Sent to ${result.sent}/${result.total} recipient${result.total !== 1 ? 's' : ''}`);
+        } catch (e) {
+            showToast(e instanceof Error ? e.message : 'Failed to send');
         } finally {
             setPSending(false);
         }
