@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowLeft, Briefcase, CalendarClock, CheckCircle2, ChevronDown, Clock, Download, ExternalLink,
+    ArrowLeft, Bell, Briefcase, CalendarClock, CheckCircle2, ChevronDown, Clock, Download, ExternalLink,
     FileText, Loader2, Mail, MapPin, Pencil, Plus, Search, Send, Trash2, UserCheck, UserX, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -572,6 +572,7 @@ export default function CareersAdmin() {
     const [interviewInvites, setInterviewInvites] = useState<InterviewInvite[]>([]);
     const [interviewInviteLoading, setInterviewInviteLoading] = useState(false);
     const [addCandidatesOpen, setAddCandidatesOpen] = useState(false);
+    const [sendingReminder, setSendingReminder] = useState(false);
 
     const showToast = (msg: string) => { setToast(msg); };
 
@@ -792,6 +793,16 @@ export default function CareersAdmin() {
         } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to add candidates'); }
     };
 
+    const handleRemindInterview = async (interviewId: string) => {
+        setSendingReminder(true);
+        try {
+            const res = await apiFetch(`/admin/interviews/${interviewId}/remind`, { method: 'POST' });
+            if (res.sent === 0 && res.total === 0) showToast(res.message || 'No one left to remind');
+            else showToast(`Reminder sent to ${res.sent}/${res.total} candidate${res.total !== 1 ? 's' : ''}`);
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to send reminders'); }
+        finally { setSendingReminder(false); }
+    };
+
     const handleReviewInterviewInvite = async (interviewId: string, inviteId: string, status: 'COMPLETED' | 'NO_SHOW' | 'CANCELLED') => {
         try {
             const updated = await apiFetch(`/admin/interviews/${interviewId}/invites/${inviteId}`, {
@@ -807,6 +818,7 @@ export default function CareersAdmin() {
 
     const totalOpen = roles.filter((r) => r.isOpen).length;
     const totalApps = roles.reduce((s, r) => s + (r._count?.applications ?? 0), 0);
+    const pendingInviteCount = interviewInvites.filter((i) => i.status === 'INVITED').length;
 
     return (
         <div className="min-h-screen bg-background">
@@ -1319,6 +1331,16 @@ export default function CareersAdmin() {
                                         <Button variant="outline" size="sm" onClick={() => setInterviewModal({ open: true, interview: selectedInterview })}>
                                             <Pencil className="h-3.5 w-3.5" /> Edit
                                         </Button>
+                                        {pendingInviteCount > 0 && (
+                                            <Button
+                                                variant="outline" size="sm" disabled={sendingReminder}
+                                                onClick={() => handleRemindInterview(selectedInterview.id)}
+                                                title="Email everyone who hasn't picked a time yet"
+                                            >
+                                                {sendingReminder ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bell className="h-3.5 w-3.5" />}
+                                                Remind ({pendingInviteCount})
+                                            </Button>
+                                        )}
                                         <Button size="sm" onClick={() => setAddCandidatesOpen(true)}>
                                             <Plus className="h-3.5 w-3.5" /> Add Candidates
                                         </Button>
