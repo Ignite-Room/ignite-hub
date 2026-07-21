@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowLeft, Briefcase, CheckCircle2, ChevronDown, Download, ExternalLink,
-    FileText, Loader2, Mail, MapPin, Pencil, Plus, Search, Trash2, UserCheck, UserX, X,
+    ArrowLeft, Bell, Briefcase, CalendarClock, CheckCircle2, ChevronDown, Clock, Download, ExternalLink,
+    FileText, Loader2, Mail, MapPin, Pencil, Plus, Search, Send, Trash2, UserCheck, UserX, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +30,18 @@ async function adminFetch(path: string, options: RequestInit = {}) {
         throw new Error(body.message || `HTTP ${res.status}`);
     }
     return res.json();
+}
+
+// Generic authenticated JSON fetch for /api/admin/* endpoints outside careers/.
+// Throws on non-2xx so callers never set state to an error object.
+async function apiFetch(path: string, options: RequestInit = {}) {
+    const res = await fetch(`${API_URL}${path}`, {
+        ...options,
+        headers: { 'Content-Type': 'application/json', ...authHeader(), ...(options.headers || {}) },
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.message || `HTTP ${res.status}`);
+    return body;
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -67,6 +79,26 @@ interface ChallengeInvite {
     sentAt: string; submittedAt: string | null;
     repoUrl: string | null; liveUrl: string | null; notes: string | null;
     adminNote: string | null; reviewedAt: string | null;
+    application: { id: string; name: string; email: string; phone: string; college: string; yearOfStudy: string | null };
+}
+
+type InterviewInviteStatus = 'INVITED' | 'SCHEDULED' | 'COMPLETED' | 'NO_SHOW' | 'CANCELLED';
+
+interface InterviewSlot { id: string; startTime: string; capacity: number }
+
+interface Interview {
+    id: string; roleId: string | null; title: string; description: string | null;
+    location: string | null; durationMinutes: number; createdAt: string;
+    role: { title: string; slug: string } | null;
+    slots?: InterviewSlot[];
+    _count: { invites: number; slots: number };
+    inviteStats: { INVITED: number; SCHEDULED: number; COMPLETED: number; NO_SHOW: number; CANCELLED: number };
+}
+
+interface InterviewInvite {
+    id: string; token: string; status: InterviewInviteStatus;
+    sentAt: string; scheduledAt: string | null; cancelledAt: string | null;
+    slot: InterviewSlot | null;
     application: { id: string; name: string; email: string; phone: string; college: string; yearOfStudy: string | null };
 }
 
@@ -513,7 +545,7 @@ function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-type Tab = 'roles' | 'applications' | 'challenges';
+type Tab = 'roles' | 'applications' | 'challenges' | 'interviews';
 
 export default function CareersAdmin() {
     const { user, logout } = useAuth();
@@ -534,6 +566,13 @@ export default function CareersAdmin() {
     const [challengeInvites, setChallengeInvites] = useState<ChallengeInvite[]>([]);
     const [inviteLoading, setInviteLoading] = useState(false);
     const [sendingChallenge, setSendingChallenge] = useState(false);
+    const [interviews, setInterviews] = useState<Interview[]>([]);
+    const [interviewModal, setInterviewModal] = useState<{ open: boolean; interview?: Interview }>({ open: false });
+    const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
+    const [interviewInvites, setInterviewInvites] = useState<InterviewInvite[]>([]);
+    const [interviewInviteLoading, setInterviewInviteLoading] = useState(false);
+    const [addCandidatesOpen, setAddCandidatesOpen] = useState(false);
+    const [sendingReminder, setSendingReminder] = useState(false);
 
     const showToast = (msg: string) => { setToast(msg); };
 
@@ -648,8 +687,8 @@ export default function CareersAdmin() {
     const loadChallenges = useCallback(async () => {
         setLoading(true);
         try {
-            const data = await fetch(`${API_URL}/admin/challenges`, { headers: { 'Content-Type': 'application/json', ...authHeader() } }).then((r) => r.json());
-            setChallenges(data);
+            const data = await apiFetch('/admin/challenges');
+            setChallenges(Array.isArray(data) ? data : []);
         } catch { showToast('Failed to load challenges'); }
         finally { setLoading(false); }
     }, []);
@@ -657,9 +696,9 @@ export default function CareersAdmin() {
     const loadChallengeInvites = async (challengeId: string) => {
         setInviteLoading(true);
         try {
-            const data = await fetch(`${API_URL}/admin/challenges/${challengeId}/invites`, { headers: { ...authHeader() } }).then((r) => r.json());
-            setChallengeInvites(data);
-        } catch { showToast('Failed to load submissions'); }
+            const data = await apiFetch(`/admin/challenges/${challengeId}/invites`);
+            setChallengeInvites(Array.isArray(data) ? data : []);
+        } catch { showToast('Failed to load submissions'); setChallengeInvites([]); }
         finally { setInviteLoading(false); }
     };
 
@@ -671,27 +710,24 @@ export default function CareersAdmin() {
     const handleSendChallenge = async (challengeId: string) => {
         setSendingChallenge(true);
         try {
-            const res = await fetch(`${API_URL}/admin/challenges/${challengeId}/send`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeader() },
-            }).then((r) => r.json());
+            const res = await apiFetch(`/admin/challenges/${challengeId}/send`, { method: 'POST' });
             if (res.sent === 0) { showToast(res.message || 'No new candidates to send to'); }
             else { showToast(`Challenge sent to ${res.sent} candidate${res.sent !== 1 ? 's' : ''}`); }
             loadChallenges();
             if (selectedChallenge?.id === challengeId) loadChallengeInvites(challengeId);
-        } catch { showToast('Failed to send challenge'); }
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to send challenge'); }
         finally { setSendingChallenge(false); }
     };
 
     const handleReviewInvite = async (challengeId: string, inviteId: string, status: 'PASSED' | 'FAILED', adminNote: string) => {
         try {
-            const updated = await fetch(`${API_URL}/admin/challenges/${challengeId}/invites/${inviteId}`, {
+            const updated = await apiFetch(`/admin/challenges/${challengeId}/invites/${inviteId}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', ...authHeader() },
                 body: JSON.stringify({ status, adminNote }),
-            }).then((r) => r.json());
+            });
             setChallengeInvites((prev) => prev.map((i) => (i.id === inviteId ? updated : i)));
             showToast(status === 'PASSED' ? 'Marked as passed' : 'Marked as failed');
-        } catch { showToast('Failed to update'); }
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to update'); }
     };
 
     const handleDeleteChallenge = async (id: string) => {
@@ -705,8 +741,84 @@ export default function CareersAdmin() {
 
     useEffect(() => { if (tab === 'challenges') loadChallenges(); }, [tab, loadChallenges]);
 
+    const loadInterviews = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await apiFetch('/admin/interviews');
+            setInterviews(Array.isArray(data) ? data : []);
+        } catch { showToast('Failed to load interviews'); }
+        finally { setLoading(false); }
+    }, []);
+
+    const loadInterviewInvites = async (interviewId: string) => {
+        setInterviewInviteLoading(true);
+        try {
+            const data = await apiFetch(`/admin/interviews/${interviewId}/invites`);
+            setInterviewInvites(Array.isArray(data) ? data : []);
+        } catch { showToast('Failed to load candidates'); setInterviewInvites([]); }
+        finally { setInterviewInviteLoading(false); }
+    };
+
+    const handleSelectInterview = async (iv: Interview) => {
+        try {
+            const full = await apiFetch(`/admin/interviews/${iv.id}`);
+            setSelectedInterview({ ...iv, slots: Array.isArray(full.slots) ? full.slots : [] });
+        } catch {
+            showToast('Failed to load interview details');
+            setSelectedInterview({ ...iv, slots: [] });
+        }
+        loadInterviewInvites(iv.id);
+    };
+
+    const handleDeleteInterview = async (id: string) => {
+        try {
+            await apiFetch(`/admin/interviews/${id}`, { method: 'DELETE' });
+            setInterviews((prev) => prev.filter((i) => i.id !== id));
+            if (selectedInterview?.id === id) setSelectedInterview(null);
+            showToast('Interview deleted');
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to delete interview'); }
+    };
+
+    const handleAddCandidates = async (applicationIds: string[]) => {
+        if (!selectedInterview) return;
+        try {
+            const res = await apiFetch(`/admin/interviews/${selectedInterview.id}/invites`, {
+                method: 'POST',
+                body: JSON.stringify({ applicationIds }),
+            });
+            if (res.sent === 0 && res.total === 0) showToast(res.message || 'No new candidates added');
+            else showToast(`Invited ${res.sent}/${res.total} candidate${res.total !== 1 ? 's' : ''}`);
+            loadInterviewInvites(selectedInterview.id);
+            loadInterviews();
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to add candidates'); }
+    };
+
+    const handleRemindInterview = async (interviewId: string) => {
+        setSendingReminder(true);
+        try {
+            const res = await apiFetch(`/admin/interviews/${interviewId}/remind`, { method: 'POST' });
+            if (res.sent === 0 && res.total === 0) showToast(res.message || 'No one left to remind');
+            else showToast(`Reminder sent to ${res.sent}/${res.total} candidate${res.total !== 1 ? 's' : ''}`);
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to send reminders'); }
+        finally { setSendingReminder(false); }
+    };
+
+    const handleReviewInterviewInvite = async (interviewId: string, inviteId: string, status: 'COMPLETED' | 'NO_SHOW' | 'CANCELLED') => {
+        try {
+            const updated = await apiFetch(`/admin/interviews/${interviewId}/invites/${inviteId}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ status }),
+            });
+            setInterviewInvites((prev) => prev.map((i) => (i.id === inviteId ? updated : i)));
+            showToast('Updated');
+        } catch (e) { showToast(e instanceof Error ? e.message : 'Failed to update'); }
+    };
+
+    useEffect(() => { if (tab === 'interviews') loadInterviews(); }, [tab, loadInterviews]);
+
     const totalOpen = roles.filter((r) => r.isOpen).length;
     const totalApps = roles.reduce((s, r) => s + (r._count?.applications ?? 0), 0);
+    const pendingInviteCount = interviewInvites.filter((i) => i.status === 'INVITED').length;
 
     return (
         <div className="min-h-screen bg-background">
@@ -772,6 +884,11 @@ export default function CareersAdmin() {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
+                        <Link to="/ambassador/admin/mail">
+                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                                <Send className="h-4 w-4" /> <span className="hidden sm:inline">Mail Center</span>
+                            </Button>
+                        </Link>
                         <span className="hidden text-sm text-muted-foreground sm:block">{user?.name}</span>
                         <Button variant="ghost" size="sm" onClick={logout} className="text-muted-foreground">
                             Sign out
@@ -797,7 +914,7 @@ export default function CareersAdmin() {
 
                 {/* Tab bar */}
                 <div className="mb-6 flex gap-1 rounded-xl border border-border/40 bg-secondary/30 p-1">
-                    {(['roles', 'applications', 'challenges'] as Tab[]).map((t) => (
+                    {(['roles', 'applications', 'challenges', 'interviews'] as Tab[]).map((t) => (
                         <button
                             key={t}
                             onClick={() => setTab(t)}
@@ -805,13 +922,16 @@ export default function CareersAdmin() {
                                 tab === t ? 'bg-background text-foreground shadow-sm border border-border/50' : 'text-muted-foreground hover:text-foreground'
                             }`}
                         >
-                            {t === 'roles' ? <Briefcase className="h-4 w-4" /> : t === 'applications' ? <FileText className="h-4 w-4" /> : <Mail className="h-4 w-4" />}
-                            {t === 'roles' ? 'Roles' : t === 'applications' ? 'Applications' : 'Challenges'}
+                            {t === 'roles' ? <Briefcase className="h-4 w-4" /> : t === 'applications' ? <FileText className="h-4 w-4" /> : t === 'challenges' ? <Mail className="h-4 w-4" /> : <CalendarClock className="h-4 w-4" />}
+                            {t === 'roles' ? 'Roles' : t === 'applications' ? 'Applications' : t === 'challenges' ? 'Challenges' : 'Interviews'}
                             {t === 'applications' && appTotal > 0 && (
                                 <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{appTotal}</span>
                             )}
                             {t === 'challenges' && challenges.length > 0 && (
                                 <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{challenges.length}</span>
+                            )}
+                            {t === 'interviews' && interviews.length > 0 && (
+                                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{interviews.length}</span>
                             )}
                         </button>
                     ))}
@@ -1145,6 +1265,156 @@ export default function CareersAdmin() {
                         />
                     )}
                 </AnimatePresence>
+
+                {/* ── Interviews tab ───────────────────────────────────────── */}
+                {tab === 'interviews' && (
+                    <div className="flex gap-6">
+                        <div className={`${selectedInterview ? 'hidden lg:block lg:w-80 lg:flex-shrink-0' : 'w-full'}`}>
+                            <div className="mb-5 flex items-center justify-between">
+                                <h2 className="font-heading text-base font-semibold text-foreground">Interviews</h2>
+                                <Button size="sm" onClick={() => setInterviewModal({ open: true })}>
+                                    <Plus className="h-4 w-4" /> New Interview
+                                </Button>
+                            </div>
+                            {loading ? (
+                                <div className="flex justify-center py-20"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
+                            ) : interviews.length === 0 ? (
+                                <div className="flex flex-col items-center gap-3 py-20 text-center">
+                                    <CalendarClock className="h-10 w-10 text-muted-foreground/30" />
+                                    <p className="text-sm text-muted-foreground">No interviews yet.</p>
+                                    <Button size="sm" variant="outline" onClick={() => setInterviewModal({ open: true })}>
+                                        <Plus className="h-4 w-4" /> Create Interview
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {interviews.map((iv) => (
+                                        <div
+                                            key={iv.id}
+                                            onClick={() => handleSelectInterview(iv)}
+                                            className={`cursor-pointer rounded-xl border p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 ${
+                                                selectedInterview?.id === iv.id ? 'border-primary/40 bg-primary/5' : 'border-border/50 bg-secondary/20'
+                                            }`}
+                                        >
+                                            <div className="mb-2 flex items-start justify-between gap-2">
+                                                <p className="font-medium text-foreground text-sm">{iv.title}</p>
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0 text-muted-foreground hover:text-destructive"
+                                                    onClick={(e) => { e.stopPropagation(); handleDeleteInterview(iv.id); }}>
+                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                </Button>
+                                            </div>
+                                            {iv.role && <p className="mb-3 text-xs text-muted-foreground">{iv.role.title}</p>}
+                                            <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                                                <span>{iv._count.slots} slot{iv._count.slots !== 1 ? 's' : ''}</span>
+                                                <span className="text-amber-400">{iv.inviteStats.SCHEDULED} scheduled</span>
+                                                <span className="text-emerald-400">{iv.inviteStats.COMPLETED} done</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {selectedInterview && (
+                            <div className="flex-1 min-w-0">
+                                <div className="mb-5 flex items-center justify-between gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <button onClick={() => setSelectedInterview(null)} className="lg:hidden text-muted-foreground hover:text-foreground">
+                                            <ArrowLeft className="h-4 w-4" />
+                                        </button>
+                                        <div>
+                                            <h2 className="font-heading text-base font-semibold text-foreground">{selectedInterview.title}</h2>
+                                            {selectedInterview.role && <p className="text-xs text-muted-foreground">{selectedInterview.role.title}</p>}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="sm" onClick={() => setInterviewModal({ open: true, interview: selectedInterview })}>
+                                            <Pencil className="h-3.5 w-3.5" /> Edit
+                                        </Button>
+                                        {pendingInviteCount > 0 && (
+                                            <Button
+                                                variant="outline" size="sm" disabled={sendingReminder}
+                                                onClick={() => handleRemindInterview(selectedInterview.id)}
+                                                title="Email everyone who hasn't picked a time yet"
+                                            >
+                                                {sendingReminder ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bell className="h-3.5 w-3.5" />}
+                                                Remind ({pendingInviteCount})
+                                            </Button>
+                                        )}
+                                        <Button size="sm" onClick={() => setAddCandidatesOpen(true)}>
+                                            <Plus className="h-3.5 w-3.5" /> Add Candidates
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                {/* Slots overview */}
+                                {selectedInterview.slots && selectedInterview.slots.length > 0 && (
+                                    <div className="mb-5 flex flex-wrap gap-2">
+                                        {selectedInterview.slots.map((s) => (
+                                            <span key={s.id} className="inline-flex items-center gap-1.5 rounded-lg border border-border/40 bg-secondary/30 px-3 py-1.5 text-xs text-muted-foreground">
+                                                <Clock className="h-3 w-3" />
+                                                {new Date(s.startTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {interviewInviteLoading ? (
+                                    <div className="flex justify-center py-20"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
+                                ) : interviewInvites.length === 0 ? (
+                                    <div className="py-16 text-center text-sm text-muted-foreground">
+                                        No candidates invited yet. Click "Add Candidates" to invite candidates to book a time.
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {interviewInvites.map((invite) => (
+                                            <InterviewInviteCard
+                                                key={invite.id}
+                                                invite={invite}
+                                                interviewId={selectedInterview.id}
+                                                onReview={handleReviewInterviewInvite}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Interview modal */}
+                <AnimatePresence>
+                    {interviewModal.open && (
+                        <InterviewModal
+                            initial={interviewModal.interview}
+                            roles={roles}
+                            onClose={() => setInterviewModal({ open: false })}
+                            onSave={(saved) => {
+                                if (interviewModal.interview) {
+                                    setInterviews((prev) => prev.map((i) => (i.id === saved.id ? { ...saved, inviteStats: i.inviteStats } : i)));
+                                    if (selectedInterview?.id === saved.id) setSelectedInterview({ ...saved, inviteStats: selectedInterview.inviteStats });
+                                    showToast('Interview updated');
+                                } else {
+                                    setInterviews((prev) => [saved, ...prev]);
+                                    showToast('Interview created');
+                                }
+                                setInterviewModal({ open: false });
+                            }}
+                        />
+                    )}
+                </AnimatePresence>
+
+                {/* Add candidates modal */}
+                <AnimatePresence>
+                    {addCandidatesOpen && selectedInterview && (
+                        <AddCandidatesModal
+                            roles={roles}
+                            existingApplicationIds={interviewInvites.map((i) => i.application.id)}
+                            onClose={() => setAddCandidatesOpen(false)}
+                            onAdd={(ids) => { handleAddCandidates(ids); setAddCandidatesOpen(false); }}
+                        />
+                    )}
+                </AnimatePresence>
             </main>
         </div>
     );
@@ -1320,6 +1590,303 @@ function ChallengeInviteCard({ invite, challengeId, onReview }: {
                                     )}
                                 </div>
                             )}
+                        </>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+// ─── Interview Modal ────────────────────────────────────────────────────────────
+
+function InterviewModal({ initial, roles, onClose, onSave }: {
+    initial?: Interview; roles: Role[];
+    onClose: () => void; onSave: (iv: Interview) => void;
+}) {
+    const [form, setForm] = useState({
+        title: initial?.title || '',
+        description: initial?.description || '',
+        location: initial?.location || '',
+        durationMinutes: initial?.durationMinutes ?? 30,
+        roleId: initial?.roleId || '',
+    });
+    const [pendingSlots, setPendingSlots] = useState<string[]>([]);
+    const [newSlot, setNewSlot] = useState('');
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+
+    const addSlot = () => {
+        if (!newSlot) return;
+        setPendingSlots((prev) => [...prev, newSlot].sort());
+        setNewSlot('');
+    };
+    const removeSlot = (s: string) => setPendingSlots((prev) => prev.filter((x) => x !== s));
+
+    const handleSave = async () => {
+        setSaving(true); setError('');
+        try {
+            const payload = {
+                ...form,
+                slots: initial ? undefined : pendingSlots.map((s) => `${s}:00+05:30`),
+            };
+            const url = initial ? `${API_URL}/admin/interviews/${initial.id}` : `${API_URL}/admin/interviews`;
+            const r = await fetch(url, {
+                method: initial ? 'PATCH' : 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeader() },
+                body: JSON.stringify(payload),
+            });
+            const body = await r.json();
+            if (!r.ok) throw new Error(body.message);
+
+            // If editing and there are new pending slots, add them one by one
+            if (initial && pendingSlots.length > 0) {
+                for (const s of pendingSlots) {
+                    const slotRes = await fetch(`${API_URL}/admin/interviews/${initial.id}/slots`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', ...authHeader() },
+                        body: JSON.stringify({ startTime: `${s}:00+05:30`, capacity: 1 }),
+                    });
+                    if (!slotRes.ok) {
+                        const slotBody = await slotRes.json().catch(() => ({}));
+                        throw new Error(slotBody.message || 'Failed to add a time slot');
+                    }
+                }
+                const refreshRes = await fetch(`${API_URL}/admin/interviews/${initial.id}`, { headers: { ...authHeader() } });
+                const refreshed = await refreshRes.json().catch(() => ({}));
+                const slots = refreshRes.ok && Array.isArray(refreshed.slots) ? refreshed.slots : (initial.slots || []);
+                onSave({ ...body, slots, _count: { ...body._count, slots: slots.length } });
+            } else {
+                onSave(body);
+            }
+        } catch (e) { setError(e instanceof Error ? e.message : 'Save failed'); }
+        finally { setSaving(false); }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+                className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl overflow-y-auto" style={{ maxHeight: '88vh' }} onClick={(e) => e.stopPropagation()}>
+                <div className="mb-5 flex items-center justify-between">
+                    <h2 className="font-heading text-lg font-semibold text-foreground">{initial ? 'Edit Interview' : 'New Interview'}</h2>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
+                </div>
+                <div className="space-y-4">
+                    <div>
+                        <Label className="mb-1.5 block text-sm text-muted-foreground">Title</Label>
+                        <Input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} className="bg-secondary/50 border-border/50 h-10" placeholder="e.g. Technical Interview — Round 1" />
+                    </div>
+                    <div>
+                        <Label className="mb-1.5 block text-sm text-muted-foreground">Description for candidate <span className="text-muted-foreground/40">(optional)</span></Label>
+                        <Textarea value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+                            rows={3} className="bg-secondary/50 border-border/50 resize-none"
+                            placeholder="What to expect, what to bring, meeting link, etc." />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label className="mb-1.5 block text-sm text-muted-foreground">Location</Label>
+                            <Input value={form.location} onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))} className="bg-secondary/50 border-border/50 h-10" placeholder="Google Meet link / address" />
+                        </div>
+                        <div>
+                            <Label className="mb-1.5 block text-sm text-muted-foreground">Duration (minutes)</Label>
+                            <Input type="number" min={5} max={480} value={form.durationMinutes}
+                                onChange={(e) => setForm((p) => ({ ...p, durationMinutes: parseInt(e.target.value) || 30 }))}
+                                className="bg-secondary/50 border-border/50 h-10" />
+                        </div>
+                    </div>
+                    <div>
+                        <Label className="mb-1.5 block text-sm text-muted-foreground">Linked Role <span className="text-muted-foreground/40">(optional)</span></Label>
+                        <Select value={form.roleId || 'none'} onValueChange={(v) => setForm((p) => ({ ...p, roleId: v === 'none' ? '' : v }))}>
+                            <SelectTrigger className="h-10 bg-secondary/50 border-border/50"><SelectValue placeholder="None" /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">None</SelectItem>
+                                {roles.map((r) => <SelectItem key={r.id} value={r.id}>{r.title}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="h-px bg-border/40" />
+
+                    <div>
+                        <Label className="mb-1.5 block text-sm text-muted-foreground">
+                            {initial ? 'Add more time slots (IST)' : 'Time slots (IST)'}
+                        </Label>
+                        <div className="flex gap-2 mb-3">
+                            <Input type="datetime-local" value={newSlot} onChange={(e) => setNewSlot(e.target.value)} className="bg-secondary/50 border-border/50 h-9 flex-1" />
+                            <Button type="button" variant="outline" size="sm" onClick={addSlot}>Add</Button>
+                        </div>
+                        {initial?.slots && initial.slots.length > 0 && (
+                            <div className="mb-2 flex flex-wrap gap-1.5">
+                                {initial.slots.map((s) => (
+                                    <span key={s.id} className="rounded-md bg-secondary/40 border border-border/30 px-2 py-1 text-xs text-muted-foreground">
+                                        {new Date(s.startTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                        {pendingSlots.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5">
+                                {pendingSlots.map((s) => (
+                                    <span key={s} className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-2 py-1 text-xs text-primary">
+                                        {new Date(`${s}:00+05:30`).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                        <button onClick={() => removeSlot(s)}><X className="h-3 w-3" /></button>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {error && <p className="text-xs text-destructive">{error}</p>}
+                    <Button onClick={handleSave} disabled={saving || !form.title} className="w-full">
+                        {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : initial ? 'Save Changes' : 'Create Interview'}
+                    </Button>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+// ─── Add Candidates Modal ───────────────────────────────────────────────────────
+
+function AddCandidatesModal({ roles, existingApplicationIds, onClose, onAdd }: {
+    roles: Role[]; existingApplicationIds: string[];
+    onClose: () => void; onAdd: (ids: string[]) => void;
+}) {
+    const [roleId, setRoleId] = useState('');
+    const [status, setStatus] = useState('SHORTLISTED');
+    const [apps, setApps] = useState<Application[]>([]);
+    const [selected, setSelected] = useState<Set<string>>(new Set());
+    const [loading, setLoading] = useState(false);
+
+    const load = useCallback(async () => {
+        setLoading(true);
+        try {
+            const params = new URLSearchParams();
+            if (roleId) params.set('roleId', roleId);
+            if (status) params.set('status', status);
+            params.set('limit', '100');
+            const data = await adminFetch(`applications?${params}`);
+            setApps(data.applications || []);
+        } catch { /* ignore */ }
+        finally { setLoading(false); }
+    }, [roleId, status]);
+
+    useEffect(() => { load(); }, [load]);
+
+    const existing = new Set(existingApplicationIds);
+    const toggle = (id: string) => setSelected((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id); else next.add(id);
+        return next;
+    });
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
+                className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl flex flex-col" style={{ maxHeight: '85vh' }} onClick={(e) => e.stopPropagation()}>
+                <div className="mb-4 flex items-center justify-between">
+                    <h2 className="font-heading text-lg font-semibold text-foreground">Add Candidates</h2>
+                    <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
+                </div>
+                <div className="mb-4 grid grid-cols-2 gap-3">
+                    <Select value={roleId || 'all'} onValueChange={(v) => setRoleId(v === 'all' ? '' : v)}>
+                        <SelectTrigger className="h-9 bg-secondary/50 border-border/50"><SelectValue placeholder="All roles" /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All roles</SelectItem>
+                            {roles.map((r) => <SelectItem key={r.id} value={r.id}>{r.title}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                    <Select value={status || 'all'} onValueChange={(v) => setStatus(v === 'all' ? '' : v)}>
+                        <SelectTrigger className="h-9 bg-secondary/50 border-border/50"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Any status</SelectItem>
+                            {Object.entries(STATUS_META).map(([k, { label }]) => (
+                                <SelectItem key={k} value={k}>{label}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="flex-1 overflow-y-auto rounded-lg border border-border/40">
+                    {loading ? (
+                        <div className="flex justify-center py-10"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
+                    ) : apps.length === 0 ? (
+                        <p className="py-10 text-center text-sm text-muted-foreground">No matching applicants.</p>
+                    ) : (
+                        <div className="divide-y divide-border/30">
+                            {apps.map((a) => (
+                                <label key={a.id} className={`flex items-center gap-3 px-4 py-2.5 ${existing.has(a.id) ? 'opacity-40' : 'cursor-pointer hover:bg-secondary/20'}`}>
+                                    <input type="checkbox" disabled={existing.has(a.id)} checked={selected.has(a.id)} onChange={() => toggle(a.id)} className="h-4 w-4 accent-primary" />
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-foreground">{a.name}</p>
+                                        <p className="truncate text-xs text-muted-foreground">{a.email} &bull; {a.role.title}{existing.has(a.id) ? ' · already invited' : ''}</p>
+                                    </div>
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div className="mt-4 flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground">{selected.size} selected</p>
+                    <Button size="sm" disabled={selected.size === 0} onClick={() => onAdd(Array.from(selected))}>
+                        <Send className="h-3.5 w-3.5" /> Invite {selected.size || ''}
+                    </Button>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+// ─── Interview Invite Card ──────────────────────────────────────────────────────
+
+const INTERVIEW_STATUS: Record<InterviewInviteStatus, { label: string; color: string }> = {
+    INVITED:   { label: 'Invited',   color: 'bg-secondary text-muted-foreground' },
+    SCHEDULED: { label: 'Scheduled', color: 'bg-amber-500/10 text-amber-400' },
+    COMPLETED: { label: 'Completed', color: 'bg-emerald-500/10 text-emerald-400' },
+    NO_SHOW:   { label: 'No-show',   color: 'bg-red-500/10 text-red-400' },
+    CANCELLED: { label: 'Cancelled', color: 'bg-secondary text-muted-foreground/60' },
+};
+
+function InterviewInviteCard({ invite, interviewId, onReview }: {
+    invite: InterviewInvite; interviewId: string;
+    onReview: (interviewId: string, inviteId: string, status: 'COMPLETED' | 'NO_SHOW' | 'CANCELLED') => void;
+}) {
+    const [reviewing, setReviewing] = useState(false);
+    const meta = INTERVIEW_STATUS[invite.status];
+
+    const review = async (status: 'COMPLETED' | 'NO_SHOW' | 'CANCELLED') => {
+        setReviewing(true);
+        await onReview(interviewId, invite.id, status);
+        setReviewing(false);
+    };
+
+    return (
+        <div className="rounded-xl border border-border/50 bg-secondary/10 p-4">
+            <div className="flex items-center gap-4">
+                <div className="flex-1 min-w-0">
+                    <p className="font-medium text-foreground text-sm">{invite.application.name}</p>
+                    <p className="text-xs text-muted-foreground">{invite.application.email} &bull; {invite.application.college}</p>
+                    {invite.slot && (
+                        <p className="mt-1 text-xs text-primary">
+                            {new Date(invite.slot.startTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })} IST
+                        </p>
+                    )}
+                </div>
+                <span className={`flex-shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium ${meta.color}`}>{meta.label}</span>
+            </div>
+
+            {(invite.status === 'SCHEDULED' || invite.status === 'COMPLETED' || invite.status === 'NO_SHOW') && (
+                <div className="mt-3 flex gap-2">
+                    {invite.status === 'SCHEDULED' && (
+                        <>
+                            <Button size="sm" variant="outline" disabled={reviewing} className="text-xs" onClick={() => review('COMPLETED')}>
+                                {reviewing ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserCheck className="h-3 w-3" />} Mark Completed
+                            </Button>
+                            <Button size="sm" variant="outline" disabled={reviewing} className="text-xs border-red-500/30 text-red-400 hover:bg-red-500/10" onClick={() => review('NO_SHOW')}>
+                                No-show
+                            </Button>
+                            <Button size="sm" variant="ghost" disabled={reviewing} className="text-xs text-muted-foreground" onClick={() => review('CANCELLED')}>
+                                Cancel
+                            </Button>
                         </>
                     )}
                 </div>

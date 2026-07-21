@@ -124,8 +124,8 @@ export default function CareersPage() {
 
     useEffect(() => {
         fetch(`${API_URL}/careers`)
-            .then((r) => r.json())
-            .then(setRoles)
+            .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+            .then((data) => setRoles(Array.isArray(data) ? data : []))
             .catch(console.error)
             .finally(() => setLoading(false));
     }, []);
