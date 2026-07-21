@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 // Existing site pages
 import Index from "./pages/Index";
+import HomePage from "./pages/HomePage";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -33,6 +34,7 @@ import AmbassadorLanding from "./pages/ambassador/AmbassadorLanding";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 import PendingApprovalPage from "./pages/auth/PendingApprovalPage";
+import SignupGeneralPage from "./pages/auth/SignupGeneralPage";
 import AmbassadorDashboard from "./pages/dashboard/AmbassadorDashboard";
 import ReferralLanding from "./pages/referral/ReferralLanding";
 import LeaderboardPage from "./pages/leaderboard/LeaderboardPage";
@@ -40,6 +42,20 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import ExternalVerificationPage from "./pages/admin/ExternalVerificationPage";
+
+// Events platform pages
+import EventsListPage from "./pages/events/EventsListPage";
+import EventDetailPage from "./pages/events/EventDetailPage";
+import EventRegisterPage from "./pages/events/EventRegisterPage";
+import EventTicketPage from "./pages/events/EventTicketPage";
+import OrganizerApplyPage from "./pages/events/OrganizerApplyPage";
+import OrganizerEventsPage from "./pages/events/organizer/OrganizerEventsPage";
+import OrganizerEventForm from "./pages/events/organizer/OrganizerEventForm";
+import OrganizerRegistrationsPage from "./pages/events/organizer/OrganizerRegistrationsPage";
+import OrganizerCheckinPage from "./pages/events/organizer/OrganizerCheckinPage";
+import OrganizerRoundSubmissionsPage from "./pages/events/organizer/OrganizerRoundSubmissionsPage";
+import RoundSubmitPage from "./pages/events/RoundSubmitPage";
+import EventsAdmin from "./pages/admin/EventsAdmin";
 
 const queryClient = new QueryClient();
 
@@ -71,6 +87,33 @@ const App = () => (
             <Route path="/careers/:slug/apply" element={<ApplyPage />} />
             <Route path="/careers/challenge/:token" element={<ChallengePage />} />
 
+            {/* ── Events Platform ───────────────────────────────── */}
+            <Route path="/events" element={<EventsListPage />} />
+            <Route path="/events/organizers/apply" element={<OrganizerApplyPage />} />
+            <Route path="/events/organizer" element={
+              <ProtectedRoute><OrganizerEventsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/new" element={
+              <ProtectedRoute><OrganizerEventForm /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/edit" element={
+              <ProtectedRoute><OrganizerEventForm /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/registrations" element={
+              <ProtectedRoute><OrganizerRegistrationsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/checkin" element={
+              <ProtectedRoute><OrganizerCheckinPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/rounds/:roundId" element={
+              <ProtectedRoute><OrganizerRoundSubmissionsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/ticket/:token/rounds/:roundId" element={<RoundSubmitPage />} />
+            <Route path="/events/ticket/:token" element={<EventTicketPage />} />
+            {/* Slug routes last — anything not matched above falls through here */}
+            <Route path="/events/:slug/register" element={<EventRegisterPage />} />
+            <Route path="/events/:slug" element={<EventDetailPage />} />
+
             {/* ── Ambassador Platform (all under /ambassador) ───── */}
             {/* Landing page */}
             <Route path="/ambassador" element={<AmbassadorLanding />} />
@@ -99,6 +142,9 @@ const App = () => (
             <Route path="/ambassador/admin/careers" element={
               <AdminRoute><CareersAdmin /></AdminRoute>
             } />
+            <Route path="/ambassador/admin/events" element={
+              <AdminRoute><EventsAdmin /></AdminRoute>
+            } />
 
             {/* Public pages */}
             <Route path="/ambassador/leaderboard" element={<LeaderboardPage />} />
@@ -106,9 +152,14 @@ const App = () => (
             {/* Referral links — kept short intentionally for sharing */}
             <Route path="/ref/:code" element={<ReferralLanding />} />
 
+            {/* General account access — works for anyone, not just ambassadors */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupGeneralPage />} />
+            <Route path="/home" element={
+              <ProtectedRoute><HomePage /></ProtectedRoute>
+            } />
+
             {/* Legacy redirects — in case bookmarks exist */}
-            <Route path="/login" element={<Navigate to="/ambassador/login" replace />} />
-            <Route path="/signup" element={<Navigate to="/ambassador/signup" replace />} />
             <Route path="/dashboard" element={<Navigate to="/ambassador/dashboard" replace />} />
             <Route path="/leaderboard" element={<Navigate to="/ambassador/leaderboard" replace />} />
             <Route path="/admin" element={<Navigate to="/ambassador/admin" replace />} />

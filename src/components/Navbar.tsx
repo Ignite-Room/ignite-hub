@@ -3,13 +3,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth, redirectPathForUser } from '@/lib/auth-context';
 import igniteLogo from '@/assets/ignite-logo.png';
 
 const navLinks = [
   { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
-  { name: 'Events', href: '#events' },
-  { name: 'Ambassador', href: '#ambassador' },
+  { name: 'Events', href: '/events' },
+  { name: 'Chapters', href: '#chapters' },
   { name: 'App', href: '#app' },
   { name: 'Careers', href: '/careers' },
 ];
@@ -19,6 +20,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const handleNav = (href: string, e?: React.MouseEvent) => {
     if (e) e.preventDefault();
@@ -81,6 +83,20 @@ export default function Navbar() {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
+            {isAuthenticated && user ? (
+              <>
+                <Button variant="outline" size="sm" onClick={() => navigate(redirectPathForUser(user))}>
+                  Dashboard
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/'); }}>
+                  Log Out
+                </Button>
+              </>
+            ) : (
+              <Button variant="outline" size="sm" onClick={() => navigate('/login')}>
+                Login
+              </Button>
+            )}
             <Button variant="default" size="sm" onClick={() => window.open('https://chat.whatsapp.com/HqqpmbtlbF7DESwKgd5Mc6', '_blank')}>
               Join Community
             </Button>
@@ -119,7 +135,21 @@ export default function Navbar() {
                   {link.name}
                 </a>
               ))}
-              <Button variant="default" className="w-full mt-4" onClick={() => { setIsMobileMenuOpen(false); navigate('/join-us'); }}>
+              {isAuthenticated && user ? (
+                <>
+                  <Button variant="outline" className="w-full mt-4" onClick={() => { setIsMobileMenuOpen(false); navigate(redirectPathForUser(user)); }}>
+                    Dashboard
+                  </Button>
+                  <Button variant="ghost" className="w-full mt-2" onClick={() => { setIsMobileMenuOpen(false); logout(); navigate('/'); }}>
+                    Log Out
+                  </Button>
+                </>
+              ) : (
+                <Button variant="outline" className="w-full mt-4" onClick={() => { setIsMobileMenuOpen(false); navigate('/login'); }}>
+                  Login
+                </Button>
+              )}
+              <Button variant="default" className="w-full mt-2" onClick={() => { setIsMobileMenuOpen(false); navigate('/join-us'); }}>
                 Join Community
               </Button>
             </div>

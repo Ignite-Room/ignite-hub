@@ -5,10 +5,11 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   referralCode: string;
-  role: 'AMBASSADOR' | 'ADMIN' | 'ambassador' | 'admin';
+  role: 'USER' | 'AMBASSADOR' | 'ADMIN' | 'ORGANIZER' | 'ambassador' | 'admin';
   accountStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  authProvider?: 'LOCAL' | 'GOOGLE';
   college?: string;
   enrollmentId?: string;
   createdAt: string;
@@ -26,6 +27,8 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
+  loginWithGoogle: (credential: string) => Promise<void>;
+  registerGeneral: (data: { name: string; email: string; password: string; phone?: string }) => Promise<void>;
   signup: (_data: SignupData) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
@@ -95,8 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * In both cases the STORAGE_TYPE_KEY flag is written to localStorage so that
    * getActiveStorage() can find the right storage reliably on every render.
    */
-  const login = async (email: string, password: string, rememberMe = false) => {
-    const res = await api.login(email, password, rememberMe);
+  const persistSession = (newToken: string, newUser: User, rememberMe: boolean) => {
     const storage = rememberMe ? localStorage : sessionStorage;
 
     // Clear any previous session from both storages
@@ -106,14 +108,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sessionStorage.removeItem(USER_KEY);
 
     // Write the token + user to the chosen storage
-    storage.setItem(TOKEN_KEY, res.token);
-    storage.setItem(USER_KEY, JSON.stringify(res.user));
+    storage.setItem(TOKEN_KEY, newToken);
+    storage.setItem(USER_KEY, JSON.stringify(newUser));
 
     // Record which storage holds this session so getActiveStorage() always works
     localStorage.setItem(STORAGE_TYPE_KEY, rememberMe ? 'local' : 'session');
 
-    setToken(res.token);
-    setUser(res.user);
+    setToken(newToken);
+    setUser(newUser);
+  };
+
+  const login = async (email: string, password: string, rememberMe = false) => {
+    const res = await api.login(email, password, rememberMe);
+    persistSession(res.token, res.user, rememberMe);
+  };
+
+  const loginWithGoogle = async (credential: string) => {
+    const res = await api.loginWithGoogle(credential);
+    persistSession(res.token, res.user, true);
+  };
+
+  const registerGeneral = async (data: { name: string; email: string; password: string; phone?: string }) => {
+    const res = await api.registerGeneral(data);
+    persistSession(res.token, res.user, true);
   };
 
   const signup = async (_data: SignupData) => {
@@ -137,6 +154,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       token,
       loading,
       login,
+      loginWithGoogle,
+      registerGeneral,
       signup,
       logout,
       isAdmin: user?.role === 'ADMIN' || user?.role === 'admin',
@@ -151,4 +170,12 @@ export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
+}
+
+/** Where to send someone right after they log in — depends on their role, not a fixed page. */
+export function redirectPathForUser(user: User): string {
+  const role = user.role.toUpperCase();
+  if (role === 'ADMIN') return '/ambassador/admin';
+  if (role === 'AMBASSADOR') return '/ambassador/dashboard';
+  return '/home'; // USER, ORGANIZER, or anything else general
 }

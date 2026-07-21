@@ -2,12 +2,18 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 const partners = [
-  { name: 'Physics Wallah', logo: 'pw' },
-  { name: 'Google Developer Groups', logo: 'gdg' },
-  { name: 'GeeksforGeeks', logo: 'gfg' },
-  { name: 'GitHub', logo: 'github' },
-  { name: 'MLH', logo: 'mlh' },
-  { name: 'DevFolio', logo: 'dev' },
+  { name: 'Physics Wallah', logo: 'pw.png' },
+  { name: 'Google Developer Groups', logo: 'gdg.png' },
+  { name: 'GeeksforGeeks', logo: 'gfg.png' },
+  { name: 'GitHub', logo: 'github.png' },
+  { name: 'MLH', logo: 'mlh.png' },
+  { name: 'DevFolio', logo: 'dev.png' },
+  { name: 'Daytona', logo: 'daytona.png' },
+  { name: "Master's Union", logo: 'mastersunion.png' },
+  { name: 'v0 by Vercel', logo: 'v0vercel.png' },
+  { name: 'Para AI', logo: 'paraai.jpeg' },
+  { name: 'Mozilla AI', logo: 'mozillaai.jpeg' },
+  { name: 'Trae AI', logo: 'traeai.png' },
 ];
 
 export default function CollaborationsSection() {
@@ -44,17 +50,10 @@ export default function CollaborationsSection() {
               <div className="aspect-square rounded-2xl bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-secondary hover:border-primary/30 transition-all duration-300">
                 <div className="flex flex-col items-center justify-center w-full h-full">
                   <img
-                    src={`/partners/${partner.logo}.svg`}
+                    src={`/partners/${partner.logo}`}
                     alt={partner.name}
                     loading="lazy"
                     decoding="async"
-                    onError={(e) => {
-                      const target = e.currentTarget as HTMLImageElement;
-                      if (!target.dataset.fallbackTried) {
-                        target.dataset.fallbackTried = 'true';
-                        target.src = `/partners/${partner.logo}.png`;
-                      }
-                    }}
                     style={{ imageOrientation: 'from-image' }}
                     className="block mx-auto max-h-[66%] max-w-[66%] object-contain object-center transform-none transition-all"
                   />

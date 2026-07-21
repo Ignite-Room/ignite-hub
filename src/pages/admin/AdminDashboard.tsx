@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
     Users, FileCheck, Trophy, LogOut, CheckCircle2, XCircle,
     Eye, Download, RefreshCw, Plus, Building2, IdCard, ChevronRight, BarChart2, Trash2,
-    Mail, Send, FileText
+    Mail, Send, FileText, CalendarDays
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -237,7 +237,7 @@ export default function AdminDashboard() {
                             {[
                                 { label: 'College', value: manageModal.college || '—', icon: <Building2 className="w-3.5 h-3.5" /> },
                                 { label: 'Enrollment ID', value: manageModal.enrollmentId || '—', icon: <IdCard className="w-3.5 h-3.5" /> },
-                                { label: 'Phone', value: manageModal.phone, icon: null },
+                                { label: 'Phone', value: manageModal.phone || '—', icon: null },
                                 { label: 'Referral Code', value: manageModal.referralCode, isCode: true, icon: null },
                                 { label: 'Joined', value: new Date(manageModal.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }), icon: null },
                             ].map((row, i) => (
@@ -333,6 +333,11 @@ export default function AdminDashboard() {
                         <Link to="/ambassador/admin/careers">
                             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
                                 <FileText className="w-4 h-4" /> <span className="hidden sm:inline">Careers</span>
+                            </Button>
+                        </Link>
+                        <Link to="/ambassador/admin/events">
+                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                                <CalendarDays className="w-4 h-4" /> <span className="hidden sm:inline">Events</span>
                             </Button>
                         </Link>
                         <Link to="/ambassador/admin/external-verification">

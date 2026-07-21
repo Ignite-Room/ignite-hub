@@ -8,7 +8,8 @@ import { Eye, EyeOff, LogIn, AlertCircle, Clock, XCircle, Check } from 'lucide-r
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth, redirectPathForUser } from '@/lib/auth-context';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 import igniteLogo from '@/assets/ignite-logo.png';
 
 const schema = z.object({
@@ -35,29 +36,33 @@ export default function LoginPage() {
         resolver: zodResolver(schema),
     });
 
+    const redirectAfterLogin = () => {
+        // Get user from storage to determine role for redirect
+        const savedUser = localStorage.getItem('ignite_user') || sessionStorage.getItem('ignite_user');
+        const user = savedUser ? JSON.parse(savedUser) : null;
+        const destination = from || (user ? redirectPathForUser(user) : '/home');
+        navigate(destination, { replace: true });
+    };
+
+    const handleAuthError = (msg: string) => {
+        if (msg.includes('PENDING_APPROVAL') || msg.includes('under review')) {
+            setStatusBanner('pending');
+        } else if (msg.includes('REJECTED') || msg.includes('not approved')) {
+            setStatusBanner('rejected');
+        } else {
+            setError(msg);
+        }
+    };
+
     const onSubmit = async (data: FormData) => {
         setError('');
         setStatusBanner(null);
         setLoading(true);
         try {
             await login(data.email, data.password, rememberMe);
-            // Get user from storage to determine role for redirect
-            const savedUser = localStorage.getItem('ignite_user') || sessionStorage.getItem('ignite_user');
-            const user = savedUser ? JSON.parse(savedUser) : null;
-            const isAdmin = user?.role === 'ADMIN' || user?.role === 'admin';
-
-            // Admin → admin console, Ambassador → dashboard
-            const destination = from || (isAdmin ? '/ambassador/admin' : '/ambassador/dashboard');
-            navigate(destination, { replace: true });
+            redirectAfterLogin();
         } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Login failed';
-            if (msg.includes('PENDING_APPROVAL') || msg.includes('under review')) {
-                setStatusBanner('pending');
-            } else if (msg.includes('REJECTED') || msg.includes('not approved')) {
-                setStatusBanner('rejected');
-            } else {
-                setError(msg);
-            }
+            handleAuthError(e instanceof Error ? e.message : 'Login failed');
         } finally {
             setLoading(false);
         }
@@ -87,7 +92,7 @@ export default function LoginPage() {
 
                     <div className="mb-6">
                         <h1 className="text-2xl font-bold text-foreground mb-1">Welcome back</h1>
-                        <p className="text-muted-foreground text-sm">Sign in to your ambassador dashboard</p>
+                        <p className="text-muted-foreground text-sm">Sign in to Ignite Room</p>
                     </div>
 
                     {statusBanner === 'pending' && (
@@ -166,12 +171,18 @@ export default function LoginPage() {
                         </Button>
                     </form>
 
+                    <GoogleSignInButton
+                        onError={handleAuthError}
+                        onSuccess={redirectAfterLogin}
+                    />
+
                     <p className="mt-6 text-center text-sm text-muted-foreground">
                         Don't have an account?{' '}
-                        <Link to="/ambassador/signup" className="text-primary hover:text-primary/80 font-medium transition-colors">Apply now</Link>
+                        <Link to="/signup" className="text-primary hover:text-primary/80 font-medium transition-colors">Sign up</Link>
                     </p>
                     <p className="mt-3 text-center text-xs text-muted-foreground">
-                        <Link to="/ambassador" className="hover:text-foreground transition-colors">← Back to Ambassador Program</Link>
+                        Want to become a Campus Ambassador?{' '}
+                        <Link to="/ambassador/signup" className="hover:text-foreground transition-colors underline">Apply here</Link>
                     </p>
                 </div>
             </motion.div>

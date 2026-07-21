@@ -9,10 +9,12 @@ type Event = {
   description: string
   date: string
   location: string
-  participants: string
+  participants?: string
   status: 'past'
   externalUrl?: string
   externalLabel?: string
+  siteUrl?: string
+  siteLabel?: string
 }
 
 const events: Event[] = [
@@ -54,14 +56,99 @@ const events: Event[] = [
     externalLabel: 'View on Luma',
   },
   {
-    title: 'Hackarena',
-    subtitle: '36-Hour National Hackathon',
+    title: 'HackArena 2.0 — Delhi Zonal',
+    subtitle: 'Zonal Round · Grand Finale Host City',
     description:
-      'A 36-hour national-level hackathon featuring mentorship, competitive problem statements, and strong industry exposure.',
-    date: 'June 2025',
-    location: 'Hybrid',
-    participants: '300+',
+      'The flagship zonal round of HackArena 2.0 (theme: Generative & Agentic AI) — teams pitched AI prototypes via PPT submission, with shortlisted teams advancing to an 8-hour build. Delhi also hosted the 24-hour Grand Finale.',
+    date: '12 April 2025',
+    location: "Master's Union, Gurgaon",
     status: 'past',
+    externalUrl:
+      'https://unstop.com/hackathons/hackarena-20-delhi-zonals-hackarena-20-ignite-room-1652642',
+    externalLabel: 'View on Unstop',
+    siteUrl: 'https://igniteroom.in/hackarena2.0',
+    siteLabel: 'HackArena 2.0 Site',
+  },
+  {
+    title: 'HackArena 2.0 — Chandigarh Zonal',
+    subtitle: 'Zonal Round',
+    description:
+      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+    date: '26 April 2025',
+    location: 'Chandigarh',
+    status: 'past',
+    externalUrl:
+      'https://unstop.com/hackathons/hackarena-20-chandigarh-zonals-hackarena-20-ignite-room-1654430',
+    externalLabel: 'View on Unstop',
+    siteUrl: 'https://igniteroom.in/hackarena2.0',
+    siteLabel: 'HackArena 2.0 Site',
+  },
+  {
+    title: 'HackArena 2.0 — Mumbai Zonal',
+    subtitle: 'Zonal Round',
+    description:
+      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+    date: '9 May 2025',
+    location: 'Mumbai',
+    status: 'past',
+    externalUrl:
+      'https://unstop.com/hackathons/hackarena-20-mumbai-zonals-hackarena-20-ignite-room-1654421',
+    externalLabel: 'View on Unstop',
+    siteUrl: 'https://igniteroom.in/hackarena2.0',
+    siteLabel: 'HackArena 2.0 Site',
+  },
+  {
+    title: 'HackArena 2.0 — Hyderabad Zonal',
+    subtitle: 'Zonal Round',
+    description:
+      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+    date: '23 May 2025',
+    location: 'Hyderabad',
+    status: 'past',
+    externalUrl:
+      'https://unstop.com/hackathons/hackarena-20-hyderabad-zonals-hackarena-20-ignite-room-1654428',
+    externalLabel: 'View on Unstop',
+    siteUrl: 'https://igniteroom.in/hackarena2.0',
+    siteLabel: 'HackArena 2.0 Site',
+  },
+  {
+    title: 'HackArena 2.0 — Bangalore Zonal',
+    subtitle: 'Zonal Round',
+    description:
+      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+    date: '6 June 2025',
+    location: 'Bangalore',
+    status: 'past',
+    externalUrl:
+      'https://unstop.com/hackathons/hackarena-20-bangalore-zonals-hackarena-20-ignite-room-1654427',
+    externalLabel: 'View on Unstop',
+    siteUrl: 'https://igniteroom.in/hackarena2.0',
+    siteLabel: 'HackArena 2.0 Site',
+  },
+  {
+    title: 'HackArena 2.0 — Kolkata Zonal',
+    subtitle: 'Zonal Round',
+    description:
+      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+    date: '13 June 2025',
+    location: 'Kolkata',
+    status: 'past',
+    externalUrl:
+      'https://unstop.com/hackathons/hackarena-20-kolkata-zonals-hackarena-20-ignite-room-1654413',
+    externalLabel: 'View on Unstop',
+    siteUrl: 'https://igniteroom.in/hackarena2.0',
+    siteLabel: 'HackArena 2.0 Site',
+  },
+  {
+    title: 'Agent Labs by Phinite',
+    subtitle: 'Multi-Agent Build Session',
+    description:
+      'A half-day hands-on build session with the Phinite platform — participants created and deployed a live AI agent to production, with mentorship, timed build blocks, and prizes for completed projects.',
+    date: '2025',
+    location: 'Mumbai, Maharashtra',
+    status: 'past',
+    externalUrl: 'https://luma.com/1cmb1tm1',
+    externalLabel: 'View on Luma',
   },
 ]
 
@@ -107,24 +194,36 @@ function EventCard({ event, index }: { event: Event; index: number }) {
             <MapPin className="w-4 h-4" />
             {event.location}
           </div>
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            {event.participants}
-          </div>
+          {event.participants && (
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              {event.participants}
+            </div>
+          )}
         </div>
 
-        {event.externalUrl && (
-          <div className="pt-4">
-            <Button asChild variant="outline" size="sm" className="group/btn">
-              <a
-                href={event.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {event.externalLabel ?? 'View Event'}
-                <ArrowUpRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-              </a>
-            </Button>
+        {(event.externalUrl || event.siteUrl) && (
+          <div className="pt-4 flex flex-wrap gap-3">
+            {event.siteUrl && (
+              <Button asChild variant="outline" size="sm" className="group/btn">
+                <a href={event.siteUrl} target="_blank" rel="noopener noreferrer">
+                  {event.siteLabel ?? 'View Site'}
+                  <ArrowUpRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                </a>
+              </Button>
+            )}
+            {event.externalUrl && (
+              <Button asChild variant="outline" size="sm" className="group/btn">
+                <a
+                  href={event.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {event.externalLabel ?? 'View Event'}
+                  <ArrowUpRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                </a>
+              </Button>
+            )}
           </div>
         )}
       </div>

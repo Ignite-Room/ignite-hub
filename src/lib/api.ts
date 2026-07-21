@@ -72,6 +72,22 @@ export const api = {
         });
     },
 
+    async registerGeneral(data: { name: string; email: string; password: string; phone?: string }) {
+        if (USE_MOCK) throw new Error('Sign up requires the real backend (set VITE_USE_MOCK=false)');
+        return real<{ token: string; user: User }>('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+
+    async loginWithGoogle(credential: string) {
+        if (USE_MOCK) throw new Error('Google login requires the real backend (set VITE_USE_MOCK=false)');
+        return real<{ token: string; user: User }>('/auth/google', {
+            method: 'POST',
+            body: JSON.stringify({ credential }),
+        });
+    },
+
     async forgotPassword(email: string) {
         if (USE_MOCK) return; // mock not supported for this side flow yet
         return real<{ ok: boolean; message: string }>('/auth/forgot-password', {
@@ -238,5 +254,127 @@ export const api = {
         if (USE_MOCK) return { ok: true };
         return real<{ ok: boolean }>(`/admin/submissions/${id}`, { method: 'DELETE' });
     },
+
+    // ── Events (public) — no mock support, always hits the real backend ────
+    async listEvents(params?: { category?: string; mode?: string; q?: string; cursor?: string; limit?: number }) {
+        if (USE_MOCK) return { events: [], nextCursor: null };
+        const qs = new URLSearchParams(Object.entries(params || {}).filter(([, v]) => v).map(([k, v]) => [k, String(v)]) as [string, string][]).toString();
+        return real<{ events: EventSummary[]; nextCursor: string | null }>(`/events${qs ? `?${qs}` : ''}`);
+    },
+
+    async getEvent(slug: string) {
+        if (USE_MOCK) throw new Error('Events require the real backend (set VITE_USE_MOCK=false)');
+        return real<EventDetail>(`/events/${slug}`);
+    },
+
+    async getEventTicketTypes(slug: string) {
+        if (USE_MOCK) return [];
+        return real<TicketTypeWithAvailability[]>(`/events/${slug}/ticket-types`);
+    },
+
+    async registerForEvent(slug: string, data: EventRegistrationInput) {
+        if (USE_MOCK) throw new Error('Events require the real backend (set VITE_USE_MOCK=false)');
+        return real<{ token: string; ticketUrl: string }>(`/events/${slug}/register`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+
+    async getEventTicket(token: string) {
+        if (USE_MOCK) throw new Error('Events require the real backend (set VITE_USE_MOCK=false)');
+        return real<EventTicket>(`/events/ticket/${token}`);
+    },
+
+    async cancelEventTicket(token: string) {
+        if (USE_MOCK) throw new Error('Events require the real backend (set VITE_USE_MOCK=false)');
+        return real<{ ok: boolean; message: string }>(`/events/ticket/${token}/cancel`, { method: 'POST' });
+    },
+
+    async getTicketRounds(token: string) {
+        if (USE_MOCK) return [];
+        return real<TicketRound[]>(`/events/ticket/${token}/rounds`);
+    },
+
+    async applyOrganizer(data: OrganizerApplyInput) {
+        if (USE_MOCK) throw new Error('Events require the real backend (set VITE_USE_MOCK=false)');
+        return real<{ ok: boolean; message: string; id: string }>('/events/organizers/apply', {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
 };
+
+// ── Events types ─────────────────────────────────────────────────────────────
+export interface EventSummary {
+    id: string; slug: string; title: string; tagline: string | null;
+    category: string; mode: string; venueName: string | null; venueAddress: string | null;
+    coverImageUrl: string | null; startAt: string; endAt: string; timezone: string;
+    registrationDeadline: string | null; capacity: number | null; status: string; isFeatured: boolean;
+    organizer: { orgName: string; logoUrl: string | null; orgType: string };
+}
+
+export interface EventCustomField {
+    id: string;
+    label: string;
+    type: 'text' | 'textarea' | 'select' | 'checkbox';
+    required: boolean;
+    options?: string[];
+}
+
+export interface EventDetail extends EventSummary {
+    description: string;
+    organizer: EventSummary['organizer'] & { website: string | null };
+    ticketTypes: TicketTypeWithAvailability[];
+    customFields: EventCustomField[] | null;
+}
+
+export interface TicketTypeWithAvailability {
+    id: string; eventId: string; name: string; description: string | null;
+    priceInPaise: number; quantity: number | null; quantitySold: number;
+    minTeamSize: number; maxTeamSize: number; isActive: boolean;
+    available: number | null; onSale: boolean;
+}
+
+export interface EventRegistrationInput {
+    ticketTypeId: string;
+    name: string;
+    email: string;
+    phone: string;
+    teamName?: string;
+    teamMembers?: { name: string; email?: string; phone?: string }[];
+    answers?: Record<string, unknown>;
+    recaptchaToken?: string;
+}
+
+export interface EventTicket {
+    id: string; token: string; name: string; email: string; phone: string;
+    teamName: string | null; status: string; checkedInAt: string | null; createdAt: string;
+    teamMembers: { name: string; email: string | null; phone: string | null }[];
+    ticketType: { name: string };
+    event: {
+        title: string; slug: string; startAt: string; endAt: string; mode: string;
+        venueName: string | null; venueAddress: string | null; onlineUrl: string | null;
+        status: string; organizer: { orgName: string };
+    };
+}
+
+export interface TicketRound {
+    id: string;
+    name: string;
+    description: string | null;
+    submissionDeadline: string | null;
+    allowFileUpload: boolean;
+    allowLinks: boolean;
+    deadlinePassed: boolean;
+    submission: { status: 'PENDING' | 'SUBMITTED' | 'SHORTLISTED' | 'REJECTED'; submittedAt: string | null } | null;
+}
+
+export interface OrganizerApplyInput {
+    orgName: string;
+    orgType: 'club' | 'community' | 'external' | 'individual';
+    bio?: string;
+    website?: string;
+    contactEmail: string;
+    contactPhone: string;
+}
 

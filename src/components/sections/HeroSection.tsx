@@ -26,7 +26,7 @@ export default function HeroSection() {
             <span className="absolute w-5 h-5 rounded-full bg-primary/30 blur-[6px] animate-pulse" />
             <Flame className="relative w-4 h-4 text-primary drop-shadow-[0_0_6px_hsl(345_100%_59%_/_0.8)]" />
           </span>
-          <span className="text-sm font-medium text-muted-foreground">Student-Led Tech Community</span>
+          <span className="text-sm font-medium text-muted-foreground">12,000+ Developer Community</span>
         </motion.div>
 
         {/* Main Heading */}
@@ -85,7 +85,7 @@ export default function HeroSection() {
           className="grid grid-cols-3 gap-8 max-w-xl mx-auto mt-20"
         >
           {[
-            { value: '500+', label: 'Members' },
+            { value: '12,000+', label: 'Members' },
             { value: '20+', label: 'Events' },
             { value: '15+', label: 'Partners' },
           ].map((stat, index) => (
