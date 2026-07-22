@@ -340,7 +340,7 @@ export default function MailCenter() {
                         {simpleResult && (
                             <div className={`rounded-lg px-4 py-3 text-sm ${simpleResult.errors.length ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
                                 Sent to {simpleResult.sent}/{simpleResult.total} recipient(s).
-                                {simpleResult.errors.length > 0 && <span className="block mt-1 text-xs opacity-80">{simpleResult.errors.length} failed — check email addresses and try again.</span>}
+                                {simpleResult.errors.length > 0 && <span className="block mt-1 text-xs opacity-80">{simpleResult.errors.length} failed. Check email addresses and try again.</span>}
                             </div>
                         )}
                         <Button onClick={handleSimpleSend} disabled={simpleSending || !simpleEmails || !simpleSubject || !simpleBody} className="w-full">
@@ -396,10 +396,10 @@ export default function MailCenter() {
                         <div className="glass-card rounded-2xl p-6 space-y-5">
                             <div>
                                 <Label className="mb-1.5 block text-sm text-muted-foreground">Subject <span className="text-muted-foreground/40">(you can use &lt;name&gt;)</span></Label>
-                                <Input value={pSubject} onChange={(e) => setPSubject(e.target.value)} className="bg-secondary/50 border-border/50 h-10" placeholder="e.g. Interview invitation — <name>" />
+                                <Input value={pSubject} onChange={(e) => setPSubject(e.target.value)} className="bg-secondary/50 border-border/50 h-10" placeholder="e.g. Interview invitation for <name>" />
                             </div>
                             <div>
-                                <Label className="mb-1.5 block text-sm text-muted-foreground">Body <span className="text-muted-foreground/40">— use &lt;name&gt; anywhere you want the candidate's first name inserted</span></Label>
+                                <Label className="mb-1.5 block text-sm text-muted-foreground">Body <span className="text-muted-foreground/40">Use &lt;name&gt; anywhere you want the candidate's first name inserted</span></Label>
                                 <Textarea value={pBody} onChange={(e) => setPBody(e.target.value)} rows={10}
                                     className="bg-secondary/50 border-border/50 resize-none" placeholder={'Dear <name>,\n\n...'} />
                             </div>

@@ -12,7 +12,7 @@ export default function TeamPage() {
           Meet the Full Team
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Learn more about the people who run Ignite — their roles, links and a fun fact.
+          Learn more about the people who run Ignite: their roles, links and a fun fact.
         </p>
       </section>
 

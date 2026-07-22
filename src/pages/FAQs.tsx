@@ -10,7 +10,7 @@ export default function FAQs() {
     { q: 'How do I join Ignite Room?', a: 'Click Join Us in the navbar or visit the Join Us page and fill the form.' },
     { q: 'Are events free to attend?', a: 'Most community events are free; some workshops or bootcamps may have fees.' },
     { q: 'How can I contribute?', a: 'You can volunteer, mentor, write blog posts, or host events.' },
-    { q: 'Do you offer mentorship?', a: 'Yes — we pair experienced members with learners for mentorship.' },
+    { q: 'Do you offer mentorship?', a: 'Yes, we pair experienced members with learners for mentorship.' },
     { q: 'How do I submit an idea?', a: 'Use the Contact page or post in our community channels.' },
   ];
 

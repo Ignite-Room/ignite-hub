@@ -30,6 +30,14 @@ export async function organizerUpload<T>(path: string, formData: FormData): Prom
     return res.json();
 }
 
+/** There's no single-event GET route — fetch the organizer's full list and find it there. */
+export async function fetchOrganizerEvent(id: string): Promise<OrganizerEvent> {
+    const events = await organizerFetch<OrganizerEvent[]>('/');
+    const found = events.find(e => e.id === id);
+    if (!found) throw new Error('Event not found');
+    return found;
+}
+
 export function organizerExportUrl(eventId: string): string {
     const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
     return `${API_URL}/organizer/events/${eventId}/registrations?format=csv&token=${token}`;

@@ -22,7 +22,7 @@ const events: Event[] = [
     title: 'Conquer The Break',
     subtitle: 'Fireside Chat with Piyush Sharma',
     description:
-      'An exclusive fireside chat with Piyush Sharma (@trickymanofficial) — a high-impact session designed to help students plan internships, projects, skills, and strategy for their summer break.',
+      'An exclusive fireside chat with Piyush Sharma (@trickymanofficial), a high-impact session designed to help students plan internships, projects, skills, and strategy for their summer break.',
     date: 'March 2026',
     location: 'Microsoft Office Gurgaon',
     participants: '100+',
@@ -56,10 +56,10 @@ const events: Event[] = [
     externalLabel: 'View on Luma',
   },
   {
-    title: 'HackArena 2.0 — Delhi Zonal',
+    title: 'HackArena 2.0: Delhi Zonal',
     subtitle: 'Zonal Round · Grand Finale Host City',
     description:
-      'The flagship zonal round of HackArena 2.0 (theme: Generative & Agentic AI) — teams pitched AI prototypes via PPT submission, with shortlisted teams advancing to an 8-hour build. Delhi also hosted the 24-hour Grand Finale.',
+      'The flagship zonal round of HackArena 2.0 (theme: Generative & Agentic AI). Teams pitched AI prototypes via PPT submission, with shortlisted teams advancing to an 8-hour build. Delhi also hosted the 24-hour Grand Finale.',
     date: '12 April 2025',
     location: "Master's Union, Gurgaon",
     status: 'past',
@@ -70,10 +70,10 @@ const events: Event[] = [
     siteLabel: 'HackArena 2.0 Site',
   },
   {
-    title: 'HackArena 2.0 — Chandigarh Zonal',
+    title: 'HackArena 2.0: Chandigarh Zonal',
     subtitle: 'Zonal Round',
     description:
-      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+      'Regional qualifying round of HackArena 2.0. Teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
     date: '26 April 2025',
     location: 'Chandigarh',
     status: 'past',
@@ -84,10 +84,10 @@ const events: Event[] = [
     siteLabel: 'HackArena 2.0 Site',
   },
   {
-    title: 'HackArena 2.0 — Mumbai Zonal',
+    title: 'HackArena 2.0: Mumbai Zonal',
     subtitle: 'Zonal Round',
     description:
-      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+      'Regional qualifying round of HackArena 2.0. Teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
     date: '9 May 2025',
     location: 'Mumbai',
     status: 'past',
@@ -98,10 +98,10 @@ const events: Event[] = [
     siteLabel: 'HackArena 2.0 Site',
   },
   {
-    title: 'HackArena 2.0 — Hyderabad Zonal',
+    title: 'HackArena 2.0: Hyderabad Zonal',
     subtitle: 'Zonal Round',
     description:
-      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+      'Regional qualifying round of HackArena 2.0. Teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
     date: '23 May 2025',
     location: 'Hyderabad',
     status: 'past',
@@ -112,10 +112,10 @@ const events: Event[] = [
     siteLabel: 'HackArena 2.0 Site',
   },
   {
-    title: 'HackArena 2.0 — Bangalore Zonal',
+    title: 'HackArena 2.0: Bangalore Zonal',
     subtitle: 'Zonal Round',
     description:
-      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+      'Regional qualifying round of HackArena 2.0. Teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
     date: '6 June 2025',
     location: 'Bangalore',
     status: 'past',
@@ -126,10 +126,10 @@ const events: Event[] = [
     siteLabel: 'HackArena 2.0 Site',
   },
   {
-    title: 'HackArena 2.0 — Kolkata Zonal',
+    title: 'HackArena 2.0: Kolkata Zonal',
     subtitle: 'Zonal Round',
     description:
-      'Regional qualifying round of HackArena 2.0 — teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
+      'Regional qualifying round of HackArena 2.0. Teams built Generative & Agentic AI prototypes with the top performers advancing to the national Grand Finale in Delhi.',
     date: '13 June 2025',
     location: 'Kolkata',
     status: 'past',
@@ -143,7 +143,7 @@ const events: Event[] = [
     title: 'Agent Labs by Phinite',
     subtitle: 'Multi-Agent Build Session',
     description:
-      'A half-day hands-on build session with the Phinite platform — participants created and deployed a live AI agent to production, with mentorship, timed build blocks, and prizes for completed projects.',
+      'A half-day hands-on build session with the Phinite platform. Participants created and deployed a live AI agent to production, with mentorship, timed build blocks, and prizes for completed projects.',
     date: '2025',
     location: 'Mumbai, Maharashtra',
     status: 'past',
@@ -314,7 +314,7 @@ export default function EventsSection() {
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             A glimpse into the hackathons and community events that shaped
-            IgniteRoom — and what’s coming next.
+            IgniteRoom, and what’s coming next.
           </p>
         </motion.div>
 

@@ -43,7 +43,7 @@ export default function ExportModal({ isOpen, onClose, title, data, fields, onEx
         const tableRows = data.map(item => {
             return fields.filter(f => selectedFields.includes(f.id)).map(f => {
                 const value = f.id.split('.').reduce((obj, key) => obj?.[key], item);
-                return value === null || value === undefined ? '—' : String(value);
+                return value === null || value === undefined ? '-' : String(value);
             });
         });
 

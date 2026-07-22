@@ -52,7 +52,7 @@ import EventRegisterPage from "./pages/events/EventRegisterPage";
 import EventTicketPage from "./pages/events/EventTicketPage";
 import OrganizerApplyPage from "./pages/events/OrganizerApplyPage";
 import OrganizerEventsPage from "./pages/events/organizer/OrganizerEventsPage";
-import OrganizerEventForm from "./pages/events/organizer/OrganizerEventForm";
+import EventWizard from "./pages/events/organizer/wizard/EventWizard";
 import OrganizerRegistrationsPage from "./pages/events/organizer/OrganizerRegistrationsPage";
 import OrganizerCheckinPage from "./pages/events/organizer/OrganizerCheckinPage";
 import OrganizerRoundSubmissionsPage from "./pages/events/organizer/OrganizerRoundSubmissionsPage";
@@ -97,10 +97,10 @@ const App = () => (
               <ProtectedRoute><OrganizerEventsPage /></ProtectedRoute>
             } />
             <Route path="/events/organizer/new" element={
-              <ProtectedRoute><OrganizerEventForm /></ProtectedRoute>
+              <ProtectedRoute><EventWizard /></ProtectedRoute>
             } />
             <Route path="/events/organizer/:id/edit" element={
-              <ProtectedRoute><OrganizerEventForm /></ProtectedRoute>
+              <ProtectedRoute><EventWizard /></ProtectedRoute>
             } />
             <Route path="/events/organizer/:id/registrations" element={
               <ProtectedRoute><OrganizerRegistrationsPage /></ProtectedRoute>

@@ -52,8 +52,8 @@ export default function AppSection() {
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed">
                 Stay connected with the Ignite Room community wherever you go.
-                Access mentorship, manage events, and unlock exclusive opportunities
-                — all from one powerful app.
+                Access mentorship, manage events, and unlock exclusive opportunities,
+                all from one powerful app.
               </p>
             </div>
 

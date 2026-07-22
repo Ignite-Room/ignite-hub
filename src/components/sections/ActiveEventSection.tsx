@@ -89,7 +89,7 @@ export default function ActiveEventSection() {
               height="600"
               frameBorder="0"
               style={{ borderRadius: '0 0 16px 16px', display: 'block' }}
-              title="Conquer The Break — Luma Event"
+              title="Conquer The Break: Luma Event"
               allowFullScreen
             />
           </div>

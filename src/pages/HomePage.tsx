@@ -32,7 +32,7 @@ export default function HomePage() {
         {
             icon: Rocket,
             title: 'Organize Events',
-            description: 'Host your own hackathon or workshop on Ignite Room — manage registrations, rounds, and scoring.',
+            description: 'Host your own hackathon or workshop on Ignite Room: manage registrations, rounds, and scoring.',
             cta: 'Organizer Dashboard',
             to: '/events/organizer',
         },
@@ -55,7 +55,7 @@ export default function HomePage() {
                     </span>
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">What would you like to do?</h1>
                     <p className="text-muted-foreground text-lg max-w-2xl">
-                        Everything on Ignite Room — events, the Ambassador Program, and hosting tools — starts here.
+                        Everything on Ignite Room starts here: events, the Ambassador Program, and hosting tools.
                     </p>
                 </div>
 

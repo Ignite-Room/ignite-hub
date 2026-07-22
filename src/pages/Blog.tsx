@@ -25,7 +25,7 @@ export default function Blog() {
               transition={{ duration: 0.5 }}
             >
               <h1 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-4">Blog</h1>
-              <p className="text-muted-foreground text-lg mb-8">Learn from our community — tutorials, stories and announcements.</p>
+              <p className="text-muted-foreground text-lg mb-8">Learn from our community: tutorials, stories and announcements.</p>
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-8">

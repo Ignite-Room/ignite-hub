@@ -186,7 +186,7 @@ export default function AmbassadorDashboard() {
                         <StatsCard label="Ext. Referrals" value={stats.externalReferrals} icon={<ExternalLink className="w-5 h-5" />} color="blue" />
                         <StatsCard
                             label="Leaderboard Rank"
-                            value={stats.rank > 0 ? `#${stats.rank}` : '—'}
+                            value={stats.rank > 0 ? `#${stats.rank}` : '-'}
                             icon={<Trophy className="w-5 h-5" />}
                             color="amber"
                             isString
@@ -205,7 +205,7 @@ export default function AmbassadorDashboard() {
 
                         <div className="flex gap-2 mb-3">
                             <div className="flex-1 bg-secondary/60 rounded-xl px-3 py-2.5 border border-border/40 min-w-0 overflow-hidden">
-                                <code className="text-xs sm:text-sm text-primary truncate block">{referralLink || '—'}</code>
+                                <code className="text-xs sm:text-sm text-primary truncate block">{referralLink || '-'}</code>
                             </div>
                             <Button onClick={copyLink} variant="outline" size="sm"
                                 className="border-border/50 hover:border-primary/50 gap-1.5 flex-shrink-0 h-auto px-3 sm:px-4">

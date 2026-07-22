@@ -135,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = async (_data: SignupData) => {
     // Signup now goes to approval flow — new SignupPage handles this directly
-    throw new Error('Use SignupPage directly — signup now requires admin approval.');
+    throw new Error('Use SignupPage directly. Signup now requires admin approval.');
   };
 
   const logout = () => {
@@ -172,10 +172,11 @@ export function useAuth() {
   return ctx;
 }
 
-/** Where to send someone right after they log in — depends on their role, not a fixed page. */
+/** Where to send someone right after they log in. Depends on their role, not a fixed page. */
 export function redirectPathForUser(user: User): string {
   const role = user.role.toUpperCase();
   if (role === 'ADMIN') return '/ambassador/admin';
   if (role === 'AMBASSADOR') return '/ambassador/dashboard';
-  return '/home'; // USER, ORGANIZER, or anything else general
+  if (role === 'ORGANIZER') return '/events/organizer';
+  return '/home'; // USER, or anything else general
 }

@@ -111,7 +111,7 @@ export default function RoundSubmitPage() {
                     {deadlineStr && (
                         <p className={`mb-8 flex items-center gap-1.5 text-sm font-medium ${round.deadlinePassed ? 'text-destructive' : 'text-amber-400'}`}>
                             <Clock className="h-4 w-4" />
-                            {round.deadlinePassed ? 'Deadline passed — ' : 'Submit by '}{deadlineStr}
+                            {round.deadlinePassed ? 'Deadline passed: ' : 'Submit by '}{deadlineStr}
                         </p>
                     )}
 

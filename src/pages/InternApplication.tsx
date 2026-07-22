@@ -38,7 +38,7 @@ const schema = z.object({
     techStack: z.string().min(2, 'Tell us what you build with'),
     githubUrl: z.string().url('Enter a valid URL (include https://)'),
     portfolioUrl: z.string().url('Enter a valid URL (include https://)').optional().or(z.literal('')),
-    projects: z.string().min(30, 'Tell us a bit more — at least a few lines'),
+    projects: z.string().min(30, 'Tell us a bit more, at least a few lines'),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -50,7 +50,7 @@ const highlights = [
     {
         icon: Smartphone,
         title: 'Ship a real product',
-        description: 'Work on the official Ignite Room app from day one — not a practice project.',
+        description: 'Work on the official Ignite Room app from day one, not a practice project.',
     },
     {
         icon: Users,
@@ -128,7 +128,7 @@ export default function InternApplication() {
                 >
                     <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/50 bg-secondary/50 px-4 py-2">
                         <Sparkles className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium text-muted-foreground">We're hiring — App launch team</span>
+                        <span className="text-sm font-medium text-muted-foreground">We're hiring: App launch team</span>
                     </div>
                     <h1 className="font-heading text-4xl font-bold leading-tight md:text-6xl">
                         <span className="text-foreground">App Developer</span>{' '}
@@ -289,7 +289,7 @@ export default function InternApplication() {
                                             <Textarea
                                                 id="projects"
                                                 rows={5}
-                                                placeholder="Tell us about your best work — what you built, the stack you used, and links if they're live or on GitHub."
+                                                placeholder="Tell us about your best work: what you built, the stack you used, and links if they're live or on GitHub."
                                                 className="resize-none border-border/50 bg-secondary/50 focus:border-primary/50"
                                                 {...register('projects')}
                                             />

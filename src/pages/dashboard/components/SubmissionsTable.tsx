@@ -106,7 +106,7 @@ export default function SubmissionsTable({
                                             </td>
                                         )}
                                         {showActions && sub.status !== 'pending' && (
-                                            <td className="px-5 py-3.5 text-muted-foreground text-xs">—</td>
+                                            <td className="px-5 py-3.5 text-muted-foreground text-xs">-</td>
                                         )}
                                     </tr>
                                 );

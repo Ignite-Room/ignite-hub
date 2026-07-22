@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Twitter, Instagram, Linkedin, Github, Mail, Flame } from 'lucide-react';
+import { Twitter, Instagram, Linkedin, Github, Mail, Flame, ArrowUpRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import igniteLogo from '@/assets/ignite-logo.png';
 
@@ -133,9 +133,9 @@ export default function Footer() {
                 {/* Plain anchor: /chess is a separately deployed app, not a client-side route */}
                 <a
                   href="/chess"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="inline-flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Play Chess ↗
+                  Play Chess <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </li>
             </ul>

@@ -70,7 +70,7 @@ export default function OrganizerRegistrationsPage() {
                                         <TableCell className="font-medium">{r.name}</TableCell>
                                         <TableCell className="text-muted-foreground">{r.email}</TableCell>
                                         <TableCell className="text-muted-foreground">
-                                            {r.teamName || '—'}
+                                            {r.teamName || '-'}
                                             {r.teamMembers.length > 0 && (
                                                 <span className="block text-xs">{r.teamMembers.map(m => m.name).join(', ')}</span>
                                             )}

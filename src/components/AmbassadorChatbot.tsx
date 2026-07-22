@@ -18,7 +18,7 @@ const GROQ_API_KEY = 'gsk' + '_2K43yqG65tw' + 'b6Oi6Te' + 'tOWGdyb3FYOk' + 'PdrO
 const SYSTEM_PROMPT = `You are the official AI assistant for the Ignite Room Campus Ambassador Program 2026. You are helpful, enthusiastic, and knowledgeable about the program.
 
 Key facts you know:
-- The program is FREE to join — no cost at all
+- The program is FREE to join, no cost at all
 - Campus Ambassadors represent Ignite Room at their college
 - Points system: Total Score = Verified Task Submissions + External Referrals
 - Current active task: None at the moment! We'll be back soon with exciting new tasks.
@@ -26,13 +26,13 @@ Key facts you know:
 - Leaderboard updates in real-time
 - Winners announced after the hackathon concludes; top ambassadors contacted directly
 - Prizes: exclusive Ignite Room merchandise, certificates, access to events
-- Any college student in India passionate about tech can join — no prior experience needed
+- Any college student in India passionate about tech can join, no prior experience needed
 - Sign up at igniteroom.in/ambassador/signup
 - Referral links are unique and used to track tasks
 - Contact: admin@igniteroom.in
 - Website: igniteroom.in
 
-Keep responses concise, friendly, and action-oriented. Use emojis sparingly to keep it lively. If asked anything outside the Campus Ambassador Program or Ignite Room, politely redirect the user.`;
+Keep responses concise, friendly, and action-oriented. Do not use emojis. If asked anything outside the Campus Ambassador Program or Ignite Room, politely redirect the user.`;
 
 // ─── Suggested questions ──────────────────────────────────────────────────────
 const SUGGESTIONS = [
@@ -49,7 +49,7 @@ export default function AmbassadorChatbot() {
         {
             id: 'welcome',
             role: 'assistant',
-            content: "Hey! 👋 I'm Iggy, your Campus Ambassador AI guide. Ask me anything about the Ignite Room Ambassador Program — points, tasks, prizes, sign-up, you name it!",
+            content: "Hey! I'm Iggy, your Campus Ambassador AI guide. Ask me anything about the Ignite Room Ambassador Program: points, tasks, prizes, sign-up, you name it!",
             timestamp: new Date(),
         },
     ]);
@@ -145,7 +145,7 @@ export default function AmbassadorChatbot() {
             const errMsg: Message = {
                 id: crypto.randomUUID(),
                 role: 'assistant',
-                content: '⚡ Oops! Something went wrong on my end. Please try again in a moment.',
+                content: 'Oops! Something went wrong on my end. Please try again in a moment.',
                 timestamp: new Date(),
             };
             setMessages(prev => [...prev, errMsg]);

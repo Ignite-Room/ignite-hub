@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, CheckCircle2, Mail } from 'lucide-react';
+import { Clock, CheckCircle2, Mail, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import igniteLogo from '@/assets/ignite-logo.png';
 
@@ -65,7 +65,9 @@ export default function PendingApprovalPage() {
                             <Button variant="outline" className="w-full border-border/50">Check Login Status</Button>
                         </Link>
                         <Link to="/ambassador">
-                            <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground text-sm">← Back to Ambassador Program</Button>
+                            <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground text-sm gap-1.5">
+                                <ArrowLeft className="w-3.5 h-3.5" /> Back to Ambassador Program
+                            </Button>
                         </Link>
                     </div>
 

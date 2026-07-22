@@ -108,7 +108,7 @@ export default function ChallengePage() {
                     {deadlineStr && (
                         <p className={`mb-8 flex items-center gap-1.5 text-sm font-medium ${deadlinePassed ? 'text-destructive' : 'text-amber-400'}`}>
                             <Clock className="h-4 w-4" />
-                            {deadlinePassed ? 'Deadline passed — ' : 'Submit by '}{deadlineStr}
+                            {deadlinePassed ? 'Deadline passed: ' : 'Submit by '}{deadlineStr}
                         </p>
                     )}
 
@@ -186,7 +186,7 @@ export default function ChallengePage() {
                                     Notes to the team <span className="text-muted-foreground/40">(optional)</span>
                                 </Label>
                                 <Textarea
-                                    placeholder="Anything you'd like us to know — design decisions, trade-offs, what you'd do with more time…"
+                                    placeholder="Anything you'd like us to know: design decisions, trade-offs, what you'd do with more time..."
                                     value={form.notes}
                                     onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
                                     rows={4}

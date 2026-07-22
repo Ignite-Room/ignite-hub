@@ -45,7 +45,7 @@ export default function ChaptersSection() {
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             IgniteRoom's community spans 6 cities nationwide, born out of the
-            HackArena 2.0 zonal rounds — with Delhi hosting the national Grand Finale.
+            HackArena 2.0 zonal rounds, with Delhi hosting the national Grand Finale.
           </p>
         </motion.div>
 

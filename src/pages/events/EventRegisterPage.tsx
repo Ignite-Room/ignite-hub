@@ -151,8 +151,8 @@ export default function EventRegisterPage() {
                                     {event.ticketTypes.map(t => (
                                         <SelectItem key={t.id} value={t.id} disabled={!t.onSale || t.available === 0}>
                                             {t.name} {t.priceInPaise === 0 ? '(Free)' : `(₹${t.priceInPaise / 100})`}
-                                            {t.available !== null ? ` — ${t.available} left` : ''}
-                                            {t.maxTeamSize > 1 ? ` — Team of ${t.minTeamSize}-${t.maxTeamSize}` : ''}
+                                            {t.available !== null ? ` (${t.available} left)` : ''}
+                                            {t.maxTeamSize > 1 ? ` (Team of ${t.minTeamSize}-${t.maxTeamSize})` : ''}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>

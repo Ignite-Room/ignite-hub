@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, UserPlus, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -185,7 +185,9 @@ export default function SignupPage() {
                         <Link to="/signup" className="underline hover:text-foreground transition-colors">Create a general account</Link>
                     </p>
                     <p className="mt-3 text-center text-xs text-muted-foreground">
-                        <Link to="/ambassador" className="hover:text-foreground transition-colors">← Back to Ambassador Program</Link>
+                        <Link to="/ambassador" className="inline-flex items-center gap-1 hover:text-foreground transition-colors">
+                            <ArrowLeft className="w-3 h-3" /> Back to Ambassador Program
+                        </Link>
                     </p>
                 </div>
             </motion.div>

@@ -371,7 +371,7 @@ function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
                                 { label: 'Email', value: app.email },
                                 { label: 'Phone', value: app.phone },
                                 { label: 'College', value: app.college },
-                                { label: 'Year', value: app.yearOfStudy || '—' },
+                                { label: 'Year', value: app.yearOfStudy || '-' },
                                 { label: 'Applied', value: new Date(app.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) },
                             ].map((r) => (
                                 <div key={r.label} className="flex items-center justify-between border-b border-border/20 px-4 py-2.5 last:border-0">
@@ -1674,7 +1674,7 @@ function InterviewModal({ initial, roles, onClose, onSave }: {
                 <div className="space-y-4">
                     <div>
                         <Label className="mb-1.5 block text-sm text-muted-foreground">Title</Label>
-                        <Input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} className="bg-secondary/50 border-border/50 h-10" placeholder="e.g. Technical Interview — Round 1" />
+                        <Input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} className="bg-secondary/50 border-border/50 h-10" placeholder="e.g. Technical Interview, Round 1" />
                     </div>
                     <div>
                         <Label className="mb-1.5 block text-sm text-muted-foreground">Description for candidate <span className="text-muted-foreground/40">(optional)</span></Label>

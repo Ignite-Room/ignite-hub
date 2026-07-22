@@ -81,7 +81,7 @@ function TermsModal({ onClose }: { onClose: () => void }) {
                     <section>
                         <h3 className="mb-2 font-heading font-semibold text-foreground">2. What we collect</h3>
                         <p>
-                            By submitting this form, you consent to Ignite Room collecting and storing the information you provide —
+                            By submitting this form, you consent to Ignite Room collecting and storing the information you provide,
                             including your name, email address, phone number, academic details, resume, project links, and any other
                             content you include in your application. This data is used solely to evaluate your suitability for the role.
                         </p>
@@ -257,7 +257,7 @@ export default function ApplyPage() {
                                 </div>
                                 <h2 className="font-heading text-xl font-bold text-foreground">Application submitted</h2>
                                 <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
-                                    Check your inbox — we've sent a confirmation. We'll reach out directly if you're shortlisted.
+                                    Check your inbox: we've sent a confirmation. We'll reach out directly if you're shortlisted.
                                 </p>
                                 <Button asChild variant="outline" className="mt-7">
                                     <Link to="/careers">Browse other roles</Link>

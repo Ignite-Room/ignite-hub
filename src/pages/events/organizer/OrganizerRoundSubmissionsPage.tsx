@@ -171,7 +171,7 @@ export default function OrganizerRoundSubmissionsPage() {
                     <>
                         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
                             <div>
-                                <h1 className="text-2xl font-bold">{round.name} — Submissions</h1>
+                                <h1 className="text-2xl font-bold">{round.name}: Submissions</h1>
                                 <p className="text-sm text-muted-foreground">{submissions.length} submission(s)</p>
                             </div>
                             <div className="flex items-center gap-2 flex-wrap">

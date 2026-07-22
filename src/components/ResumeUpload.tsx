@@ -93,7 +93,7 @@ export function ResumeUpload({
                         Upload your resume
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                        Drag & drop or click to browse — PDF, up to {MAX_SIZE_MB} MB
+                        Drag & drop or click to browse. PDF, up to {MAX_SIZE_MB} MB
                     </p>
 
                     <div className="relative mx-auto mt-8 w-full max-w-xl">

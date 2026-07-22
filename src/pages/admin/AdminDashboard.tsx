@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
     Users, FileCheck, Trophy, LogOut, CheckCircle2, XCircle,
     Eye, Download, RefreshCw, Plus, Building2, IdCard, ChevronRight, BarChart2, Trash2,
-    Mail, Send, FileText, CalendarDays
+    Mail, Send, FileText, CalendarDays, ArrowUpRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -235,9 +235,9 @@ export default function AdminDashboard() {
                         {/* Details */}
                         <div className="space-y-0 border border-border/40 rounded-xl overflow-hidden mb-5">
                             {[
-                                { label: 'College', value: manageModal.college || '—', icon: <Building2 className="w-3.5 h-3.5" /> },
-                                { label: 'Enrollment ID', value: manageModal.enrollmentId || '—', icon: <IdCard className="w-3.5 h-3.5" /> },
-                                { label: 'Phone', value: manageModal.phone || '—', icon: null },
+                                { label: 'College', value: manageModal.college || '-', icon: <Building2 className="w-3.5 h-3.5" /> },
+                                { label: 'Enrollment ID', value: manageModal.enrollmentId || '-', icon: <IdCard className="w-3.5 h-3.5" /> },
+                                { label: 'Phone', value: manageModal.phone || '-', icon: null },
                                 { label: 'Referral Code', value: manageModal.referralCode, isCode: true, icon: null },
                                 { label: 'Joined', value: new Date(manageModal.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }), icon: null },
                             ].map((row, i) => (
@@ -571,7 +571,7 @@ export default function AdminDashboard() {
                                                     <Building2 className="w-3 h-3" /> {amb.college || '–'}
                                                 </span>
                                                 <span className="text-xs text-green-400 font-medium flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> {amb.leaderboardStats?.verifiedTasks ?? 0} tasks</span>
-                                                <span className="text-xs text-blue-400 font-medium">↗ {amb.leaderboardStats?.externalReferrals ?? 0} ext</span>
+                                                <span className="text-xs text-blue-400 font-medium inline-flex items-center gap-0.5"><ArrowUpRight className="w-3 h-3" /> {amb.leaderboardStats?.externalReferrals ?? 0} ext</span>
                                                 <span className="text-xs font-bold text-primary">{amb.leaderboardStats?.totalScore ?? 0} pts</span>
                                             </div>
                                         </div>
@@ -658,7 +658,7 @@ export default function AdminDashboard() {
                                         <Label htmlFor="subject">Subject Line</Label>
                                         <Input
                                             id="subject"
-                                            placeholder="Task Update: New Instagram Challenge 🔥"
+                                            placeholder="Task Update: New Instagram Challenge"
                                             value={mailSubject}
                                             onChange={e => setMailSubject(e.target.value)}
                                             className="bg-secondary/30 border-border/40 focus:border-primary/50"

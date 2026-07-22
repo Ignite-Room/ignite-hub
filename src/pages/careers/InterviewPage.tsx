@@ -154,7 +154,7 @@ export default function InterviewPage() {
                         </div>
                     ) : data.status === 'COMPLETED' || data.status === 'NO_SHOW' ? (
                         <div className="rounded-xl border border-border/50 bg-secondary/20 p-6 text-center">
-                            <p className="text-sm text-muted-foreground">This interview has already taken place. Thanks for your time — we'll be in touch.</p>
+                            <p className="text-sm text-muted-foreground">This interview has already taken place. Thanks for your time, we'll be in touch.</p>
                         </div>
                     ) : data.slots.length === 0 ? (
                         <div className="rounded-xl border border-border/50 bg-secondary/20 p-6 text-center">

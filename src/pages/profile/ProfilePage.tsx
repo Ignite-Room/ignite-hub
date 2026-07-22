@@ -238,8 +238,8 @@ export default function ProfilePage() {
                                     { icon: <User className="w-3.5 h-3.5" />, label: 'Name', value: user?.name },
                                     { icon: <Mail className="w-3.5 h-3.5" />, label: 'Email', value: user?.email },
                                     { icon: <Phone className="w-3.5 h-3.5" />, label: 'Phone', value: user?.phone },
-                                    { icon: <Building2 className="w-3.5 h-3.5" />, label: 'College', value: user?.college || '—' },
-                                    { icon: <IdCard className="w-3.5 h-3.5" />, label: 'Enrollment ID', value: user?.enrollmentId || '—' },
+                                    { icon: <Building2 className="w-3.5 h-3.5" />, label: 'College', value: user?.college || '-' },
+                                    { icon: <IdCard className="w-3.5 h-3.5" />, label: 'Enrollment ID', value: user?.enrollmentId || '-' },
                                 ].map(({ icon, label, value }) => (
                                     <div key={label} className="flex items-start gap-2.5">
                                         <div className="w-6 h-6 rounded-md bg-secondary/60 flex items-center justify-center text-muted-foreground flex-shrink-0 mt-0.5">
