@@ -8,6 +8,8 @@ import { organizerFetch, OrganizerTicketType } from './organizerApi';
 
 interface FormState {
     name: string;
+    pricing: 'free' | 'paid';
+    price: string;
     capacity: 'unlimited' | 'limited';
     quantity: string;
     registrationType: 'individual' | 'team';
@@ -17,6 +19,8 @@ interface FormState {
 
 const emptyForm: FormState = {
     name: '',
+    pricing: 'free',
+    price: '',
     capacity: 'unlimited',
     quantity: '',
     registrationType: 'individual',
@@ -27,6 +31,8 @@ const emptyForm: FormState = {
 function ticketToForm(t: OrganizerTicketType): FormState {
     return {
         name: t.name,
+        pricing: t.priceInPaise > 0 ? 'paid' : 'free',
+        price: t.priceInPaise > 0 ? (t.priceInPaise / 100).toString() : '',
         capacity: t.quantity === null ? 'unlimited' : 'limited',
         quantity: t.quantity?.toString() || '',
         registrationType: t.maxTeamSize > 1 ? 'team' : 'individual',
@@ -60,17 +66,22 @@ export default function TicketTypesEditor({ eventId, ticketTypes, onChange }: { 
 
     const handleSave = async () => {
         if (!form.name.trim()) return;
+        if (form.pricing === 'paid' && (!form.price || parseFloat(form.price) <= 0)) {
+            setErr('Enter a price greater than ₹0, or switch to Free');
+            return;
+        }
         setErr('');
         setSaving(true);
         try {
             const payload = {
                 name: form.name.trim(),
+                priceInPaise: form.pricing === 'paid' ? Math.round(parseFloat(form.price) * 100) : 0,
                 quantity: form.capacity === 'limited' && form.quantity ? parseInt(form.quantity, 10) : undefined,
                 minTeamSize: form.registrationType === 'team' ? parseInt(form.minTeamSize, 10) || 2 : 1,
                 maxTeamSize: form.registrationType === 'team' ? parseInt(form.maxTeamSize, 10) || 2 : 1,
             };
             if (editingId === 'new') {
-                await organizerFetch(`/${eventId}/ticket-types`, { method: 'POST', body: JSON.stringify({ ...payload, priceInPaise: 0 }) });
+                await organizerFetch(`/${eventId}/ticket-types`, { method: 'POST', body: JSON.stringify(payload) });
             } else {
                 await organizerFetch(`/${eventId}/ticket-types/${editingId}`, { method: 'PATCH', body: JSON.stringify(payload) });
             }
@@ -103,13 +114,13 @@ export default function TicketTypesEditor({ eventId, ticketTypes, onChange }: { 
             )}
             {ticketTypes.map(t => (
                 editingId === t.id ? (
-                    <TicketForm key={t.id} form={form} setForm={setForm} err={err} saving={saving} isNew={false} onSave={handleSave} onCancel={closeForm} />
+                    <TicketForm key={t.id} form={form} setForm={setForm} err={err} saving={saving} isNew={false} priceLocked={t.quantitySold > 0} onSave={handleSave} onCancel={closeForm} />
                 ) : (
                     <div key={t.id} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/40">
                         <div>
                             <p className="text-sm font-medium">{t.name} {t.maxTeamSize > 1 ? `(Team of ${t.minTeamSize}-${t.maxTeamSize})` : '(Individual)'}</p>
                             <p className="text-xs text-muted-foreground">
-                                Free · {t.quantity !== null ? `${t.quantitySold}/${t.quantity} claimed` : `${t.quantitySold} registered, unlimited`}
+                                {t.priceInPaise > 0 ? `₹${(t.priceInPaise / 100).toFixed(0)}` : 'Free'} · {t.quantity !== null ? `${t.quantitySold}/${t.quantity} claimed` : `${t.quantitySold} registered, unlimited`}
                             </p>
                         </div>
                         <div className="flex items-center gap-1">
@@ -127,7 +138,7 @@ export default function TicketTypesEditor({ eventId, ticketTypes, onChange }: { 
             ))}
 
             {editingId === 'new' ? (
-                <TicketForm form={form} setForm={setForm} err={err} saving={saving} isNew onSave={handleSave} onCancel={closeForm} />
+                <TicketForm form={form} setForm={setForm} err={err} saving={saving} isNew priceLocked={false} onSave={handleSave} onCancel={closeForm} />
             ) : (
                 <Button size="sm" variant="outline" onClick={openAdd}>
                     <Plus className="w-3.5 h-3.5 mr-1" /> Add Ticket Type
@@ -137,12 +148,13 @@ export default function TicketTypesEditor({ eventId, ticketTypes, onChange }: { 
     );
 }
 
-function TicketForm({ form, setForm, err, saving, isNew, onSave, onCancel }: {
+function TicketForm({ form, setForm, err, saving, isNew, priceLocked, onSave, onCancel }: {
     form: FormState;
     setForm: (updater: (prev: FormState) => FormState) => void;
     err: string;
     saving: boolean;
     isNew: boolean;
+    priceLocked: boolean;
     onSave: () => void;
     onCancel: () => void;
 }) {
@@ -159,6 +171,32 @@ function TicketForm({ form, setForm, err, saving, isNew, onSave, onCancel }: {
                     className="bg-background/50 h-10"
                     autoFocus
                 />
+            </div>
+
+            <div>
+                <Label className="text-sm text-muted-foreground mb-1.5 block">Pricing</Label>
+                <ToggleGroup
+                    type="single"
+                    value={form.pricing}
+                    onValueChange={(v) => v && !priceLocked && setForm(prev => ({ ...prev, pricing: v as FormState['pricing'] }))}
+                    className="justify-start"
+                >
+                    <ToggleGroupItem value="free" disabled={priceLocked} className="h-9 px-4 text-xs data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-border/50">Free</ToggleGroupItem>
+                    <ToggleGroupItem value="paid" disabled={priceLocked} className="h-9 px-4 text-xs data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-border/50">Paid</ToggleGroupItem>
+                </ToggleGroup>
+                {form.pricing === 'paid' && (
+                    <div className="relative mt-2 max-w-[200px]">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">₹</span>
+                        <Input
+                            type="number" min={1} placeholder="Amount"
+                            value={form.price}
+                            disabled={priceLocked}
+                            onChange={e => setForm(prev => ({ ...prev, price: e.target.value }))}
+                            className="bg-background/50 h-10 pl-7"
+                        />
+                    </div>
+                )}
+                {priceLocked && <p className="text-xs text-muted-foreground mt-1.5">Price is locked once a ticket has been sold.</p>}
             </div>
 
             <div>

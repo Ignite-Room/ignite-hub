@@ -1,8 +1,9 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import type { DailyReferral } from '@/lib/mock-api';
 
 interface ReferralChartProps {
-    data: DailyReferral[];
+    data: { date: string; count: number }[];
+    title?: string;
+    label?: string;
 }
 
 function formatDate(dateStr: string) {
@@ -15,12 +16,12 @@ function tickFormatter(value: string, index: number) {
     return index % 5 === 0 ? formatDate(value) : '';
 }
 
-export default function ReferralChart({ data }: ReferralChartProps) {
+export default function ReferralChart({ data, title = 'Referrals Over Time', label = 'Referrals' }: ReferralChartProps) {
     return (
         <div className="glass-card rounded-2xl p-5 border border-border/50 h-full">
             <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                Referrals Over Time
+                {title}
             </h3>
             <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -52,8 +53,8 @@ export default function ReferralChart({ data }: ReferralChartProps) {
                                 borderRadius: '8px',
                                 fontSize: '12px',
                             }}
-                            labelFormatter={(label) => formatDate(label)}
-                            formatter={(value) => [value, 'Referrals']}
+                            labelFormatter={(value) => formatDate(value)}
+                            formatter={(value) => [value, label]}
                             labelStyle={{ color: 'hsl(0 0% 60%)' }}
                             itemStyle={{ color: 'hsl(345 100% 59%)' }}
                         />

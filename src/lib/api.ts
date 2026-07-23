@@ -274,7 +274,15 @@ export const api = {
 
     async registerForEvent(slug: string, data: EventRegistrationInput) {
         if (USE_MOCK) throw new Error('Events require the real backend (set VITE_USE_MOCK=false)');
-        return real<{ token: string; ticketUrl: string }>(`/events/${slug}/register`, {
+        return real<EventRegistrationResult>(`/events/${slug}/register`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+
+    async verifyEventPayment(slug: string, data: VerifyPaymentInput) {
+        if (USE_MOCK) throw new Error('Events require the real backend (set VITE_USE_MOCK=false)');
+        return real<{ token: string; ticketUrl: string }>(`/events/${slug}/register/verify`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
@@ -344,6 +352,34 @@ export interface EventRegistrationInput {
     teamMembers?: { name: string; email?: string; phone?: string }[];
     answers?: Record<string, unknown>;
     recaptchaToken?: string;
+}
+
+export interface FreeRegistrationResult {
+    requiresPayment?: false;
+    token: string;
+    ticketUrl: string;
+}
+
+export interface PaidRegistrationResult {
+    requiresPayment: true;
+    registrationId: string;
+    razorpayOrderId: string;
+    razorpayKeyId: string;
+    amountInPaise: number;
+    currency: string;
+    name: string;
+    email: string;
+    phone: string;
+    eventTitle: string;
+}
+
+export type EventRegistrationResult = FreeRegistrationResult | PaidRegistrationResult;
+
+export interface VerifyPaymentInput {
+    registrationId: string;
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
 }
 
 export interface EventTicket {

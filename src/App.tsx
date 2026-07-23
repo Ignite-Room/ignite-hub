@@ -58,6 +58,7 @@ import OrganizerCheckinPage from "./pages/events/organizer/OrganizerCheckinPage"
 import OrganizerRoundSubmissionsPage from "./pages/events/organizer/OrganizerRoundSubmissionsPage";
 import RoundSubmitPage from "./pages/events/RoundSubmitPage";
 import EventsAdmin from "./pages/admin/EventsAdmin";
+import AdminEventDetail from "./pages/admin/AdminEventDetail";
 
 const queryClient = new QueryClient();
 
@@ -147,6 +148,9 @@ const App = () => (
             } />
             <Route path="/ambassador/admin/events" element={
               <AdminRoute><EventsAdmin /></AdminRoute>
+            } />
+            <Route path="/ambassador/admin/events/:id" element={
+              <AdminRoute><AdminEventDetail /></AdminRoute>
             } />
             <Route path="/ambassador/admin/mail" element={
               <AdminRoute><MailCenter /></AdminRoute>

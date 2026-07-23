@@ -11,8 +11,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { api, EventDetail, TicketTypeWithAvailability } from '@/lib/api';
+import { api, EventDetail, PaidRegistrationResult, TicketTypeWithAvailability } from '@/lib/api';
 import { getRecaptchaToken, RECAPTCHA_SITE_KEY } from '@/lib/recaptcha';
+import { openRazorpayCheckout } from '@/lib/razorpay';
 
 const schema = z.object({
     ticketTypeId: z.string().min(1, 'Select a ticket type'),
@@ -37,6 +38,7 @@ export default function EventRegisterPage() {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [answers, setAnswers] = useState<Record<string, string | boolean>>({});
+    const [pendingPayment, setPendingPayment] = useState<PaidRegistrationResult | null>(null);
 
     const { register, control, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -61,6 +63,37 @@ export default function EventRegisterPage() {
         const needed = Math.max(0, selectedTicket.minTeamSize - 1);
         setValue('teamMembers', Array.from({ length: needed }, () => ({ name: '', email: '', phone: '' })));
     }, [selectedTicket, setValue]);
+
+    const launchCheckout = async (payment: PaidRegistrationResult) => {
+        setError('');
+        setSubmitting(true);
+        try {
+            const result = await openRazorpayCheckout({
+                keyId: payment.razorpayKeyId,
+                amountInPaise: payment.amountInPaise,
+                currency: payment.currency,
+                name: 'Ignite Room',
+                description: payment.eventTitle,
+                orderId: payment.razorpayOrderId,
+                prefill: { name: payment.name, email: payment.email, contact: payment.phone },
+            });
+            const verified = await api.verifyEventPayment(slug!, {
+                registrationId: payment.registrationId,
+                razorpay_order_id: result.razorpay_order_id,
+                razorpay_payment_id: result.razorpay_payment_id,
+                razorpay_signature: result.razorpay_signature,
+            });
+            navigate(`/events/ticket/${verified.token}`, { replace: true });
+        } catch (e) {
+            if (e instanceof Error && e.message === 'DISMISSED') {
+                setError('Payment window closed. Your spot is held briefly, retry when ready.');
+            } else {
+                setError(e instanceof Error ? e.message : 'Payment failed. Please retry.');
+            }
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const onSubmit = async (data: FormData) => {
         if (!slug || !event) return;
@@ -92,10 +125,16 @@ export default function EventRegisterPage() {
                 answers,
                 recaptchaToken,
             });
+
+            if (res.requiresPayment) {
+                setPendingPayment(res);
+                setSubmitting(false);
+                await launchCheckout(res);
+                return;
+            }
             navigate(`/events/ticket/${res.token}`, { replace: true });
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Registration failed');
-        } finally {
             setSubmitting(false);
         }
     };
@@ -143,6 +182,7 @@ export default function EventRegisterPage() {
                     )}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <fieldset disabled={!!pendingPayment} className="space-y-4 border-0 p-0 m-0 disabled:opacity-60">
                         <div>
                             <Label className="text-sm text-muted-foreground mb-1.5 block">Ticket Type</Label>
                             <Select onValueChange={(v) => setValue('ticketTypeId', v)}>
@@ -258,12 +298,23 @@ export default function EventRegisterPage() {
                                 </div>
                             </>
                         )}
+                    </fieldset>
 
-                        <Button type="submit" className="w-full h-11 mt-2" disabled={submitting}>
-                            {submitting ? (
-                                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            ) : 'Complete Registration'}
-                        </Button>
+                        {pendingPayment ? (
+                            <Button type="button" className="w-full h-11 mt-2" disabled={submitting} onClick={() => launchCheckout(pendingPayment)}>
+                                {submitting ? (
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : `Retry Payment · ₹${(pendingPayment.amountInPaise / 100).toFixed(0)}`}
+                            </Button>
+                        ) : (
+                            <Button type="submit" className="w-full h-11 mt-2" disabled={submitting}>
+                                {submitting ? (
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : selectedTicket && selectedTicket.priceInPaise > 0 ? (
+                                    `Pay ₹${(selectedTicket.priceInPaise / 100).toFixed(0)} & Register`
+                                ) : 'Complete Registration'}
+                            </Button>
+                        )}
                     </form>
                 </div>
             </main>

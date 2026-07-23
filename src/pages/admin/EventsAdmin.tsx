@@ -1,40 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, XCircle, Ban } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, CheckCircle2, XCircle, Ban, Search, Star, TrendingUp, Users, CalendarDays, IndianRupee, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import ReferralChart from '@/pages/dashboard/components/ReferralChart';
+import { adminEventsFetch, fetchEventsAnalytics, AdminEventSummary, EventsAnalytics } from './adminEventsApi';
 import igniteLogo from '@/assets/ignite-logo.png';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-
-function authHeader() {
-    const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
-    return token ? { Authorization: `Bearer ${token}` } : {};
-}
-
-async function adminFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
-    const res = await fetch(`${API_URL}/admin/${path}`, {
-        ...options,
-        headers: { 'Content-Type': 'application/json', ...authHeader(), ...(options.headers || {}) },
-    });
-    if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.message || body.error || `HTTP ${res.status}`);
-    }
-    return res.json();
-}
 
 interface OrganizerRow {
     id: string; orgName: string; orgType: string; status: string;
     contactEmail: string; contactPhone: string; createdAt: string;
     user: { name: string; email: string };
     _count: { events: number };
-}
-
-interface EventRow {
-    id: string; title: string; status: string; startAt: string;
-    organizer: { orgName: string };
-    _count: { registrations: number };
 }
 
 const ORG_STATUS_COLOR: Record<string, string> = {
@@ -51,10 +30,29 @@ const EVENT_STATUS_COLOR: Record<string, string> = {
     COMPLETED: 'bg-blue-500/10 text-blue-400',
 };
 
+function formatRupees(paise: number): string {
+    return `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+}
+
+function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
+    return (
+        <div className="glass-card rounded-xl p-4 border border-border/50 flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0">{icon}</div>
+            <div className="min-w-0">
+                <p className="text-lg font-bold text-foreground truncate">{value}</p>
+                <p className="text-xs text-muted-foreground">{label}</p>
+            </div>
+        </div>
+    );
+}
+
 export default function EventsAdmin() {
-    const [tab, setTab] = useState<'organizers' | 'events'>('organizers');
+    const [tab, setTab] = useState<'organizers' | 'events'>('events');
     const [organizers, setOrganizers] = useState<OrganizerRow[]>([]);
-    const [events, setEvents] = useState<EventRow[]>([]);
+    const [events, setEvents] = useState<AdminEventSummary[]>([]);
+    const [analytics, setAnalytics] = useState<EventsAnalytics | null>(null);
+    const [statusFilter, setStatusFilter] = useState<'ALL' | 'DRAFT' | 'PUBLISHED' | 'CANCELLED' | 'COMPLETED'>('ALL');
+    const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -62,8 +60,16 @@ export default function EventsAdmin() {
         setLoading(true);
         setError('');
         try {
-            if (tab === 'organizers') setOrganizers(await adminFetch('organizers'));
-            else setEvents(await adminFetch('events'));
+            if (tab === 'organizers') {
+                setOrganizers(await adminEventsFetch('/organizers'));
+            } else {
+                const [eventsRes, analyticsRes] = await Promise.all([
+                    adminEventsFetch<AdminEventSummary[]>('/events'),
+                    fetchEventsAnalytics(),
+                ]);
+                setEvents(eventsRes);
+                setAnalytics(analyticsRes);
+            }
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed to load');
         } finally {
@@ -75,7 +81,7 @@ export default function EventsAdmin() {
 
     const decideOrganizer = async (id: string, status: 'APPROVED' | 'REJECTED' | 'SUSPENDED') => {
         try {
-            await adminFetch(`organizers/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+            await adminEventsFetch(`/organizers/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
             load();
         } catch (e) {
             alert(e instanceof Error ? e.message : 'Failed to update');
@@ -85,12 +91,20 @@ export default function EventsAdmin() {
     const moderateEvent = async (id: string, status: 'DRAFT' | 'CANCELLED') => {
         if (!confirm(`Set this event to ${status}?`)) return;
         try {
-            await adminFetch(`events/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+            await adminEventsFetch(`/events/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
             load();
         } catch (e) {
             alert(e instanceof Error ? e.message : 'Failed to update');
         }
     };
+
+    const filteredEvents = useMemo(() => {
+        return events.filter(e => {
+            if (statusFilter !== 'ALL' && e.status !== statusFilter) return false;
+            if (query && !e.title.toLowerCase().includes(query.toLowerCase()) && !e.organizer.orgName.toLowerCase().includes(query.toLowerCase())) return false;
+            return true;
+        });
+    }, [events, statusFilter, query]);
 
     return (
         <div className="min-h-screen bg-background">
@@ -108,15 +122,15 @@ export default function EventsAdmin() {
 
             <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
                 <div className="flex gap-2 mb-6">
-                    <Button variant={tab === 'organizers' ? 'default' : 'ghost'} size="sm" onClick={() => setTab('organizers')}>Organizer Applications</Button>
                     <Button variant={tab === 'events' ? 'default' : 'ghost'} size="sm" onClick={() => setTab('events')}>All Events</Button>
+                    <Button variant={tab === 'organizers' ? 'default' : 'ghost'} size="sm" onClick={() => setTab('organizers')}>Organizer Applications</Button>
                 </div>
 
                 {loading && <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />}
                 {!loading && error && <p className="text-destructive text-center py-10">{error}</p>}
 
                 {!loading && !error && tab === 'organizers' && (
-                    <div className="space-y-3">
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                         {organizers.length === 0 && <p className="text-muted-foreground text-center py-10">No organizer applications.</p>}
                         {organizers.map(o => (
                             <div key={o.id} className="rounded-xl border border-border/50 bg-card p-4 flex flex-wrap items-center justify-between gap-4">
@@ -147,32 +161,84 @@ export default function EventsAdmin() {
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </motion.div>
                 )}
 
                 {!loading && !error && tab === 'events' && (
-                    <div className="space-y-3">
-                        {events.length === 0 && <p className="text-muted-foreground text-center py-10">No events yet.</p>}
-                        {events.map(e => (
-                            <div key={e.id} className="rounded-xl border border-border/50 bg-card p-4 flex flex-wrap items-center justify-between gap-4">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Badge className={EVENT_STATUS_COLOR[e.status]}>{e.status}</Badge>
-                                    </div>
-                                    <p className="font-medium">{e.title}</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        By {e.organizer.orgName} · {new Date(e.startAt).toLocaleDateString('en-IN')} · {e._count.registrations} registered
-                                    </p>
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+                        {analytics && (
+                            <>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                    <StatTile icon={<CalendarDays className="w-4 h-4" />} label="Published events" value={analytics.publishedEvents} />
+                                    <StatTile icon={<Users className="w-4 h-4" />} label="Total registrations" value={analytics.totalRegistrations} />
+                                    <StatTile icon={<TrendingUp className="w-4 h-4" />} label="Confirmed" value={analytics.confirmedRegistrations} />
+                                    <StatTile icon={<IndianRupee className="w-4 h-4" />} label="Total revenue" value={formatRupees(analytics.totalRevenueInPaise)} />
                                 </div>
-                                {e.status === 'PUBLISHED' && (
-                                    <div className="flex gap-2">
-                                        <Button size="sm" variant="outline" onClick={() => moderateEvent(e.id, 'DRAFT')}>Unpublish</Button>
-                                        <Button size="sm" variant="outline" className="text-destructive" onClick={() => moderateEvent(e.id, 'CANCELLED')}>Cancel</Button>
+
+                                <div className="grid lg:grid-cols-[2fr_1fr] gap-4">
+                                    <ReferralChart data={analytics.registrationsOverTime} title="Registrations, last 30 days" label="Registrations" />
+                                    <div className="glass-card rounded-2xl p-5 border border-border/50">
+                                        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                                            <Star className="w-4 h-4 text-primary" /> Top Events
+                                        </h3>
+                                        <div className="space-y-3">
+                                            {analytics.topEvents.length === 0 && <p className="text-xs text-muted-foreground">No registrations yet.</p>}
+                                            {analytics.topEvents.map((e, i) => (
+                                                <Link key={e.id} to={`/ambassador/admin/events/${e.id}`} className="flex items-center justify-between gap-2 text-sm hover:text-primary transition-colors">
+                                                    <span className="truncate flex items-center gap-2">
+                                                        <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
+                                                        <span className="truncate">{e.title}</span>
+                                                    </span>
+                                                    <span className="text-xs text-muted-foreground flex-shrink-0">{e.registrations} regs</span>
+                                                </Link>
+                                            ))}
+                                        </div>
                                     </div>
-                                )}
+                                </div>
+                            </>
+                        )}
+
+                        <div className="flex flex-wrap items-center gap-3">
+                            <div className="relative flex-1 min-w-[200px]">
+                                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                                <Input placeholder="Search by event or organizer..." value={query} onChange={e => setQuery(e.target.value)} className="pl-9 h-10 bg-secondary/30 border-border/40" />
                             </div>
-                        ))}
-                    </div>
+                            <div className="flex gap-1 bg-secondary/30 rounded-lg p-1 border border-border/40 overflow-x-auto">
+                                {(['ALL', 'DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED'] as const).map(f => (
+                                    <button key={f} onClick={() => setStatusFilter(f)}
+                                        className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all ${statusFilter === f ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                                    >{f}</button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            {filteredEvents.length === 0 && <p className="text-muted-foreground text-center py-10">No events match.</p>}
+                            {filteredEvents.map(e => (
+                                <div key={e.id} className="rounded-xl border border-border/50 bg-card p-4 flex flex-wrap items-center justify-between gap-4 hover:border-primary/30 transition-colors">
+                                    <Link to={`/ambassador/admin/events/${e.id}`} className="flex-1 min-w-0 group">
+                                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                            <Badge className={EVENT_STATUS_COLOR[e.status]}>{e.status}</Badge>
+                                            {e.isFeatured && <Badge className="bg-primary/20 text-primary border-primary/30">Featured</Badge>}
+                                        </div>
+                                        <p className="font-medium group-hover:text-primary transition-colors flex items-center gap-1">
+                                            {e.title} <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            By {e.organizer.orgName} · {new Date(e.startAt).toLocaleDateString('en-IN')} · {e._count.registrations} registered
+                                            {e.revenueInPaise > 0 && ` · ${formatRupees(e.revenueInPaise)} revenue`}
+                                        </p>
+                                    </Link>
+                                    {e.status === 'PUBLISHED' && (
+                                        <div className="flex gap-2 flex-shrink-0">
+                                            <Button size="sm" variant="outline" onClick={() => moderateEvent(e.id, 'DRAFT')}>Unpublish</Button>
+                                            <Button size="sm" variant="outline" className="text-destructive" onClick={() => moderateEvent(e.id, 'CANCELLED')}>Cancel</Button>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
                 )}
             </main>
         </div>
