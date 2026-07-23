@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-    ArrowLeft, Users, CheckCircle2, IndianRupee, Ticket, Star, Download,
+    Users, CheckCircle2, IndianRupee, Ticket, Star, Download,
     Save, AlertCircle, RotateCcw, Layers,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,12 +13,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import ReferralChart from '@/pages/dashboard/components/ReferralChart';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { CATEGORIES, MODES, toLocalInput } from '@/pages/events/organizer/wizard/DetailsStep';
 import {
     fetchAdminEvent, updateAdminEvent, fetchAdminRegistrations, adminEventsExportUrl, refundOrder,
     AdminEventDetail as AdminEventDetailType, AdminRegistration, AdminEventUpdateInput,
 } from './adminEventsApi';
-import igniteLogo from '@/assets/ignite-logo.png';
 
 const EVENT_STATUS_COLOR: Record<string, string> = {
     DRAFT: 'bg-secondary text-muted-foreground',
@@ -170,34 +170,21 @@ export default function AdminEventDetail() {
     const mode = form.mode;
 
     return (
-        <div className="min-h-screen bg-background">
-            <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto" />
-                        <span className="font-bold text-gradient hidden sm:block">Events Admin</span>
-                    </div>
-                    <Link to="/ambassador/admin/events" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                        <ArrowLeft className="w-4 h-4" /> Back to Events
-                    </Link>
-                </div>
-            </header>
-
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-                <div className="flex items-start justify-between flex-wrap gap-3 mb-6">
-                    <div>
-                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                            <Badge className={EVENT_STATUS_COLOR[event.status]}>{event.status}</Badge>
-                            {event.isFeatured && <Badge className="bg-primary/20 text-primary border-primary/30"><Star className="w-3 h-3 mr-1" /> Featured</Badge>}
-                        </div>
-                        <h1 className="text-2xl font-bold">{event.title}</h1>
-                        <p className="text-sm text-muted-foreground mt-1">
-                            By {event.organizer.orgName} ({event.organizer.user.name}) · {event.organizer.user.email}
-                        </p>
-                    </div>
-                    <Button asChild variant="outline" size="sm">
-                        <a href={`/events/${event.slug}`} target="_blank" rel="noopener noreferrer">View Public Page</a>
-                    </Button>
+        <AdminLayout
+            title={event.title}
+            breadcrumb={['Admin', 'Events', 'All Events']}
+            actions={
+                <Button asChild variant="outline" size="sm">
+                    <a href={`/events/${event.slug}`} target="_blank" rel="noopener noreferrer">View Public Page</a>
+                </Button>
+            }
+        >
+                <div className="flex items-center gap-2 mb-6 flex-wrap">
+                    <Badge className={EVENT_STATUS_COLOR[event.status]}>{event.status}</Badge>
+                    {event.isFeatured && <Badge className="bg-primary/20 text-primary border-primary/30"><Star className="w-3 h-3 mr-1" /> Featured</Badge>}
+                    <span className="text-sm text-muted-foreground">
+                        By {event.organizer.orgName} ({event.organizer.user.name}) · {event.organizer.user.email}
+                    </span>
                 </div>
 
                 <div className="flex gap-1 bg-secondary/30 rounded-xl p-1 border border-border/40 mb-6 w-fit">
@@ -450,7 +437,6 @@ export default function AdminEventDetail() {
                         )}
                     </motion.div>
                 )}
-            </main>
-        </div>
+        </AdminLayout>
     );
 }

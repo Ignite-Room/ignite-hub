@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     CheckCircle2, Loader2, Mail, Plus, Send, Trash2, Users, X, XCircle,
@@ -9,8 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAuth } from '@/lib/auth-context';
-import igniteLogo from '@/assets/ignite-logo.png';
+import AdminLayout from '@/components/admin/AdminLayout';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -165,7 +163,6 @@ function ImportModal({ onClose, onImport }: { onClose: () => void; onImport: (ro
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function MailCenter() {
-    const { user, logout } = useAuth();
     const [tab, setTab] = useState<Tab>('personalized');
     const [toast, setToast] = useState('');
     const showToast = (msg: string) => setToast(msg);
@@ -277,29 +274,11 @@ export default function MailCenter() {
     const previewName = validRecipients[0]?.name?.split(' ')[0] || 'there';
 
     return (
-        <div className="min-h-screen bg-background">
+        <>
             <AnimatePresence>{toast && <Toast msg={toast} onDone={() => setToast('')} />}</AnimatePresence>
             <AnimatePresence>{importOpen && <ImportModal onClose={() => setImportOpen(false)} onImport={handleImportFromApplicants} />}</AnimatePresence>
 
-            {/* Header */}
-            <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-                <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
-                    <div className="flex items-center gap-3">
-                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto" />
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Link to="/ambassador/admin" className="hover:text-foreground transition-colors">Admin</Link>
-                            <span>/</span>
-                            <span className="font-medium text-foreground">Mail Center</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <span className="hidden text-sm text-muted-foreground sm:block">{user?.name}</span>
-                        <Button variant="ghost" size="sm" onClick={logout} className="text-muted-foreground">Sign out</Button>
-                    </div>
-                </div>
-            </header>
-
-            <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+            <AdminLayout title="Mail Center" breadcrumb={['Admin', 'Communications']}>
                 {/* Tab bar */}
                 <div className="mb-6 flex gap-1 rounded-xl border border-border/40 bg-secondary/30 p-1">
                     {([
@@ -451,7 +430,7 @@ export default function MailCenter() {
                         )}
                     </div>
                 )}
-            </main>
-        </div>
+            </AdminLayout>
+        </>
     );
 }

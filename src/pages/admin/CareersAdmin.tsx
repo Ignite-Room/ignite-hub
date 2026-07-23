@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     ArrowLeft, Bell, Briefcase, CalendarClock, CheckCircle2, ChevronDown, Clock, Download, ExternalLink,
@@ -10,8 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAuth } from '@/lib/auth-context';
-import igniteLogo from '@/assets/ignite-logo.png';
+import AdminLayout from '@/components/admin/AdminLayout';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -548,7 +546,6 @@ function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
 type Tab = 'roles' | 'applications' | 'challenges' | 'interviews';
 
 export default function CareersAdmin() {
-    const { user, logout } = useAuth();
     const [tab, setTab] = useState<Tab>('roles');
     const [roles, setRoles] = useState<Role[]>([]);
     const [applications, setApplications] = useState<Application[]>([]);
@@ -821,7 +818,7 @@ export default function CareersAdmin() {
     const pendingInviteCount = interviewInvites.filter((i) => i.status === 'INVITED').length;
 
     return (
-        <div className="min-h-screen bg-background">
+        <>
             {/* Toast */}
             <AnimatePresence>
                 {toast && <Toast msg={toast} onDone={() => setToast('')} />}
@@ -872,32 +869,7 @@ export default function CareersAdmin() {
                 )}
             </AnimatePresence>
 
-            {/* Header */}
-            <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-                <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-                    <div className="flex items-center gap-3">
-                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto" />
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Link to="/ambassador/admin" className="hover:text-foreground transition-colors">Admin</Link>
-                            <span>/</span>
-                            <span className="font-medium text-foreground">Careers</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Link to="/ambassador/admin/mail">
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                                <Send className="h-4 w-4" /> <span className="hidden sm:inline">Mail Center</span>
-                            </Button>
-                        </Link>
-                        <span className="hidden text-sm text-muted-foreground sm:block">{user?.name}</span>
-                        <Button variant="ghost" size="sm" onClick={logout} className="text-muted-foreground">
-                            Sign out
-                        </Button>
-                    </div>
-                </div>
-            </header>
-
-            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+            <AdminLayout title="Careers" breadcrumb={['Admin', 'Careers']}>
                 {/* Stats row */}
                 <div className="mb-8 grid grid-cols-3 gap-4">
                     {[
@@ -1415,8 +1387,8 @@ export default function CareersAdmin() {
                         />
                     )}
                 </AnimatePresence>
-            </main>
-        </div>
+            </AdminLayout>
+        </>
     );
 }
 

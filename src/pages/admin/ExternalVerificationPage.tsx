@@ -1,12 +1,10 @@
 import { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, UploadCloud, Download, CheckCircle2, XCircle, RefreshCw, Key, PlayCircle, AlertCircle } from 'lucide-react';
+import { UploadCloud, Download, CheckCircle2, XCircle, RefreshCw, Key, PlayCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/lib/auth-context';
+import AdminLayout from '@/components/admin/AdminLayout';
 
 export default function ExternalVerificationPage() {
-    const { logout } = useAuth();
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState({ current: 0, total: 0 });
@@ -218,23 +216,9 @@ export default function ExternalVerificationPage() {
     const progressPercentage = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
 
     return (
-        <div className="min-h-screen bg-background flex flex-col">
-            <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <Link to="/ambassador/admin">
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                                <ArrowLeft className="w-4 h-4" /> Back
-                            </Button>
-                        </Link>
-                        <h1 className="font-bold text-foreground text-lg hidden sm:block">Frontend External Verification</h1>
-                    </div>
-                </div>
-            </header>
-
-            <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full">
+        <AdminLayout title="External Verification" breadcrumb={['Admin', 'Ambassador Program']}>
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Box 1: File Upload */}
                         <div className="glass-card rounded-2xl p-6 border border-border/50 text-center">
@@ -371,7 +355,6 @@ export default function ExternalVerificationPage() {
                         </div>
                     )}
                 </motion.div>
-            </main>
-        </div>
+        </AdminLayout>
     );
 }

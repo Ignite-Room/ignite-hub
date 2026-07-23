@@ -1,19 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-    Users, FileCheck, Trophy, LogOut, CheckCircle2, XCircle,
-    Eye, Download, RefreshCw, Plus, Building2, IdCard, ChevronRight, BarChart2, Trash2,
-    Mail, Send, FileText, CalendarDays, ArrowUpRight
+    Users, FileCheck, Trophy, CheckCircle2, XCircle,
+    Eye, Download, RefreshCw, Plus, Building2, IdCard, BarChart2, Trash2,
+    Mail, Send, ArrowUpRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
 import ExportModal from '@/components/admin/ExportModal';
-import igniteLogo from '@/assets/ignite-logo.png';
+import AdminLayout from '@/components/admin/AdminLayout';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false';
@@ -69,9 +68,13 @@ const MOCK_LB: LeaderboardEntry[] = [
 ];
 
 
+const VALID_TABS: Tab[] = ['applications', 'submissions', 'ambassadors', 'leaderboard', 'mailing'];
+
 export default function AdminDashboard() {
-    const { user, logout } = useAuth();
-    const [tab, setTab] = useState<Tab>('applications');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabParam = searchParams.get('tab') as Tab | null;
+    const tab: Tab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'applications';
+    const setTab = (t: Tab) => setSearchParams({ tab: t });
     const [applications, setApplications] = useState<Application[]>([]);
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
@@ -196,7 +199,7 @@ export default function AdminDashboard() {
     ];
 
     return (
-        <div className="min-h-screen bg-background">
+        <>
             {/* Toast */}
             {toast && (
                 <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-xl bg-card border border-border shadow-xl text-sm text-foreground animate-in fade-in slide-in-from-top-2">
@@ -322,71 +325,15 @@ export default function AdminDashboard() {
                 </div>
             )}
 
-            {/* Header */}
-            <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto" />
-                        <span className="font-bold text-gradient hidden sm:block">Admin Panel</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Link to="/ambassador/admin/careers">
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                                <FileText className="w-4 h-4" /> <span className="hidden sm:inline">Careers</span>
-                            </Button>
-                        </Link>
-                        <Link to="/ambassador/admin/events">
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                                <CalendarDays className="w-4 h-4" /> <span className="hidden sm:inline">Events</span>
-                            </Button>
-                        </Link>
-                        <Link to="/ambassador/admin/mail">
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                                <Send className="w-4 h-4" /> <span className="hidden sm:inline">Mail Center</span>
-                            </Button>
-                        </Link>
-                        <Link to="/ambassador/admin/external-verification">
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-primary hover:text-primary/80">
-                                <CheckCircle2 className="w-4 h-4" /> <span className="hidden sm:inline">External Verification</span>
-                            </Button>
-                        </Link>
-                        <Link to="/ambassador/leaderboard">
-                            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                                <Trophy className="w-4 h-4" /> <span className="hidden sm:inline">Public Leaderboard</span>
-                            </Button>
-                        </Link>
-                        <div className="text-sm text-muted-foreground hidden sm:block">{user?.name}</div>
-                        <Button variant="ghost" size="sm" onClick={logout} className="gap-1.5 text-muted-foreground">
-                            <LogOut className="w-4 h-4" />
-                        </Button>
-                    </div>
-                </div>
-            </header>
-
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-                {/* Tab Bar */}
-                <div className="flex gap-1 bg-secondary/30 rounded-xl p-1 border border-border/40 mb-8 overflow-x-auto">
-                    {tabs.map(t => (
-                        <button
-                            key={t.id}
-                            onClick={() => setTab(t.id)}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex-1 justify-center ${tab === t.id ? 'bg-background text-foreground shadow-sm border border-border/50' : 'text-muted-foreground hover:text-foreground'}`}
-                        >
-                            {t.icon}
-                            {t.label}
-                            {t.badge != null && t.badge > 0 && (
-                                <span className="bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{t.badge}</span>
-                            )}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Refresh */}
-                <div className="flex justify-end mb-4">
+            <AdminLayout
+                title={tabs.find(t => t.id === tab)?.label || 'Dashboard'}
+                breadcrumb={['Admin', 'Ambassador Program']}
+                actions={
                     <Button variant="ghost" size="sm" onClick={() => loadTab(tab)} className="gap-1.5 text-muted-foreground">
-                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
+                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> <span className="hidden sm:inline">Refresh</span>
                     </Button>
-                </div>
+                }
+            >
 
                 {/* ── Tab: Applications ─────────────────────────── */}
                 {tab === 'applications' && (
@@ -702,7 +649,7 @@ export default function AdminDashboard() {
                         </div>
                     </motion.div>
                 )}
-            </main>
+            </AdminLayout>
 
             {/* Export Modal */}
             {exportModal && (
@@ -733,6 +680,6 @@ export default function AdminDashboard() {
                     ]}
                 />
             )}
-        </div>
+        </>
     );
 }

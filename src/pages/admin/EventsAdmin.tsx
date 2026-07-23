@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, XCircle, Ban, Search, Star, TrendingUp, Users, CalendarDays, IndianRupee, ChevronRight } from 'lucide-react';
+import { CheckCircle2, XCircle, Ban, Search, Star, TrendingUp, Users, CalendarDays, IndianRupee, ChevronRight, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import ReferralChart from '@/pages/dashboard/components/ReferralChart';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { adminEventsFetch, fetchEventsAnalytics, AdminEventSummary, EventsAnalytics } from './adminEventsApi';
-import igniteLogo from '@/assets/ignite-logo.png';
 
 interface OrganizerRow {
     id: string; orgName: string; orgType: string; status: string;
@@ -47,7 +47,10 @@ function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string
 }
 
 export default function EventsAdmin() {
-    const [tab, setTab] = useState<'organizers' | 'events'>('events');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabParam = searchParams.get('tab');
+    const tab: 'organizers' | 'events' = tabParam === 'organizers' ? 'organizers' : 'events';
+    const setTab = (t: 'organizers' | 'events') => setSearchParams({ tab: t });
     const [organizers, setOrganizers] = useState<OrganizerRow[]>([]);
     const [events, setEvents] = useState<AdminEventSummary[]>([]);
     const [analytics, setAnalytics] = useState<EventsAnalytics | null>(null);
@@ -107,25 +110,15 @@ export default function EventsAdmin() {
     }, [events, statusFilter, query]);
 
     return (
-        <div className="min-h-screen bg-background">
-            <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto" />
-                        <span className="font-bold text-gradient">Events Admin</span>
-                    </div>
-                    <Link to="/ambassador/admin" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                        <ArrowLeft className="w-4 h-4" /> Back to Admin
-                    </Link>
-                </div>
-            </header>
-
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-                <div className="flex gap-2 mb-6">
-                    <Button variant={tab === 'events' ? 'default' : 'ghost'} size="sm" onClick={() => setTab('events')}>All Events</Button>
-                    <Button variant={tab === 'organizers' ? 'default' : 'ghost'} size="sm" onClick={() => setTab('organizers')}>Organizer Applications</Button>
-                </div>
-
+        <AdminLayout
+            title={tab === 'organizers' ? 'Organizer Applications' : 'All Events'}
+            breadcrumb={['Admin', 'Events']}
+            actions={
+                <Button variant="ghost" size="sm" onClick={load} className="gap-1.5 text-muted-foreground">
+                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> <span className="hidden sm:inline">Refresh</span>
+                </Button>
+            }
+        >
                 {loading && <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />}
                 {!loading && error && <p className="text-destructive text-center py-10">{error}</p>}
 
@@ -240,7 +233,6 @@ export default function EventsAdmin() {
                         </div>
                     </motion.div>
                 )}
-            </main>
-        </div>
+        </AdminLayout>
     );
 }
