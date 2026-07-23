@@ -30,12 +30,8 @@ export async function organizerUpload<T>(path: string, formData: FormData): Prom
     return res.json();
 }
 
-/** There's no single-event GET route — fetch the organizer's full list and find it there. */
 export async function fetchOrganizerEvent(id: string): Promise<OrganizerEvent> {
-    const events = await organizerFetch<OrganizerEvent[]>('/');
-    const found = events.find(e => e.id === id);
-    if (!found) throw new Error('Event not found');
-    return found;
+    return organizerFetch<OrganizerEvent>(`/${id}`);
 }
 
 export function organizerExportUrl(eventId: string): string {
@@ -88,7 +84,8 @@ export interface OrganizerTicketType {
 export interface OrganizerRegistration {
     id: string; name: string; email: string; phone: string; teamName: string | null;
     status: string; checkedInAt: string | null; createdAt: string;
-    ticketType: { name: string };
+    ticketType: { name: string; priceInPaise: number };
+    order: { status: string; amountInPaise: number } | null;
     teamMembers: { name: string; email: string | null; phone: string | null }[];
 }
 

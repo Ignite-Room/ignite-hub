@@ -56,9 +56,13 @@ import EventWizard from "./pages/events/organizer/wizard/EventWizard";
 import OrganizerRegistrationsPage from "./pages/events/organizer/OrganizerRegistrationsPage";
 import OrganizerCheckinPage from "./pages/events/organizer/OrganizerCheckinPage";
 import OrganizerRoundSubmissionsPage from "./pages/events/organizer/OrganizerRoundSubmissionsPage";
+import EarningsPage from "./pages/events/organizer/EarningsPage";
+import PayoutSettingsPage from "./pages/events/organizer/PayoutSettingsPage";
 import RoundSubmitPage from "./pages/events/RoundSubmitPage";
 import EventsAdmin from "./pages/admin/EventsAdmin";
 import AdminEventDetail from "./pages/admin/AdminEventDetail";
+import AdminPayoutsPage from "./pages/admin/AdminPayoutsPage";
+import AdminPayoutDetailPage from "./pages/admin/AdminPayoutDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -96,6 +100,12 @@ const App = () => (
             <Route path="/events/organizers/apply" element={<OrganizerApplyPage />} />
             <Route path="/events/organizer" element={
               <ProtectedRoute><OrganizerEventsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/earnings" element={
+              <ProtectedRoute><EarningsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/payout-settings" element={
+              <ProtectedRoute><PayoutSettingsPage /></ProtectedRoute>
             } />
             <Route path="/events/organizer/new" element={
               <ProtectedRoute><EventWizard /></ProtectedRoute>
@@ -151,6 +161,12 @@ const App = () => (
             } />
             <Route path="/ambassador/admin/events/:id" element={
               <AdminRoute><AdminEventDetail /></AdminRoute>
+            } />
+            <Route path="/ambassador/admin/payouts" element={
+              <AdminRoute><AdminPayoutsPage /></AdminRoute>
+            } />
+            <Route path="/ambassador/admin/payouts/:organizerId" element={
+              <AdminRoute><AdminPayoutDetailPage /></AdminRoute>
             } />
             <Route path="/ambassador/admin/mail" element={
               <AdminRoute><MailCenter /></AdminRoute>

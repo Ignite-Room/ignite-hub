@@ -53,7 +53,12 @@ export default function CoverImageStep({ eventId, coverImageUrl, onChange }: { e
             >
                 {coverImageUrl ? (
                     <>
-                        <img src={coverImageUrl} alt="Event banner" className="w-full h-full object-cover" />
+                        <div
+                            className="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-50"
+                            style={{ backgroundImage: `url(${coverImageUrl})` }}
+                            aria-hidden="true"
+                        />
+                        <img src={coverImageUrl} alt="Event banner" className="relative w-full h-full object-contain" />
                         <div className="absolute inset-0 bg-black/0 hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
                             <span className="flex items-center gap-2 text-white text-sm font-medium">
                                 <Upload className="w-4 h-4" /> Replace banner

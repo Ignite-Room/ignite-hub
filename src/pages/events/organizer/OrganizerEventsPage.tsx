@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Users, Pencil, QrCode, Download, Rocket, Trash2, CalendarCheck, FileEdit, Sparkles } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { Plus, Users, Pencil, QrCode, Download, Rocket, Trash2, CalendarCheck, FileEdit, Sparkles, IndianRupee } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import OrganizerLayout from '@/components/organizer/OrganizerLayout';
 import { organizerFetch, organizerExportUrl, OrganizerEvent } from './organizerApi';
+import { fetchEarnings } from './organizerPayoutsApi';
+
+function formatRupees(paise: number): string {
+    return `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+}
 
 const STATUS_COLOR: Record<string, string> = {
     DRAFT: 'bg-secondary text-muted-foreground',
@@ -14,7 +18,7 @@ const STATUS_COLOR: Record<string, string> = {
     COMPLETED: 'bg-blue-500/20 text-blue-400',
 };
 
-function StatTile({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: number }) {
+function StatTile({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: number | string }) {
     return (
         <div className="rounded-2xl bg-gradient-card border border-border/60 p-5 flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -30,6 +34,7 @@ function StatTile({ icon: Icon, label, value }: { icon: typeof Users; label: str
 
 export default function OrganizerEventsPage() {
     const [events, setEvents] = useState<OrganizerEvent[]>([]);
+    const [pendingPayoutInPaise, setPendingPayoutInPaise] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [notOrganizer, setNotOrganizer] = useState(false);
@@ -46,6 +51,7 @@ export default function OrganizerEventsPage() {
                 setError(msg);
             })
             .finally(() => setLoading(false));
+        fetchEarnings().then(e => setPendingPayoutInPaise(e.pendingInPaise)).catch(() => {});
     };
 
     useEffect(load, []);
@@ -76,19 +82,13 @@ export default function OrganizerEventsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-background">
-            <Navbar />
-            <main className="pt-28 pb-20 px-6 max-w-6xl mx-auto">
-                <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold mb-1">Publisher Dashboard</h1>
-                        <p className="text-muted-foreground text-sm">Create, edit, and manage the events you organize on Ignite Room.</p>
-                    </div>
-                    {!notOrganizer && (
-                        <Button asChild><Link to="/events/organizer/new"><Plus className="w-4 h-4 mr-1" /> New Event</Link></Button>
-                    )}
-                </div>
-
+        <OrganizerLayout
+            title="Publisher Dashboard"
+            breadcrumb={['Organizer']}
+            actions={!notOrganizer ? (
+                <Button asChild size="sm"><Link to="/events/organizer/new"><Plus className="w-4 h-4 mr-1" /> New Event</Link></Button>
+            ) : undefined}
+        >
                 {loading && <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />}
 
                 {!loading && notOrganizer && (
@@ -111,10 +111,13 @@ export default function OrganizerEventsPage() {
 
                 {!loading && events.length > 0 && (
                     <>
-                        <div className="grid sm:grid-cols-3 gap-4 mb-8">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                             <StatTile icon={Rocket} label="Published" value={stats.published} />
                             <StatTile icon={FileEdit} label="Drafts" value={stats.draft} />
                             <StatTile icon={Users} label="Total registrations" value={stats.registrations} />
+                            <Link to="/events/organizer/earnings">
+                                <StatTile icon={IndianRupee} label="Pending payout" value={formatRupees(pendingPayoutInPaise)} />
+                            </Link>
                         </div>
 
                         <div className="space-y-4">
@@ -164,8 +167,6 @@ export default function OrganizerEventsPage() {
                         </div>
                     </>
                 )}
-            </main>
-            <Footer />
-        </div>
+        </OrganizerLayout>
     );
 }
