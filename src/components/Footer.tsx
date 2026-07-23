@@ -167,6 +167,13 @@ export default function Footer() {
           <p className="text-sm text-muted-foreground">
             Built with <Flame className="w-4 h-4 inline-block text-orange-500 mx-1" /> by students, for students.
           </p>
+          <Link
+            to="/staff-login"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+          >
+            Organizer &amp; Admin Login
+          </Link>
         </div>
       </div>
     </footer>

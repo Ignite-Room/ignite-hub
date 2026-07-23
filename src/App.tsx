@@ -43,6 +43,7 @@ import LeaderboardPage from "./pages/leaderboard/LeaderboardPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ProfilePage from "./pages/profile/ProfilePage";
+import AccountPage from "./pages/profile/AccountPage";
 import ExternalVerificationPage from "./pages/admin/ExternalVerificationPage";
 
 // Events platform pages
@@ -125,7 +126,9 @@ const App = () => (
             <Route path="/events/ticket/:token/rounds/:roundId" element={<RoundSubmitPage />} />
             <Route path="/events/ticket/:token" element={<EventTicketPage />} />
             {/* Slug routes last — anything not matched above falls through here */}
-            <Route path="/events/:slug/register" element={<EventRegisterPage />} />
+            <Route path="/events/:slug/register" element={
+              <ProtectedRoute><EventRegisterPage /></ProtectedRoute>
+            } />
             <Route path="/events/:slug" element={<EventDetailPage />} />
 
             {/* ── Ambassador Platform (all under /ambassador) ───── */}
@@ -134,6 +137,7 @@ const App = () => (
 
             {/* Auth */}
             <Route path="/ambassador/login" element={<LoginPage />} />
+            <Route path="/staff-login" element={<LoginPage variant="staff" />} />
             <Route path="/ambassador/signup" element={<SignupPage />} />
             <Route path="/ambassador/pending" element={<PendingApprovalPage />} />
             <Route path="/ambassador/forgot-password" element={<ForgotPasswordPage />} />
@@ -183,6 +187,9 @@ const App = () => (
             <Route path="/signup" element={<SignupGeneralPage />} />
             <Route path="/home" element={
               <ProtectedRoute><HomePage /></ProtectedRoute>
+            } />
+            <Route path="/account" element={
+              <ProtectedRoute><AccountPage /></ProtectedRoute>
             } />
 
             {/* Legacy redirects — in case bookmarks exist */}

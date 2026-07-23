@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { api, EventDetail, PaidRegistrationResult, TicketTypeWithAvailability } from '@/lib/api';
 import { getRecaptchaToken, RECAPTCHA_SITE_KEY } from '@/lib/recaptcha';
 import { openRazorpayCheckout } from '@/lib/razorpay';
+import { useAuth } from '@/lib/auth-context';
 
 const schema = z.object({
     ticketTypeId: z.string().min(1, 'Select a ticket type'),
@@ -33,6 +34,7 @@ type FormData = z.infer<typeof schema>;
 export default function EventRegisterPage() {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [event, setEvent] = useState<EventDetail | null>(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -42,7 +44,12 @@ export default function EventRegisterPage() {
 
     const { register, control, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
-        defaultValues: { teamMembers: [] },
+        defaultValues: {
+            teamMembers: [],
+            name: user?.name || '',
+            email: user?.email || '',
+            phone: user?.phone || '',
+        },
     });
     const { fields, append, remove } = useFieldArray({ control, name: 'teamMembers' });
     const ticketTypeId = watch('ticketTypeId');
@@ -209,7 +216,8 @@ export default function EventRegisterPage() {
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div>
                                 <Label className="text-sm text-muted-foreground mb-1.5 block">Email</Label>
-                                <Input type="email" className="bg-secondary/50 border-border/50 h-11" {...register('email')} />
+                                <Input type="email" readOnly className="bg-secondary/30 border-border/50 h-11 cursor-not-allowed text-muted-foreground" {...register('email')} />
+                                <p className="mt-1 text-xs text-muted-foreground">Registrations use the email on your account.</p>
                                 {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>}
                             </div>
                             <div>

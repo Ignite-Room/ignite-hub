@@ -130,7 +130,13 @@ export default function SignupGeneralPage() {
 
                     <GoogleSignInButton
                         onError={setError}
-                        onSuccess={goToDestination}
+                        onSuccess={(outcome) => {
+                            if (outcome.otpRequired) {
+                                setError('This account needs additional verification. Please sign in from the login page instead.');
+                                return;
+                            }
+                            goToDestination();
+                        }}
                     />
 
                     <p className="mt-6 text-center text-sm text-muted-foreground">

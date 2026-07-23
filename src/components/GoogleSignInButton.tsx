@@ -1,11 +1,11 @@
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth, LoginOutcome } from '@/lib/auth-context';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 
 interface GoogleSignInButtonProps {
     onError: (message: string) => void;
-    onSuccess: () => void;
+    onSuccess: (outcome: LoginOutcome) => void;
 }
 
 function GoogleSignInInner({ onError, onSuccess }: GoogleSignInButtonProps) {
@@ -27,8 +27,8 @@ function GoogleSignInInner({ onError, onSuccess }: GoogleSignInButtonProps) {
                             return;
                         }
                         try {
-                            await loginWithGoogle(credentialResponse.credential);
-                            onSuccess();
+                            const outcome = await loginWithGoogle(credentialResponse.credential);
+                            onSuccess(outcome);
                         } catch (e) {
                             onError(e instanceof Error ? e.message : 'Google sign-in failed');
                         }

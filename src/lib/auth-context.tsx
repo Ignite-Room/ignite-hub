@@ -22,12 +22,18 @@ export interface User {
   techStack?: string[];
 }
 
+// Returned by any login entry point. When otpRequired is true, no session has been
+// created yet — the caller must collect a code and call completeOtpLogin.
+export type LoginOutcome = { otpRequired: false } | { otpRequired: true; email: string };
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
-  loginWithGoogle: (credential: string) => Promise<void>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<LoginOutcome>;
+  loginWithGoogle: (credential: string) => Promise<LoginOutcome>;
+  completeOtpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<void>;
+  resendLoginOtp: (email: string) => Promise<void>;
   registerGeneral: (data: { name: string; email: string; password: string; phone?: string }) => Promise<void>;
   signup: (_data: SignupData) => Promise<void>;
   logout: () => void;
@@ -118,14 +124,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(newUser);
   };
 
-  const login = async (email: string, password: string, rememberMe = false) => {
+  const login = async (email: string, password: string, rememberMe = false): Promise<LoginOutcome> => {
     const res = await api.login(email, password, rememberMe);
+    if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email };
+    persistSession(res.token, res.user, rememberMe);
+    return { otpRequired: false };
+  };
+
+  const loginWithGoogle = async (credential: string): Promise<LoginOutcome> => {
+    const res = await api.loginWithGoogle(credential);
+    if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email };
+    persistSession(res.token, res.user, true);
+    return { otpRequired: false };
+  };
+
+  const completeOtpLogin = async (email: string, code: string, rememberMe = false) => {
+    const res = await api.verifyLoginOtp(email, code, rememberMe);
     persistSession(res.token, res.user, rememberMe);
   };
 
-  const loginWithGoogle = async (credential: string) => {
-    const res = await api.loginWithGoogle(credential);
-    persistSession(res.token, res.user, true);
+  const resendLoginOtp = async (email: string) => {
+    await api.resendLoginOtp(email);
   };
 
   const registerGeneral = async (data: { name: string; email: string; password: string; phone?: string }) => {
@@ -155,6 +174,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       login,
       loginWithGoogle,
+      completeOtpLogin,
+      resendLoginOtp,
       registerGeneral,
       signup,
       logout,

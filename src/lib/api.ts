@@ -2,6 +2,10 @@ import { MockAPI } from './mock-api';
 import type { User } from './auth-context';
 import type { Submission, LeaderboardEntry } from './mock-api';
 
+// Admin/organizer accounts return otpRequired instead of a token; the caller must
+// complete the flow via api.verifyLoginOtp before a session exists.
+export type LoginResponse = { token: string; user: User } | { otpRequired: true; email: string };
+
 // ── Configuration ─────────────────────────────────────────────────────────
 // VITE_USE_MOCK=true → use localStorage mock (development)
 // VITE_USE_MOCK=false → use real Express backend (production)
@@ -57,10 +61,26 @@ async function realForm<T>(path: string, formData: FormData): Promise<T> {
 export const api = {
     // ── Auth ───────────────────────────────────────────────────────────────
     async login(email: string, password: string, rememberMe = false) {
-        if (USE_MOCK) return MockAPI.login(email, password);
-        return real<{ token: string; user: User }>('/auth/login', {
+        if (USE_MOCK) return MockAPI.login(email, password) as unknown as LoginResponse;
+        return real<LoginResponse>('/auth/login', {
             method: 'POST',
             body: JSON.stringify({ email, password, rememberMe }),
+        });
+    },
+
+    async verifyLoginOtp(email: string, code: string, rememberMe = false) {
+        if (USE_MOCK) throw new Error('OTP login requires the real backend (set VITE_USE_MOCK=false)');
+        return real<{ token: string; user: User }>('/auth/verify-login-otp', {
+            method: 'POST',
+            body: JSON.stringify({ email, code, rememberMe }),
+        });
+    },
+
+    async resendLoginOtp(email: string) {
+        if (USE_MOCK) return { ok: true, message: '' };
+        return real<{ ok: boolean; message: string }>('/auth/resend-login-otp', {
+            method: 'POST',
+            body: JSON.stringify({ email }),
         });
     },
 
@@ -82,7 +102,7 @@ export const api = {
 
     async loginWithGoogle(credential: string) {
         if (USE_MOCK) throw new Error('Google login requires the real backend (set VITE_USE_MOCK=false)');
-        return real<{ token: string; user: User }>('/auth/google', {
+        return real<LoginResponse>('/auth/google', {
             method: 'POST',
             body: JSON.stringify({ credential }),
         });
@@ -310,6 +330,12 @@ export const api = {
             body: JSON.stringify(data),
         });
     },
+
+    // ── Account: my registrations & transactions ────────────────────────────
+    async getMyRegistrations() {
+        if (USE_MOCK) return [];
+        return real<MyRegistration[]>('/profile/registrations');
+    },
 };
 
 // ── Events types ─────────────────────────────────────────────────────────────
@@ -403,6 +429,21 @@ export interface TicketRound {
     allowLinks: boolean;
     deadlinePassed: boolean;
     submission: { status: 'PENDING' | 'SUBMITTED' | 'SHORTLISTED' | 'REJECTED'; submittedAt: string | null } | null;
+}
+
+export interface MyRegistration {
+    id: string;
+    token: string;
+    status: 'PENDING_PAYMENT' | 'CONFIRMED' | 'CANCELLED' | 'CHECKED_IN' | 'NO_SHOW' | 'REFUNDED';
+    teamName: string | null;
+    createdAt: string;
+    checkedInAt: string | null;
+    event: {
+        title: string; slug: string; startAt: string; endAt: string; mode: string;
+        venueName: string | null; coverImageUrl: string | null; status: string;
+    };
+    ticketType: { name: string; priceInPaise: number };
+    order: { id: string; amountInPaise: number; status: 'CREATED' | 'PAID' | 'FAILED' | 'REFUNDED'; gatewayPaymentId: string | null; createdAt: string } | null;
 }
 
 export interface OrganizerApplyInput {

@@ -38,10 +38,12 @@ export default function HomePage() {
         },
         {
             icon: UserIcon,
-            title: 'My Profile',
-            description: 'Update your details, avatar, and account information.',
-            cta: 'View Profile',
-            to: '/ambassador/profile',
+            title: isAmbassador ? 'My Profile' : 'My Account',
+            description: isAmbassador
+                ? 'Update your details, avatar, and account information.'
+                : 'View your registered events, payment history, and account details.',
+            cta: isAmbassador ? 'View Profile' : 'View Account',
+            to: isAmbassador ? '/ambassador/profile' : '/account',
         },
     ];
 
