@@ -51,9 +51,16 @@ export default function EventPreviewCard({ event, variant, registerHref, registr
 
     return (
         <div>
-            <div className={`${live ? 'h-36' : 'h-56 md:h-72'} rounded-2xl bg-secondary/40 overflow-hidden mb-6`}>
+            <div className={`relative ${live ? 'h-36' : 'h-56 md:h-72'} rounded-2xl bg-secondary/40 overflow-hidden mb-6`}>
                 {event.coverImageUrl ? (
-                    <img src={event.coverImageUrl} alt={event.title || 'Event cover'} className="w-full h-full object-cover" />
+                    <>
+                        <div
+                            className="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-50"
+                            style={{ backgroundImage: `url(${event.coverImageUrl})` }}
+                            aria-hidden="true"
+                        />
+                        <img src={event.coverImageUrl} alt={event.title || 'Event cover'} className="relative w-full h-full object-contain" />
+                    </>
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm text-center px-4">
                         No cover image yet
