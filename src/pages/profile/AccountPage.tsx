@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
     User, Mail, Phone, CalendarDays, Receipt, MapPin, Ticket,
-    CheckCircle2, Clock, XCircle, Loader2, ExternalLink,
+    CheckCircle2, Clock, XCircle, Loader2, ExternalLink, Award, Rocket, ArrowRight,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -37,6 +38,40 @@ function Badge({ label, className }: { label: string; className: string }) {
     return <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${className}`}>{label}</span>;
 }
 
+const PROGRAM_STATUS_STYLE: Record<string, { label: string; className: string }> = {
+    PENDING: { label: 'Application under review', className: 'bg-amber-500/10 text-amber-400 border-amber-500/30' },
+    APPROVED: { label: 'Active', className: 'bg-green-500/10 text-green-400 border-green-500/30' },
+    REJECTED: { label: 'Not approved — you can reapply', className: 'bg-muted text-muted-foreground border-border/50' },
+    SUSPENDED: { label: 'Suspended', className: 'bg-destructive/10 text-destructive border-destructive/30' },
+};
+
+function ProgramCard({ icon: Icon, title, description, status, to, cta }: {
+    icon: typeof Award; title: string; description: string;
+    status?: keyof typeof PROGRAM_STATUS_STYLE; to: string; cta: string;
+}) {
+    const statusStyle = status ? PROGRAM_STATUS_STYLE[status] : null;
+    return (
+        <Link to={to} className="flex-1 min-w-[240px] rounded-2xl border border-border/50 bg-card p-5 hover:border-primary/30 transition-colors group">
+            <div className="flex items-start gap-3 mb-3">
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-4.5 h-4.5 text-primary" />
+                </div>
+                <div className="min-w-0">
+                    <p className="font-medium text-foreground">{title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+                </div>
+            </div>
+            {statusStyle ? (
+                <Badge label={statusStyle.label} className={statusStyle.className} />
+            ) : (
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                    {cta} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+            )}
+        </Link>
+    );
+}
+
 function Avatar({ url, name }: { url?: string; name?: string }) {
     if (url) return <img src={url} alt={name || 'Avatar'} className="w-16 h-16 rounded-full object-cover border-2 border-primary/30" />;
     return (
@@ -62,6 +97,9 @@ export default function AccountPage() {
 
     const transactions = useMemo(() => registrations.filter(r => r.order !== null), [registrations]);
 
+    const isAmbassador = user?.role === 'AMBASSADOR' && user?.accountStatus === 'APPROVED';
+    const isPartner = user?.partnerStatus === 'APPROVED';
+
     const itemVariants = {
         hidden: { opacity: 0, y: 16 },
         show: { opacity: 1, y: 0, transition: { duration: 0.3 } },
@@ -76,12 +114,44 @@ export default function AccountPage() {
                     <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 border border-border/50 flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
                         <Avatar url={user?.avatarUrl} name={user?.name} />
                         <div className="min-w-0 flex-1">
-                            <h1 className="text-xl font-bold text-foreground">{user?.name}</h1>
+                            <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                                <h1 className="text-xl font-bold text-foreground">{user?.name}</h1>
+                                {isPartner && (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 border border-primary/30 text-primary">
+                                        <Award className="w-3 h-3" /> Partner
+                                    </span>
+                                )}
+                                {isAmbassador && (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-accent/15 border border-accent/30 text-accent-foreground">
+                                        Ambassador
+                                    </span>
+                                )}
+                            </div>
                             <div className="mt-2 space-y-1">
                                 <p className="flex items-center justify-center sm:justify-start gap-1.5 text-sm text-muted-foreground"><Mail className="w-3.5 h-3.5" /> {user?.email}</p>
                                 {user?.phone && <p className="flex items-center justify-center sm:justify-start gap-1.5 text-sm text-muted-foreground"><Phone className="w-3.5 h-3.5" /> {user.phone}</p>}
                             </div>
                         </div>
+                    </motion.div>
+
+                    {/* Programs — apply, or check status */}
+                    <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
+                        <ProgramCard
+                            icon={Award}
+                            title="Campus Ambassador Program"
+                            description="Lead your campus community and unlock rewards."
+                            status={user?.role === 'AMBASSADOR' ? user?.accountStatus : undefined}
+                            to={isAmbassador ? '/ambassador/dashboard' : '/ambassador/apply'}
+                            cta="Apply now"
+                        />
+                        <ProgramCard
+                            icon={Rocket}
+                            title="Organizer Program"
+                            description="Host your own hackathons, workshops, and meetups."
+                            status={user?.partnerStatus ?? undefined}
+                            to={isPartner ? '/events/organizer' : '/events/organizers/apply'}
+                            cta="Apply now"
+                        />
                     </motion.div>
 
                     {/* Tabs */}

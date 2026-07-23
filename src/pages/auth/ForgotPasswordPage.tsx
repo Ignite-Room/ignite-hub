@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
             await api.resetPassword(email, token, newPassword);
             setSuccess(true);
             setTimeout(() => {
-                navigate('/ambassador/login');
+                navigate('/login');
             }, 3000);
         } catch (err: any) {
             setResetError(err.message || 'Failed to reset password');
@@ -80,7 +80,7 @@ export default function ForgotPasswordPage() {
                     </div>
                     <h2 className="text-2xl font-bold text-foreground mb-3">Password Reset!</h2>
                     <p className="text-muted-foreground mb-8">Your password has been changed successfully. Redirecting you to login...</p>
-                    <Button onClick={() => navigate('/ambassador/login')} className="bg-primary hover:bg-primary/90 text-white w-full">Go to Login</Button>
+                    <Button onClick={() => navigate('/login')} className="bg-primary hover:bg-primary/90 text-white w-full">Go to Login</Button>
                 </motion.div>
             </div>
         );
@@ -108,7 +108,7 @@ export default function ForgotPasswordPage() {
                         <span className="text-xl font-bold text-gradient">Ignite Room</span>
                     </div>
 
-                    <Link to="/ambassador/login" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-6">
+                    <Link to="/login" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-6">
                         <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Login
                     </Link>
 

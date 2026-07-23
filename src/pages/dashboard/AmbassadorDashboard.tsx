@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
     Copy, Check, Share2, Trophy, Users, BadgeCheck, ExternalLink, Flame,
-    LogOut, Star, RefreshCw, AlertTriangle, MessageCircle, Twitter, Linkedin, Sparkles, UserCircle
+    LogOut, Star, RefreshCw, AlertTriangle, MessageCircle, Twitter, Linkedin, Sparkles, UserCircle,
+    Clock, XCircle, Award,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
@@ -28,8 +29,16 @@ export default function AmbassadorDashboard() {
 
     const referralLink = user?.referralCode ? `${SITE_URL}/ref/${user.referralCode}` : '';
 
+    // Ambassador and Partner (organizer) status are independent privileges on one
+    // account — this dashboard only unlocks once the Ambassador application itself
+    // is approved, regardless of role history.
+    const isApprovedAmbassador = user?.role === 'AMBASSADOR' && user?.accountStatus === 'APPROVED';
+    const isPending = user?.role === 'AMBASSADOR' && user?.accountStatus === 'PENDING';
+    const isRejected = user?.role === 'AMBASSADOR' && user?.accountStatus === 'REJECTED';
+    const isPartner = user?.partnerStatus === 'APPROVED';
+
     const loadData = useCallback(async () => {
-        if (!user?.id) return;
+        if (!user?.id || !isApprovedAmbassador) return;
         setLoadError(false);
         try {
             const [statsData, subs, chart, lb] = await Promise.allSettled([
@@ -53,7 +62,7 @@ export default function AmbassadorDashboard() {
             console.error('[Dashboard] Unhandled load error:', e);
             setLoadError(true);
         }
-    }, [user?.id]);
+    }, [user?.id, isApprovedAmbassador]);
 
     useEffect(() => { loadData(); }, [loadData]);
 
@@ -168,15 +177,55 @@ export default function AmbassadorDashboard() {
             )}
 
             {/* Main content */}
+            {!isApprovedAmbassador ? (
+                <main className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
+                    <div className="glass-card rounded-2xl p-8 text-center border border-border/50">
+                        {isPending ? (
+                            <>
+                                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
+                                    <Clock className="w-7 h-7 text-amber-400" />
+                                </div>
+                                <h1 className="text-xl font-bold text-foreground mb-2">Application under review</h1>
+                                <p className="text-muted-foreground text-sm">
+                                    We're reviewing your Campus Ambassador application. You'll get an email either way — your Ignite Room account works normally in the meantime.
+                                </p>
+                            </>
+                        ) : isRejected ? (
+                            <>
+                                <div className="w-14 h-14 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto mb-4">
+                                    <XCircle className="w-7 h-7 text-destructive" />
+                                </div>
+                                <h1 className="text-xl font-bold text-foreground mb-2">Application not approved</h1>
+                                <p className="text-muted-foreground text-sm mb-5">Your last application wasn't approved, but you're welcome to apply again.</p>
+                                <Button asChild><Link to="/ambassador/apply">Reapply</Link></Button>
+                            </>
+                        ) : (
+                            <>
+                                <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
+                                    <Award className="w-7 h-7 text-primary" />
+                                </div>
+                                <h1 className="text-xl font-bold text-foreground mb-2">Join the Campus Ambassador Program</h1>
+                                <p className="text-muted-foreground text-sm mb-5">Lead your campus community, run tasks, and unlock exclusive rewards. Your existing account gets upgraded once approved.</p>
+                                <Button asChild><Link to="/ambassador/apply">Apply Now</Link></Button>
+                            </>
+                        )}
+                    </div>
+                </main>
+            ) : (
             <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-5 sm:space-y-6">
 
                     {/* Welcome */}
                     <motion.div variants={itemVariants}>
-                        <h1 className="text-xl sm:text-3xl font-bold text-foreground flex items-center gap-2">
+                        <h1 className="text-xl sm:text-3xl font-bold text-foreground flex items-center gap-2 flex-wrap">
                             Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0] ?? ''}</span> <Sparkles className="w-6 h-6 text-amber-400 inline-block mb-1" />
+                            {isPartner && (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 border border-primary/30 text-primary">
+                                    <Award className="w-3 h-3" /> Partner
+                                </span>
+                            )}
                         </h1>
-                        <p className="text-muted-foreground mt-1 text-sm">Track your referrals and submissions here.</p>
+                        <p className="text-muted-foreground mt-1 text-sm">Track your referrals and {isPartner ? 'partner tasks' : 'submissions'} here.</p>
                     </motion.div>
 
                     {/* Stats Cards — 2 col on mobile, 4 on desktop */}
@@ -286,11 +335,12 @@ export default function AmbassadorDashboard() {
 
                     {/* Submissions Table */}
                     <motion.div variants={itemVariants}>
-                        <SubmissionsTable submissions={submissions} title="Recent Submissions (from your link)" />
+                        <SubmissionsTable submissions={submissions} title={isPartner ? 'Recent Partner Tasks (from your link)' : 'Recent Submissions (from your link)'} />
                     </motion.div>
 
                 </motion.div>
             </main>
+            )}
         </div>
     );
 }

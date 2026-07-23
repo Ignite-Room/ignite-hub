@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, CheckCircle2, Mail, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/auth-context';
 import igniteLogo from '@/assets/ignite-logo.png';
 
 export default function PendingApprovalPage() {
-    const location = useLocation();
-    const state = location.state as { name?: string; college?: string } | null;
+    const { user } = useAuth();
 
     // Scroll to top
     useEffect(() => { window.scrollTo(0, 0); }, []);
@@ -36,12 +36,12 @@ export default function PendingApprovalPage() {
                     </div>
 
                     <h1 className="text-2xl font-bold text-foreground mb-2">Application Received!</h1>
-                    {state?.name && (
-                        <p className="text-primary font-medium mb-3">Hi {state.name}</p>
+                    {user?.name && (
+                        <p className="text-primary font-medium mb-3">Hi {user.name.split(' ')[0]}</p>
                     )}
                     <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                        Your campus ambassador application{state?.college ? ` from ${state.college}` : ''} has been submitted successfully.
-                        Our team will review your details and get back to you shortly.
+                        Your Campus Ambassador application{user?.college ? ` from ${user.college}` : ''} has been submitted successfully.
+                        Our team will review your details and get back to you shortly. Your Ignite Room account works normally in the meantime.
                     </p>
 
                     {/* Steps */}
@@ -61,8 +61,8 @@ export default function PendingApprovalPage() {
                     </div>
 
                     <div className="space-y-2">
-                        <Link to="/ambassador/login">
-                            <Button variant="outline" className="w-full border-border/50">Check Login Status</Button>
+                        <Link to="/home">
+                            <Button variant="outline" className="w-full border-border/50">Go to Your Account</Button>
                         </Link>
                         <Link to="/ambassador">
                             <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground text-sm gap-1.5">

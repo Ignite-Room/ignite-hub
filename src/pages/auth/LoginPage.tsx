@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, LogIn, AlertCircle, Clock, XCircle, Check, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, LogIn, AlertCircle, Check, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,7 +35,6 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [statusBanner, setStatusBanner] = useState<'pending' | 'rejected' | null>(null);
 
     const [step, setStep] = useState<'credentials' | 'otp' | 'verified'>('credentials');
     const [otpEmail, setOtpEmail] = useState('');
@@ -64,15 +63,7 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
         navigate(destination, { replace: true });
     };
 
-    const handleAuthError = (msg: string) => {
-        if (msg.includes('PENDING_APPROVAL') || msg.includes('under review')) {
-            setStatusBanner('pending');
-        } else if (msg.includes('REJECTED') || msg.includes('not approved')) {
-            setStatusBanner('rejected');
-        } else {
-            setError(msg);
-        }
-    };
+    const handleAuthError = (msg: string) => setError(msg);
 
     const handleOutcome = (outcome: LoginOutcome) => {
         if (outcome.otpRequired) {
@@ -88,7 +79,6 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
 
     const onSubmit = async (data: FormData) => {
         setError('');
-        setStatusBanner(null);
         setLoading(true);
         try {
             const outcome = await login(data.email, data.password, rememberMe);
@@ -174,22 +164,6 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
                                     <p className="text-muted-foreground text-sm">{subheading}</p>
                                 </div>
 
-                                {statusBanner === 'pending' && (
-                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-                                        className="mb-4 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30"
-                                    >
-                                        <div className="flex gap-2 mb-1"><Clock className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" /><p className="text-sm font-medium text-amber-300">Application Under Review</p></div>
-                                        <p className="text-xs text-amber-400/80 ml-6">Your application is pending admin approval. You'll be able to log in once approved.</p>
-                                    </motion.div>
-                                )}
-                                {statusBanner === 'rejected' && (
-                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-                                        className="mb-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30"
-                                    >
-                                        <div className="flex gap-2 mb-1"><XCircle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" /><p className="text-sm font-medium text-destructive">Application Not Approved</p></div>
-                                        <p className="text-xs text-destructive/80 ml-6">Contact <a href="mailto:admin@igniteroom.in" className="underline">admin@igniteroom.in</a> for details.</p>
-                                    </motion.div>
-                                )}
                                 {error && (
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
@@ -268,7 +242,7 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
                                         </p>
                                         <p className="mt-3 text-center text-xs text-muted-foreground">
                                             Want to become a Campus Ambassador?{' '}
-                                            <Link to="/ambassador/signup" className="hover:text-foreground transition-colors underline">Apply here</Link>
+                                            <Link to="/ambassador/apply" className="hover:text-foreground transition-colors underline">Apply here</Link>
                                         </p>
                                     </>
                                 )}

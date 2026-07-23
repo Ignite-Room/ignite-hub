@@ -79,7 +79,7 @@ export default function LeaderboardPage() {
                                 </Button>
                             </Link>
                         ) : (
-                            <Link to="/ambassador/login">
+                            <Link to="/login">
                                 <Button size="sm" className="bg-primary hover:bg-primary/90 text-white">Ambassador Login</Button>
                             </Link>
                         )}

@@ -56,10 +56,10 @@ export default function AmbassadorLanding() {
                                     <Trophy className="w-4 h-4" /> Leaderboard
                                 </Button>
                             </Link>
-                            <Link to="/ambassador/login">
+                            <Link to="/login">
                                 <Button variant="outline" size="sm" className="border-border/50">Log In</Button>
                             </Link>
-                            <Link to="/ambassador/signup">
+                            <Link to="/ambassador/apply">
                                 <Button size="sm" className="bg-primary hover:bg-primary/90 text-white gap-1.5">
                                     Join Now <ArrowRight className="w-3.5 h-3.5" />
                                 </Button>
@@ -98,7 +98,7 @@ export default function AmbassadorLanding() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <Link to="/ambassador/signup">
+                            <Link to="/ambassador/apply">
                                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-white gap-2 text-base px-8 h-12 shadow-lg shadow-primary/20">
                                     <Zap className="w-5 h-5" /> Become an Ambassador
                                 </Button>
@@ -254,12 +254,12 @@ export default function AmbassadorLanding() {
                                 Join the campus ambassador program today and represent Ignite Room at your college.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                                <Link to="/ambassador/signup">
+                                <Link to="/ambassador/apply">
                                     <Button size="lg" className="bg-primary hover:bg-primary/90 text-white gap-2 px-8 h-12 shadow-lg shadow-primary/20">
                                         <Zap className="w-5 h-5" /> Create Account
                                     </Button>
                                 </Link>
-                                <Link to="/ambassador/login">
+                                <Link to="/login">
                                     <Button size="lg" variant="outline" className="border-border/50 px-8 h-12">
                                         Already have an account
                                     </Button>

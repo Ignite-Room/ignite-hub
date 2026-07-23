@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { api } from './api';
 
+// A user's standing in the Ambassador Program and as an Organizer ("Partner") are
+// independent privileges layered on top of one base account — never a separate
+// account/login. accountStatus tracks the Ambassador application specifically
+// (only meaningful when role === 'AMBASSADOR'); partnerStatus mirrors the same
+// PENDING/APPROVED/REJECTED/SUSPENDED shape for the Organizer application.
 export interface User {
   id: string;
   name: string;
@@ -9,6 +14,8 @@ export interface User {
   referralCode: string;
   role: 'USER' | 'AMBASSADOR' | 'ADMIN' | 'ORGANIZER' | 'ambassador' | 'admin';
   accountStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  partnerStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED' | null;
+  orgName?: string | null;
   authProvider?: 'LOCAL' | 'GOOGLE';
   college?: string;
   enrollmentId?: string;
@@ -35,17 +42,10 @@ interface AuthContextType {
   completeOtpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<void>;
   resendLoginOtp: (email: string) => Promise<void>;
   registerGeneral: (data: { name: string; email: string; password: string; phone?: string }) => Promise<void>;
-  signup: (_data: SignupData) => Promise<void>;
+  applyAmbassador: (data: { college: string; enrollmentId: string; phone: string }) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
   isAuthenticated: boolean;
-}
-
-interface SignupData {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
 }
 
 const TOKEN_KEY = 'ignite_token';
@@ -152,9 +152,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     persistSession(res.token, res.user, true);
   };
 
-  const signup = async (_data: SignupData) => {
-    // Signup now goes to approval flow — new SignupPage handles this directly
-    throw new Error('Use SignupPage directly. Signup now requires admin approval.');
+  // Upgrades the current account into a pending Ambassador application — same
+  // token/session, just refreshes the cached user (role/accountStatus changed).
+  const applyAmbassador = async (data: { college: string; enrollmentId: string; phone: string }) => {
+    const res = await api.applyAmbassador(data);
+    const storage = getActiveStorage();
+    storage?.setItem(USER_KEY, JSON.stringify(res.user));
+    setUser(res.user);
   };
 
   const logout = () => {
@@ -177,7 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       completeOtpLogin,
       resendLoginOtp,
       registerGeneral,
-      signup,
+      applyAmbassador,
       logout,
       isAdmin: user?.role === 'ADMIN' || user?.role === 'admin',
       isAuthenticated: !!user,
@@ -193,11 +197,15 @@ export function useAuth() {
   return ctx;
 }
 
-/** Where to send someone right after they log in. Depends on their role, not a fixed page. */
+/**
+ * Where to send someone right after they log in. Ambassador and Partner (organizer)
+ * status are independent privileges layered on one account, so this checks both —
+ * whichever applies, highest privilege first — rather than a single exclusive role.
+ */
 export function redirectPathForUser(user: User): string {
   const role = user.role.toUpperCase();
   if (role === 'ADMIN') return '/ambassador/admin';
-  if (role === 'AMBASSADOR') return '/ambassador/dashboard';
-  if (role === 'ORGANIZER') return '/events/organizer';
-  return '/home'; // USER, or anything else general
+  if (role === 'AMBASSADOR' && user.accountStatus === 'APPROVED') return '/ambassador/dashboard';
+  if (user.partnerStatus === 'APPROVED') return '/events/organizer';
+  return '/home'; // USER, pending/rejected applications, or anything else general
 }

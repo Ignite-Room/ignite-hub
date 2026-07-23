@@ -34,7 +34,7 @@ import MailCenter from "./pages/admin/MailCenter";
 // Ambassador platform pages
 import AmbassadorLanding from "./pages/ambassador/AmbassadorLanding";
 import LoginPage from "./pages/auth/LoginPage";
-import SignupPage from "./pages/auth/SignupPage";
+import AmbassadorApplyPage from "./pages/auth/AmbassadorApplyPage";
 import PendingApprovalPage from "./pages/auth/PendingApprovalPage";
 import SignupGeneralPage from "./pages/auth/SignupGeneralPage";
 import AmbassadorDashboard from "./pages/dashboard/AmbassadorDashboard";
@@ -135,10 +135,11 @@ const App = () => (
             {/* Landing page */}
             <Route path="/ambassador" element={<AmbassadorLanding />} />
 
-            {/* Auth */}
-            <Route path="/ambassador/login" element={<LoginPage />} />
+            {/* Auth — one login for everyone; /ambassador/login is a legacy alias */}
+            <Route path="/ambassador/login" element={<Navigate to="/login" replace />} />
             <Route path="/staff-login" element={<LoginPage variant="staff" />} />
-            <Route path="/ambassador/signup" element={<SignupPage />} />
+            <Route path="/ambassador/apply" element={<AmbassadorApplyPage />} />
+            <Route path="/ambassador/signup" element={<Navigate to="/ambassador/apply" replace />} />
             <Route path="/ambassador/pending" element={<PendingApprovalPage />} />
             <Route path="/ambassador/forgot-password" element={<ForgotPasswordPage />} />
 

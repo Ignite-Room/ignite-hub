@@ -27,7 +27,7 @@ Key facts you know:
 - Winners announced after the hackathon concludes; top ambassadors contacted directly
 - Prizes: exclusive Ignite Room merchandise, certificates, access to events
 - Any college student in India passionate about tech can join, no prior experience needed
-- Sign up at igniteroom.in/ambassador/signup
+- Log in (or sign up) at igniteroom.in/login, then apply from igniteroom.in/ambassador/apply
 - Referral links are unique and used to track tasks
 - Contact: admin@igniteroom.in
 - Website: igniteroom.in

@@ -84,9 +84,9 @@ export const api = {
         });
     },
 
-    async signup(data: { name: string; email: string; phone: string; password: string }) {
-        if (USE_MOCK) return MockAPI.signup(data);
-        return real<{ token: string; user: User }>('/auth/signup', {
+    async applyAmbassador(data: { college: string; enrollmentId: string; phone: string }) {
+        if (USE_MOCK) throw new Error('Applying requires the real backend (set VITE_USE_MOCK=false)');
+        return real<{ ok: boolean; user: User }>('/auth/apply-ambassador', {
             method: 'POST',
             body: JSON.stringify(data),
         });

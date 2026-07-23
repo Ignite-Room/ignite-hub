@@ -144,8 +144,8 @@ export default function SignupGeneralPage() {
                         <Link to="/login" className="text-primary hover:text-primary/80 font-medium transition-colors">Log in</Link>
                     </p>
                     <p className="mt-3 text-center text-xs text-muted-foreground">
-                        Want to become a Campus Ambassador?{' '}
-                        <Link to="/ambassador/signup" className="hover:text-foreground transition-colors underline">Apply here</Link>
+                        Want to become a Campus Ambassador? Create your account above, then{' '}
+                        <Link to="/ambassador/apply" className="hover:text-foreground transition-colors underline">apply here</Link>.
                     </p>
                 </div>
             </motion.div>

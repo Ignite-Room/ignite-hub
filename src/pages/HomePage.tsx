@@ -8,7 +8,9 @@ export default function HomePage() {
     const { user } = useAuth();
     const role = (user?.role || '').toUpperCase();
     const isAmbassador = role === 'AMBASSADOR';
+    const ambassadorApproved = isAmbassador && user?.accountStatus === 'APPROVED';
     const ambassadorPending = isAmbassador && user?.accountStatus === 'PENDING';
+    const ambassadorRejected = isAmbassador && user?.accountStatus === 'REJECTED';
 
     const cards = [
         {
@@ -23,11 +25,13 @@ export default function HomePage() {
             title: 'Ambassador Program',
             description: ambassadorPending
                 ? 'Your Campus Ambassador application is under review. We\'ll notify you once it\'s approved.'
-                : isAmbassador
-                    ? 'Head to your Ambassador Dashboard to track referrals, tasks, and leaderboard rank.'
-                    : 'Lead your campus community, run events, and unlock exclusive rewards as a Campus Ambassador.',
-            cta: ambassadorPending ? 'View Status' : isAmbassador ? 'Open Dashboard' : 'Apply Now',
-            to: ambassadorPending ? '/ambassador/pending' : isAmbassador ? '/ambassador/dashboard' : '/ambassador/signup',
+                : ambassadorRejected
+                    ? 'Your last application wasn\'t approved. You\'re welcome to apply again.'
+                    : ambassadorApproved
+                        ? 'Head to your Ambassador Dashboard to track referrals, tasks, and leaderboard rank.'
+                        : 'Lead your campus community, run events, and unlock exclusive rewards as a Campus Ambassador.',
+            cta: ambassadorPending ? 'View Status' : ambassadorRejected ? 'Reapply' : ambassadorApproved ? 'Open Dashboard' : 'Apply Now',
+            to: ambassadorPending ? '/ambassador/pending' : ambassadorApproved ? '/ambassador/dashboard' : '/ambassador/apply',
         },
         {
             icon: Rocket,
