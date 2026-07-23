@@ -138,6 +138,15 @@ export default function Footer() {
                   Play Chess <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </li>
+              <li>
+                <Link
+                  to="/staff-login"
+                  onClick={(e) => handleNavigation('/staff-login', e)}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Organizer &amp; Admin Login
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -167,13 +176,6 @@ export default function Footer() {
           <p className="text-sm text-muted-foreground">
             Built with <Flame className="w-4 h-4 inline-block text-orange-500 mx-1" /> by students, for students.
           </p>
-          <Link
-            to="/staff-login"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
-          >
-            Organizer &amp; Admin Login
-          </Link>
         </div>
       </div>
     </footer>

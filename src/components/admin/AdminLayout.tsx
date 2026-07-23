@@ -84,7 +84,7 @@ export default function AdminLayout({ title, breadcrumb, actions, children }: Ad
         <div className="min-h-screen bg-background flex">
             <aside className={`hidden lg:flex flex-col flex-shrink-0 border-r border-border/50 bg-card/40 backdrop-blur-xl transition-all duration-200 sticky top-0 h-screen ${collapsed ? 'w-[72px]' : 'w-64'}`}>
                 <div className="h-16 flex items-center px-4 border-b border-border/50 gap-2 flex-shrink-0">
-                    <img src={igniteLogo} alt="Ignite Room" className="h-7 w-7 flex-shrink-0" />
+                    <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto flex-shrink-0" />
                     {!collapsed && <span className="font-bold text-gradient truncate">Ignite Room</span>}
                 </div>
                 <SidebarContent collapsed={collapsed} />
@@ -103,7 +103,7 @@ export default function AdminLayout({ title, breadcrumb, actions, children }: Ad
                 <SheetContent side="left" className="w-64 p-0 flex flex-col">
                     <SheetTitle className="sr-only">Admin navigation</SheetTitle>
                     <div className="h-16 flex items-center px-4 border-b border-border/50 gap-2 flex-shrink-0">
-                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-7 flex-shrink-0" />
+                        <img src={igniteLogo} alt="Ignite Room" className="h-7 w-auto flex-shrink-0" />
                         <span className="font-bold text-gradient truncate">Ignite Room</span>
                     </div>
                     <div onClick={() => setMobileOpen(false)} className="flex-1 flex flex-col min-h-0">

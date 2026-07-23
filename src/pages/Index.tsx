@@ -8,7 +8,6 @@ import ChaptersSection from '@/components/sections/ChaptersSection';
 import AppSection from '@/components/sections/AppSection';
 import CollaborationsSection from '@/components/sections/CollaborationsSection';
 import Footer from '@/components/Footer';
-import InternRecruitmentPopup from '@/components/InternRecruitmentPopup';
 
 // Lazy load 3D background for performance
 const Logo3DBackground = lazy(() => import('@/components/Logo3DBackground'));
@@ -39,9 +38,6 @@ const Index = () => {
       <footer className="relative z-20 pointer-events-auto">
         <Footer />
       </footer>
-
-      {/* App Dev Intern recruitment announcement */}
-      <InternRecruitmentPopup />
     </div>
   );
 };

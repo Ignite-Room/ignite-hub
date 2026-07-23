@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth, redirectPathForUser, LoginOutcome } from '@/lib/auth-context';
+import { maskEmail } from '@/lib/utils';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
 import OtpCodeInput from '@/components/OtpCodeInput';
 import igniteLogo from '@/assets/ignite-logo.png';
@@ -297,7 +298,7 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
                                     <div>
                                         <h1 className="text-xl font-bold text-foreground mb-1">Enter verification code</h1>
                                         <p className="text-muted-foreground text-sm">
-                                            We sent a 6-digit code to <span className="text-foreground font-medium">{otpEmail}</span>
+                                            We sent a 6-digit code to <span className="text-foreground font-medium">{maskEmail(otpEmail)}</span>
                                         </p>
                                     </div>
                                 </div>
