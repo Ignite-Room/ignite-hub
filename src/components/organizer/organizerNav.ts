@@ -1,4 +1,4 @@
-import { LayoutDashboard, IndianRupee, Landmark, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, Plus, IndianRupee, Landmark, Building2, type LucideIcon } from 'lucide-react';
 
 export interface OrganizerNavItem {
     label: string;
@@ -16,6 +16,8 @@ export const ORGANIZER_NAV: OrganizerNavGroup[] = [
         label: 'Events',
         items: [
             { label: 'Dashboard', to: '/events/organizer', icon: LayoutDashboard },
+            { label: 'My Events', to: '/events/organizer/events', icon: CalendarDays },
+            { label: 'Create Event', to: '/events/organizer/new', icon: Plus },
         ],
     },
     {
@@ -23,6 +25,12 @@ export const ORGANIZER_NAV: OrganizerNavGroup[] = [
         items: [
             { label: 'Earnings & Payouts', to: '/events/organizer/earnings', icon: IndianRupee },
             { label: 'Payout Settings', to: '/events/organizer/payout-settings', icon: Landmark },
+        ],
+    },
+    {
+        label: 'Organization',
+        items: [
+            { label: 'Organization Profile', to: '/events/organizer/profile', icon: Building2 },
         ],
     },
 ];

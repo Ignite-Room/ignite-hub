@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { FileText, Image as ImageIcon, Ticket, ListChecks, Layers, Rocket, Eye, Check, Loader2 } from 'lucide-react';
+import { FileText, Image as ImageIcon, Ticket, ListChecks, Layers, Trophy, Rocket, Eye, Check, Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import EventPreviewCard, { EventPreviewData } from '@/components/events/EventPreviewCard';
+import EventPanelTabs from '@/components/organizer/EventPanelTabs';
 import { organizerFetch, fetchOrganizerEvent, OrganizerEvent, CustomField } from '../organizerApi';
 import WizardStepper, { WizardStep } from './WizardStepper';
 import DetailsStep, { DetailsFormData, detailsToPayload } from './DetailsStep';
@@ -14,6 +15,7 @@ import CoverImageStep from './CoverImageStep';
 import TicketsStep from './TicketsStep';
 import QuestionsStep from './QuestionsStep';
 import RoundsStep from './RoundsStep';
+import PrizesFaqsStep from './PrizesFaqsStep';
 import ReviewStep from './ReviewStep';
 
 const STEPS: WizardStep[] = [
@@ -22,6 +24,7 @@ const STEPS: WizardStep[] = [
     { id: 'tickets', label: 'Tickets', icon: Ticket },
     { id: 'questions', label: 'Questions', icon: ListChecks },
     { id: 'rounds', label: 'Rounds', icon: Layers },
+    { id: 'prizesFaqs', label: 'Prizes & FAQs', icon: Trophy },
     { id: 'review', label: 'Review & Publish', icon: Rocket },
 ];
 
@@ -122,6 +125,18 @@ export default function EventWizard() {
         }
     };
 
+    const handlePrizesFaqsAutosave = async (data: { prizes: OrganizerEvent['prizes']; faqs: OrganizerEvent['faqs'] }) => {
+        if (!event) return;
+        setSaveState('saving');
+        try {
+            await organizerFetch(`/${event.id}`, { method: 'PATCH', body: JSON.stringify(data) });
+            setEvent(prev => prev ? { ...prev, ...data } : prev);
+            setSaveState('saved');
+        } catch {
+            setSaveState('error');
+        }
+    };
+
     const handlePublish = async () => {
         if (!event) return;
         setPublishing(true);
@@ -179,6 +194,8 @@ export default function EventWizard() {
                 return <QuestionsStep customFields={event?.customFields || []} onAutosave={handleCustomFieldsAutosave} />;
             case 'rounds':
                 return event ? <RoundsStep eventId={event.id} rounds={event.rounds} onChange={refreshEvent} /> : null;
+            case 'prizesFaqs':
+                return <PrizesFaqsStep prizes={event?.prizes || []} faqs={event?.faqs || []} onAutosave={handlePrizesFaqsAutosave} />;
             case 'review':
                 return event ? <ReviewStep event={event} onPublish={handlePublish} publishing={publishing} publishError={publishError} /> : null;
             default:
@@ -190,6 +207,7 @@ export default function EventWizard() {
         <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-28 pb-20 px-6 max-w-6xl mx-auto">
+                {id && <EventPanelTabs eventId={id} active="edit" />}
                 <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
@@ -226,7 +244,9 @@ export default function EventWizard() {
                 </div>
 
                 <div className="mt-6 text-center">
-                    <Link to="/events/organizer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Back to My Events</Link>
+                    <Link to={id ? `/events/organizer/${id}` : '/events/organizer/events'} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {id ? 'Back to Overview' : 'Back to My Events'}
+                    </Link>
                 </div>
             </main>
             <Footer />

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Download } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import OrganizerLayout from '@/components/organizer/OrganizerLayout';
+import EventPanelTabs from '@/components/organizer/EventPanelTabs';
 import { organizerFetch, organizerExportUrl, OrganizerRegistration } from './organizerApi';
 
 const STATUS_COLOR: Record<string, string> = {
@@ -34,16 +36,21 @@ export default function OrganizerRegistrationsPage() {
             .finally(() => setLoading(false));
     }, [id]);
 
+    if (!id) return null;
+
     return (
-        <OrganizerLayout
-            title="Registrations"
-            breadcrumb={['Organizer', 'Events']}
-            actions={id ? (
-                <a href={organizerExportUrl(id)} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" size="sm"><Download className="w-4 h-4 mr-1.5" /> Export CSV</Button>
-                </a>
-            ) : undefined}
-        >
+        <div className="min-h-screen bg-background">
+            <Navbar />
+            <main className="pt-28 pb-20 px-6 max-w-6xl mx-auto">
+                <EventPanelTabs eventId={id} active="registrations" />
+
+                <div className="flex items-center justify-between mb-6">
+                    <h1 className="text-2xl font-bold">Registrations</h1>
+                    <a href={organizerExportUrl(id)} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="sm"><Download className="w-4 h-4 mr-1.5" /> Export CSV</Button>
+                    </a>
+                </div>
+
                 {loading && <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />}
                 {!loading && error && <p className="text-destructive text-center py-10">{error}</p>}
                 {!loading && !error && registrations.length === 0 && <p className="text-muted-foreground text-center py-10">No registrations yet.</p>}
@@ -85,6 +92,8 @@ export default function OrganizerRegistrationsPage() {
                         </Table>
                     </div>
                 )}
-        </OrganizerLayout>
+            </main>
+            <Footer />
+        </div>
     );
 }

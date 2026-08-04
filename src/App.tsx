@@ -52,11 +52,21 @@ import EventDetailPage from "./pages/events/EventDetailPage";
 import EventRegisterPage from "./pages/events/EventRegisterPage";
 import EventTicketPage from "./pages/events/EventTicketPage";
 import OrganizerApplyPage from "./pages/events/OrganizerApplyPage";
-import OrganizerEventsPage from "./pages/events/organizer/OrganizerEventsPage";
+import CollaboratorAcceptPage from "./pages/events/CollaboratorAcceptPage";
+import OrganizerDashboardPage from "./pages/events/organizer/OrganizerDashboardPage";
+import MyEventsPage from "./pages/events/organizer/MyEventsPage";
+import OrganizationProfilePage from "./pages/events/organizer/OrganizationProfilePage";
 import EventWizard from "./pages/events/organizer/wizard/EventWizard";
+import EventOverviewPage from "./pages/events/organizer/EventOverviewPage";
+import EventRoundsListPage from "./pages/events/organizer/EventRoundsListPage";
+import EventSettingsPage from "./pages/events/organizer/EventSettingsPage";
+import CommunicationsPage from "./pages/events/organizer/CommunicationsPage";
+import AnalyticsPage from "./pages/events/organizer/AnalyticsPage";
 import OrganizerRegistrationsPage from "./pages/events/organizer/OrganizerRegistrationsPage";
 import OrganizerCheckinPage from "./pages/events/organizer/OrganizerCheckinPage";
 import OrganizerRoundSubmissionsPage from "./pages/events/organizer/OrganizerRoundSubmissionsPage";
+import EvaluatorsPage from "./pages/events/organizer/EvaluatorsPage";
+import EvaluatorPortalPage from "./pages/evaluate/EvaluatorPortalPage";
 import EarningsPage from "./pages/events/organizer/EarningsPage";
 import PayoutSettingsPage from "./pages/events/organizer/PayoutSettingsPage";
 import RoundSubmitPage from "./pages/events/RoundSubmitPage";
@@ -99,8 +109,17 @@ const App = () => (
             {/* ── Events Platform ───────────────────────────────── */}
             <Route path="/events" element={<EventsListPage />} />
             <Route path="/events/organizers/apply" element={<OrganizerApplyPage />} />
+            <Route path="/events/collaborator/accept" element={
+              <ProtectedRoute><CollaboratorAcceptPage /></ProtectedRoute>
+            } />
             <Route path="/events/organizer" element={
-              <ProtectedRoute><OrganizerEventsPage /></ProtectedRoute>
+              <ProtectedRoute><OrganizerDashboardPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/events" element={
+              <ProtectedRoute><MyEventsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/profile" element={
+              <ProtectedRoute><OrganizationProfilePage /></ProtectedRoute>
             } />
             <Route path="/events/organizer/earnings" element={
               <ProtectedRoute><EarningsPage /></ProtectedRoute>
@@ -123,6 +142,25 @@ const App = () => (
             <Route path="/events/organizer/:id/rounds/:roundId" element={
               <ProtectedRoute><OrganizerRoundSubmissionsPage /></ProtectedRoute>
             } />
+            <Route path="/events/organizer/:id/rounds/:roundId/evaluators" element={
+              <ProtectedRoute><EvaluatorsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/rounds" element={
+              <ProtectedRoute><EventRoundsListPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/communications" element={
+              <ProtectedRoute><CommunicationsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/analytics" element={
+              <ProtectedRoute><AnalyticsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id/settings" element={
+              <ProtectedRoute><EventSettingsPage /></ProtectedRoute>
+            } />
+            <Route path="/events/organizer/:id" element={
+              <ProtectedRoute><EventOverviewPage /></ProtectedRoute>
+            } />
+            <Route path="/evaluate" element={<EvaluatorPortalPage />} />
             <Route path="/events/ticket/:token/rounds/:roundId" element={<RoundSubmitPage />} />
             <Route path="/events/ticket/:token" element={<EventTicketPage />} />
             {/* Slug routes last — anything not matched above falls through here */}

@@ -64,7 +64,7 @@ export default function OrganizerCheckinPage() {
             style={{ minHeight: '100dvh', touchAction: 'none', paddingBottom: 'env(safe-area-inset-bottom)', paddingTop: 'env(safe-area-inset-top)' }}
         >
             <div className="flex items-center justify-between p-4">
-                <Link to="/events/organizer" className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors">
+                <Link to={`/events/organizer/${id}`} className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors">
                     <ArrowLeft className="w-4 h-4" /> Exit
                 </Link>
                 <span className="text-sm font-medium">Check-in Scanner</span>

@@ -276,7 +276,7 @@ export const api = {
     },
 
     // ── Events (public) — no mock support, always hits the real backend ────
-    async listEvents(params?: { category?: string; mode?: string; q?: string; cursor?: string; limit?: number }) {
+    async listEvents(params?: { category?: string; mode?: string; q?: string; from?: string; to?: string; cursor?: string; limit?: number }) {
         if (USE_MOCK) return { events: [], nextCursor: null };
         const qs = new URLSearchParams(Object.entries(params || {}).filter(([, v]) => v).map(([k, v]) => [k, String(v)]) as [string, string][]).toString();
         return real<{ events: EventSummary[]; nextCursor: string | null }>(`/events${qs ? `?${qs}` : ''}`);
@@ -345,6 +345,8 @@ export interface EventSummary {
     coverImageUrl: string | null; startAt: string; endAt: string; timezone: string;
     registrationDeadline: string | null; capacity: number | null; status: string; isFeatured: boolean;
     organizer: { orgName: string; logoUrl: string | null; orgType: string };
+    registrationCount: number;
+    startingPriceInPaise: number | null;
 }
 
 export interface EventCustomField {
@@ -355,11 +357,25 @@ export interface EventCustomField {
     options?: string[];
 }
 
-export interface EventDetail extends EventSummary {
+export interface EventPrize {
+    position: string;
+    reward: string;
+    description?: string;
+}
+
+export interface EventFaq {
+    question: string;
+    answer: string;
+}
+
+export interface EventDetail extends Omit<EventSummary, 'registrationCount' | 'startingPriceInPaise'> {
     description: string;
     organizer: EventSummary['organizer'] & { website: string | null };
     ticketTypes: TicketTypeWithAvailability[];
     customFields: EventCustomField[] | null;
+    prizes: EventPrize[] | null;
+    faqs: EventFaq[] | null;
+    rounds?: { id: string; name: string; order: number; submissionDeadline: string | null }[];
 }
 
 export interface TicketTypeWithAvailability {

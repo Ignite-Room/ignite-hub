@@ -58,9 +58,21 @@ export interface ScoreCriterion {
 export interface EventRound {
     id: string; eventId: string; name: string; description: string | null;
     order: number; submissionDeadline: string | null;
+    type: 'EVALUATION' | 'SCREENING';
     allowFileUpload: boolean; allowLinks: boolean;
     criteria: ScoreCriterion[];
     _count?: { submissions: number };
+}
+
+export interface EventPrize {
+    position: string;
+    reward: string;
+    description?: string;
+}
+
+export interface EventFaq {
+    question: string;
+    answer: string;
 }
 
 export interface OrganizerEvent {
@@ -70,6 +82,8 @@ export interface OrganizerEvent {
     startAt: string; endAt: string; registrationDeadline: string | null;
     capacity: number | null; status: string; isFeatured: boolean;
     customFields: CustomField[] | null;
+    prizes: EventPrize[] | null;
+    faqs: EventFaq[] | null;
     ticketTypes: OrganizerTicketType[];
     rounds: EventRound[];
     _count: { registrations: number };
@@ -107,4 +121,32 @@ export interface RoundSubmission {
 export function organizerRoundExportUrl(eventId: string, roundId: string): string {
     const token = localStorage.getItem('ignite_token') || sessionStorage.getItem('ignite_token');
     return `${API_URL}/organizer/events/${eventId}/rounds/${roundId}/submissions?format=csv&token=${token}`;
+}
+
+export interface DashboardStats {
+    totalEvents: number;
+    activeEvents: number;
+    totalRegistrations: number;
+    totalRevenueInPaise: number;
+    monthlyRevenue: { month: string; revenueInPaise: number }[];
+    recentEvents: {
+        id: string; slug: string; title: string; status: string;
+        startAt: string; coverImageUrl: string | null; registrationCount: number;
+    }[];
+}
+
+export function fetchDashboardStats(): Promise<DashboardStats> {
+    return organizerFetch<DashboardStats>('/dashboard-stats');
+}
+
+export interface EventOverviewStats {
+    totalRegistrations: number;
+    confirmedCount: number;
+    checkedInCount: number;
+    revenueInPaise: number;
+    registrationTrend: { date: string; count: number }[];
+}
+
+export function fetchEventOverviewStats(eventId: string): Promise<EventOverviewStats> {
+    return organizerFetch<EventOverviewStats>(`/${eventId}/overview-stats`);
 }

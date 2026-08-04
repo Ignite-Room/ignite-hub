@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Download, Upload, ExternalLink, Github, FileText, CheckCircle2, XCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import { ArrowLeft, Download, Upload, ExternalLink, Github, FileText, CheckCircle2, XCircle, Users, ArrowUpRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+    AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import {
     organizerFetch, organizerRoundExportUrl, OrganizerEvent, EventRound, RoundSubmission,
 } from './organizerApi';
@@ -119,6 +124,16 @@ export default function OrganizerRoundSubmissionsPage() {
         }
     };
 
+    const promoteToNextRound = async () => {
+        if (!eventId || !roundId) return;
+        try {
+            const res = await organizerFetch<{ promoted: number; nextRoundName: string }>(`/${eventId}/rounds/${roundId}/promote`, { method: 'POST' });
+            toast.success(`Promoted ${res.promoted} submission(s) to ${res.nextRoundName}`);
+        } catch (e) {
+            toast.error(e instanceof Error ? e.message : 'Failed to promote submissions');
+        }
+    };
+
     const handleCsvImport = async (file: File) => {
         if (!eventId || !roundId || !round) return;
         setImportSummary('');
@@ -161,8 +176,8 @@ export default function OrganizerRoundSubmissionsPage() {
         <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-28 pb-20 px-6 max-w-6xl mx-auto">
-                <Link to={`/events/organizer/${eventId}/edit`} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors w-fit">
-                    <ArrowLeft className="w-4 h-4" /> Back to Event
+                <Link to={`/events/organizer/${eventId}/rounds`} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors w-fit">
+                    <ArrowLeft className="w-4 h-4" /> Back to Rounds
                 </Link>
 
                 {error && <p className="text-destructive text-center py-10">{error}</p>}
@@ -175,10 +190,17 @@ export default function OrganizerRoundSubmissionsPage() {
                                 <p className="text-sm text-muted-foreground">{submissions.length} submission(s)</p>
                             </div>
                             <div className="flex items-center gap-2 flex-wrap">
-                                <label className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-border/50 bg-secondary/40 text-sm cursor-pointer hover:border-primary/40 transition-colors">
-                                    <Upload className="w-4 h-4" /> Import Scores CSV
-                                    <input type="file" accept=".csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCsvImport(f); e.target.value = ''; }} />
-                                </label>
+                                {round.type === 'EVALUATION' && (
+                                    <>
+                                        <Link to={`/events/organizer/${eventId}/rounds/${roundId}/evaluators`}>
+                                            <Button size="sm" variant="outline"><Users className="w-4 h-4 mr-1.5" /> Evaluators</Button>
+                                        </Link>
+                                        <label className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-border/50 bg-secondary/40 text-sm cursor-pointer hover:border-primary/40 transition-colors">
+                                            <Upload className="w-4 h-4" /> Import Scores CSV
+                                            <input type="file" accept=".csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleCsvImport(f); e.target.value = ''; }} />
+                                        </label>
+                                    </>
+                                )}
                                 {eventId && roundId && (
                                     <a href={organizerRoundExportUrl(eventId, roundId)} target="_blank" rel="noopener noreferrer">
                                         <Button size="sm" variant="outline"><Download className="w-4 h-4 mr-1.5" /> Export CSV</Button>
@@ -187,15 +209,37 @@ export default function OrganizerRoundSubmissionsPage() {
                                 {selected.size > 0 && (
                                     <Button size="sm" onClick={bulkShortlist}>Shortlist Selected ({selected.size})</Button>
                                 )}
+                                {submissions.some(s => s.status === 'SHORTLISTED') && (
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button size="sm" variant="outline"><ArrowUpRight className="w-4 h-4 mr-1.5" /> Promote to Next Round</Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Promote shortlisted submissions?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Every shortlisted registration in this round will get a pending submission slot
+                                                    seeded in the next round. Already-seeded registrations are left untouched.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={promoteToNextRound}>Promote</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                )}
                             </div>
                         </div>
 
                         {importSummary && (
                             <p className="text-xs text-muted-foreground mb-4 p-3 rounded-lg bg-secondary/30 border border-border/40">{importSummary}</p>
                         )}
-                        <p className="text-xs text-muted-foreground mb-4">
-                            CSV format: a header row with an <code>email</code> column plus one column per criterion name ({round.criteria.map(c => c.name).join(', ') || 'no criteria defined yet'}).
-                        </p>
+                        {round.type === 'EVALUATION' && (
+                            <p className="text-xs text-muted-foreground mb-4">
+                                CSV format: a header row with an <code>email</code> column plus one column per criterion name ({round.criteria.map(c => c.name).join(', ') || 'no criteria defined yet'}).
+                            </p>
+                        )}
 
                         {submissions.length === 0 ? (
                             <p className="text-muted-foreground text-center py-10">No submissions yet.</p>
@@ -207,8 +251,8 @@ export default function OrganizerRoundSubmissionsPage() {
                                             <TableHead className="w-8"></TableHead>
                                             <TableHead>Registrant</TableHead>
                                             <TableHead>Links / File</TableHead>
-                                            {round.criteria.map(c => <TableHead key={c.id}>{c.name} (/{c.maxPoints})</TableHead>)}
-                                            <TableHead>Total</TableHead>
+                                            {round.type === 'EVALUATION' && round.criteria.map(c => <TableHead key={c.id}>{c.name} (/{c.maxPoints})</TableHead>)}
+                                            {round.type === 'EVALUATION' && <TableHead>Total</TableHead>}
                                             <TableHead>Status</TableHead>
                                             <TableHead>Actions</TableHead>
                                         </TableRow>
@@ -236,7 +280,7 @@ export default function OrganizerRoundSubmissionsPage() {
                                                     {s.liveUrl && <a href={s.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline"><ExternalLink className="w-3 h-3" /> Live</a>}
                                                     {s.fileUrl && <a href={s.fileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline"><FileText className="w-3 h-3" /> File</a>}
                                                 </TableCell>
-                                                {round.criteria.map(c => (
+                                                {round.type === 'EVALUATION' && round.criteria.map(c => (
                                                     <TableCell key={c.id}>
                                                         <Input
                                                             type="number" min={0} max={c.maxPoints}
@@ -247,7 +291,7 @@ export default function OrganizerRoundSubmissionsPage() {
                                                         />
                                                     </TableCell>
                                                 ))}
-                                                <TableCell className="font-medium">{totalFor(s.id)}</TableCell>
+                                                {round.type === 'EVALUATION' && <TableCell className="font-medium">{totalFor(s.id)}</TableCell>}
                                                 <TableCell><Badge className={STATUS_COLOR[s.status]}>{s.status}</Badge></TableCell>
                                                 <TableCell>
                                                     <div className="flex gap-1">
