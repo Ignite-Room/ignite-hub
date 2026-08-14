@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 export default function Blog() {
   const blogPosts = [
     { id: 1, title: 'Getting Started with Ignite', excerpt: 'How to join and get the most out of the community.' },
-    { id: 2, title: 'Building a Strong Portfolio', excerpt: 'Tips and project ideas for students.' },
+    { id: 2, title: 'Building a Strong Portfolio', excerpt: 'Tips and project ideas for developers.' },
     { id: 3, title: 'Dev Tools We Love', excerpt: 'A curated list of tools and resources.' },
     { id: 4, title: 'Hosting Your First Hackathon', excerpt: 'Step-by-step planning checklist.' },
     { id: 5, title: 'Mentorship Best Practices', excerpt: 'How to both give and receive meaningful mentorship.' },

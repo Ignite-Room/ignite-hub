@@ -154,7 +154,7 @@ export default function CareersPage() {
                         Build something people<br />actually use.
                     </h1>
                     <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-                        We are a small team shipping products that reach thousands of students.
+                        We are a small team shipping products that reach thousands of developers.
                         If you are a builder, you will fit right in.
                     </p>
                     <p className="mt-2 text-sm text-muted-foreground/60">

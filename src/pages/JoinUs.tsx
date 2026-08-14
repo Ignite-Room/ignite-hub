@@ -9,7 +9,7 @@ export default function JoinUs() {
     {
       icon: Users,
       title: 'Build Community',
-      description: 'Connect with like-minded students, makers, and innovators in your area.'
+      description: 'Connect with like-minded developers, makers, and innovators in your area.'
     },
     {
       icon: Target,
@@ -41,7 +41,7 @@ export default function JoinUs() {
                 Join Ignite Room
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Be part of a thriving community of students, creators, and innovators. 
+                Be part of a thriving community of developers, creators, and innovators.
                 Ignite your passion, learn together, and build amazing things.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
@@ -158,7 +158,7 @@ export default function JoinUs() {
               Ready to Ignite Your Journey?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Join hundreds of students who are already making an impact. Your journey starts here.
+              Join hundreds of developers who are already making an impact. Your journey starts here.
             </p>
             <a 
               href="https://chat.whatsapp.com/HqqpmbtlbF7DESwKgd5Mc6" 

@@ -7,7 +7,7 @@ const goals = [
   {
     icon: Target,
     title: 'Our Goal',
-    description: 'To support students at every stage of their tech journey through learning, collaboration, mentorship, and real-world exposure.',
+    description: 'To support developers at every stage of their tech journey through learning, collaboration, mentorship, and real-world exposure.',
   },
   {
     icon: Users,
@@ -22,7 +22,7 @@ const goals = [
   {
     icon: Rocket,
     title: 'Our Impact',
-    description: 'Helping students turn ideas into execution through hackathons, workshops, and direct connections with industry mentors.',
+    description: 'Helping developers turn ideas into execution through hackathons, workshops, and direct connections with industry mentors.',
   },
 ];
 
@@ -77,7 +77,7 @@ export default function AboutSection() {
             Igniting the Next Generation
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Ignite Room is a student-driven technology community focused on empowering learners, 
+            Ignite Room is a developer-driven technology community focused on empowering learners,
             innovators, and builders through collaborative experiences.
           </p>
         </motion.div>

@@ -79,7 +79,7 @@ export default function TeamSection() {
             The People Behind Ignite
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Passionate students driving innovation and building a community 
+            Passionate developers driving innovation and building a community
             that empowers the next generation of tech leaders.
           </p>
         </motion.div>

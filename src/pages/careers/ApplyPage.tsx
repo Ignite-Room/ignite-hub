@@ -71,7 +71,7 @@ function TermsModal({ onClose }: { onClose: () => void }) {
                     <section>
                         <h3 className="mb-2 font-heading font-semibold text-foreground">1. What you're applying for</h3>
                         <p>
-                            Submitting this form is your formal application to the role listed on this page. Ignite Room is a student-run
+                            Submitting this form is your formal application to the role listed on this page. Ignite Room is a developer-run
                             technology community. All internship positions are project-based and focused on real-world experience.
                             Unless explicitly stated in the offer letter, internships are unpaid. Completing an internship entitles
                             you to a certificate of completion and, where applicable, a letter of recommendation from the core team.

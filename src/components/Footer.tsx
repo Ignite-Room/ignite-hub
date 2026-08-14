@@ -69,7 +69,7 @@ export default function Footer() {
               <span className="font-heading font-bold text-xl text-foreground">Ignite Room</span>
             </motion.a>
             <p className="text-muted-foreground leading-relaxed mb-6 max-w-sm">
-              A student-driven technology community empowering learners, innovators,
+              A developer-driven technology community empowering learners, innovators,
               and builders to turn ideas into reality.
             </p>
             {/* Social Links */}
@@ -174,7 +174,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Ignite Room. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
-            Built with <Flame className="w-4 h-4 inline-block text-orange-500 mx-1" /> by students, for students.
+            Built with <Flame className="w-4 h-4 inline-block text-orange-500 mx-1" /> by developers, for developers.
           </p>
         </div>
       </div>

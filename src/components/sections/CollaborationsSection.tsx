@@ -31,11 +31,14 @@ export default function CollaborationsSection() {
           className="text-center mb-12"
         >
           <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
-            Our Partners
+            07 / Trusted Collaborations
           </span>
-          <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-3">
             Trusted Collaborations
           </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Backed by the tools builders love.
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
@@ -57,7 +60,7 @@ export default function CollaborationsSection() {
                     style={{ imageOrientation: 'from-image' }}
                     className="block mx-auto max-h-[66%] max-w-[66%] object-contain object-center transform-none transition-all"
                   />
-                  <p className="text-xs mt-2 opacity-0 group-hover:opacity-100 text-white transition-opacity">
+                  <p className="text-xs mt-2 opacity-0 group-hover:opacity-100 text-foreground transition-opacity">
                     {partner.name}
                   </p>
                 </div>
