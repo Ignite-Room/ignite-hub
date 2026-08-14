@@ -1,6 +1,6 @@
 import { MockAPI } from './mock-api';
 import type { User } from './auth-context';
-import type { Submission, LeaderboardEntry } from './mock-api';
+import type { Submission, LeaderboardEntry, TaskKey } from './mock-api';
 
 // Admin/organizer accounts return otpRequired instead of a token; the caller must
 // complete the flow via api.verifyLoginOtp before a session exists.
@@ -151,9 +151,11 @@ export const api = {
     // ── Task Submissions ────────────────────────────────────────────────────
     async submitTask(data: {
         ambassadorCode: string;
+        taskKey: TaskKey;
         name: string;
-        phone: string;
-        githubUsername: string;
+        email?: string;
+        phone?: string;
+        githubUsername?: string;
         screenshotFile: File;
         recaptchaToken?: string;
     }) {
@@ -161,9 +163,11 @@ export const api = {
 
         const form = new FormData();
         form.append('ambassadorCode', data.ambassadorCode);
+        form.append('taskKey', data.taskKey);
         form.append('name', data.name);
-        form.append('phone', data.phone);
-        form.append('githubUsername', data.githubUsername);
+        if (data.email) form.append('email', data.email);
+        if (data.phone) form.append('phone', data.phone);
+        if (data.githubUsername) form.append('githubUsername', data.githubUsername);
         form.append('screenshot', data.screenshotFile);
         if (data.recaptchaToken) {
             form.append('recaptchaToken', data.recaptchaToken);
@@ -209,6 +213,13 @@ export const api = {
         return real<void>('/admin/external-referrals', {
             method: 'POST',
             body: JSON.stringify({ ambassadorId, count }),
+        });
+    },
+
+    async revokeAllAmbassadors() {
+        if (USE_MOCK) return { ok: true, count: 0 };
+        return real<{ ok: boolean; count: number }>('/admin/ambassadors/revoke-all', {
+            method: 'POST',
         });
     },
 

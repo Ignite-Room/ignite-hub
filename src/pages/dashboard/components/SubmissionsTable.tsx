@@ -44,7 +44,7 @@ export default function SubmissionsTable({
                         <thead>
                             <tr className="border-b border-border/30">
                                 <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Name</th>
-                                <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">GitHub</th>
+                                <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Details</th>
                                 {showActions && (
                                     <th className="px-5 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Screenshot</th>
                                 )}
@@ -62,14 +62,20 @@ export default function SubmissionsTable({
                                     <tr key={sub.id} className={`border-b border-border/20 hover:bg-white/[0.02] transition-colors ${i === submissions.length - 1 ? 'border-b-0' : ''}`}>
                                         <td className="px-5 py-3.5 font-medium text-foreground">{sub.name}</td>
                                         <td className="px-5 py-3.5">
-                                            <a
-                                                href={`https://github.com/${sub.githubUsername}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-primary hover:text-primary/80 transition-colors"
-                                            >
-                                                @{sub.githubUsername}
-                                            </a>
+                                            {sub.githubUsername ? (
+                                                <a
+                                                    href={sub.githubUsername.startsWith('http') ? sub.githubUsername : `https://github.com/${sub.githubUsername}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-primary hover:text-primary/80 transition-colors"
+                                                >
+                                                    {sub.githubUsername.startsWith('http') ? sub.githubUsername.replace(/^https?:\/\/(www\.)?github\.com\//i, '@') : `@${sub.githubUsername}`}
+                                                </a>
+                                            ) : sub.email ? (
+                                                <span className="text-muted-foreground">{sub.email}</span>
+                                            ) : (
+                                                <span className="text-muted-foreground">—</span>
+                                            )}
                                         </td>
                                         {showActions && (
                                             <td className="px-5 py-3.5">

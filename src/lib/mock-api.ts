@@ -6,13 +6,17 @@
 import { User } from './auth-context';
 
 // ── Types ──────────────────────────────────────────────────────────────────
+export type TaskKey = 'GITHUB_STAR' | 'CODEKITCHEN_SIGNUP' | 'ANAKIN_STAR';
+
 export interface Submission {
     id: string;
     ambassadorId: string;
     ambassadorName: string;
+    taskKey: TaskKey;
     name: string;
-    phone: string;
-    githubUsername: string;
+    email?: string;
+    phone?: string;
+    githubUsername?: string;
     screenshotUrl: string;
     status: 'pending' | 'verified' | 'rejected';
     verifiedBy?: string;
@@ -128,6 +132,7 @@ function seedData() {
         id: `sub-00${i + 1}`,
         ambassadorId: ambassadors[0].id, // all from first ambassador for demo dashboard
         ambassadorName: ambassadors[0].name,
+        taskKey: 'GITHUB_STAR',
         name: a.name,
         phone: a.phone,
         githubUsername: githubNames[i],
@@ -266,9 +271,11 @@ export const MockAPI = {
 
     async submitTask(data: {
         ambassadorCode: string;
+        taskKey: TaskKey;
         name: string;
-        phone: string;
-        githubUsername: string;
+        email?: string;
+        phone?: string;
+        githubUsername?: string;
         screenshotFile: File;
     }): Promise<{ id: string }> {
         await delay(800);
@@ -277,19 +284,24 @@ export const MockAPI = {
         if (!ambassador) throw new Error('Invalid referral code.');
 
         // Anti-cheat: self-referral
-        if (ambassador.phone === data.phone) {
+        if (data.phone && ambassador.phone === data.phone) {
+            throw new Error('Ambassadors cannot submit using their own referral link.');
+        }
+        if (data.email && ambassador.email.toLowerCase() === data.email.toLowerCase()) {
             throw new Error('Ambassadors cannot submit using their own referral link.');
         }
 
-        // Anti-cheat: phone dedup
+        // Anti-cheat: dedup, scoped to this task
         const submissions = getStore<Submission[]>('mock_submissions', []);
-        if (submissions.find(s => s.phone === data.phone && s.status !== 'rejected')) {
-            throw new Error('A submission with this phone number already exists.');
+        const sameTask = (s: Submission) => s.taskKey === data.taskKey && s.status !== 'rejected';
+        if (data.phone && submissions.find(s => sameTask(s) && s.phone === data.phone)) {
+            throw new Error('A submission with this phone number already exists for this task.');
         }
-
-        // Anti-cheat: GitHub username dedup
-        if (submissions.find(s => s.githubUsername.toLowerCase() === data.githubUsername.toLowerCase() && s.status !== 'rejected')) {
-            throw new Error('This GitHub username has already been used.');
+        if (data.email && submissions.find(s => sameTask(s) && s.email?.toLowerCase() === data.email!.toLowerCase())) {
+            throw new Error('A submission with this email already exists for this task.');
+        }
+        if (data.githubUsername && submissions.find(s => sameTask(s) && s.githubUsername?.toLowerCase() === data.githubUsername!.toLowerCase())) {
+            throw new Error('This GitHub account has already been submitted for this task.');
         }
 
         // Mock screenshot URL (use object URL for preview)
@@ -299,7 +311,9 @@ export const MockAPI = {
             id: generateId(),
             ambassadorId: ambassador.id,
             ambassadorName: ambassador.name,
+            taskKey: data.taskKey,
             name: data.name,
+            email: data.email,
             phone: data.phone,
             githubUsername: data.githubUsername,
             screenshotUrl,

@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Flame, Star, GitFork, Eye, CheckCircle2, AlertCircle, Upload, X, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { motion } from 'framer-motion';
+import { Flame, Github, UtensilsCrossed, CheckCircle2, AlertCircle, Upload, X, Loader2, ExternalLink, Sparkles } from 'lucide-react';
+import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { api } from '@/lib/api';
+import type { TaskKey } from '@/lib/mock-api';
 import type { User } from '@/lib/auth-context';
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
@@ -43,31 +44,207 @@ async function getRecaptchaToken(siteKey: string): Promise<string | undefined> {
     }
 }
 
-const schema = z.object({
-    name: z.string().min(2, 'Full name is required'),
-    phone: z.string().regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit Indian mobile number'),
-    githubUsername: z.string().min(1, 'GitHub username is required').regex(/^[a-zA-Z0-9-]+$/, 'Invalid GitHub username'),
-});
+// ── Active tasks ─────────────────────────────────────────────────────────
+// Both tasks are completed by the person who followed the ambassador's referral
+// link (not the ambassador themselves) — the screenshot is the proof, an admin
+// verifies it, and the referring ambassador gets the leaderboard credit.
+type TaskDef = {
+    key: TaskKey;
+    icon: typeof UtensilsCrossed;
+    title: string;
+    instructions: string;
+    ctaLabel: string;
+    ctaUrl: string;
+    needsGithub: boolean;
+};
 
-type FormData = z.infer<typeof schema>;
+const TASKS: TaskDef[] = [
+    {
+        key: 'CODEKITCHEN_SIGNUP',
+        icon: UtensilsCrossed,
+        title: 'CodeKitchen Sign Up',
+        instructions: 'Sign up here, then upload a screenshot proving you’re signed in.',
+        ctaLabel: 'Sign up on CodeKitchen',
+        ctaUrl: 'https://codekitchen.aim.media/signup?c=mb_agency3',
+        needsGithub: false,
+    },
+    {
+        key: 'ANAKIN_STAR',
+        icon: Github,
+        title: 'Star the Anakin Repo',
+        instructions: 'Please star the following repo, then submit your GitHub profile link and a screenshot showing the star.',
+        ctaLabel: 'Open Anakin-Inc/anakin on GitHub',
+        ctaUrl: 'https://github.com/Anakin-Inc/anakin',
+        needsGithub: true,
+    },
+];
+
+const codeKitchenSchema = z.object({
+    name: z.string().min(2, 'Full name is required'),
+    email: z.string().email('Enter a valid email address'),
+});
+const anakinSchema = z.object({
+    name: z.string().min(2, 'Full name is required'),
+    email: z.string().email('Enter a valid email address'),
+    githubUrl: z.string().min(1, 'GitHub profile link is required').regex(/^https?:\/\/(www\.)?github\.com\/.+/i, 'Enter a valid GitHub profile URL'),
+});
+// Both tasks share this shape — githubUrl is simply unused (and unvalidated) for
+// tasks that don't need it, so one form type + a per-task schema is enough.
+type TaskForm = { name: string; email: string; githubUrl?: string };
+
+function TaskCard({ task, ambassadorCode }: { task: TaskDef; ambassadorCode: string }) {
+    const schema = task.needsGithub ? anakinSchema : codeKitchenSchema;
+    const { register, handleSubmit, formState: { errors } } = useForm<TaskForm>({
+        resolver: zodResolver(schema) as Resolver<TaskForm>,
+    });
+    const [screenshot, setScreenshot] = useState<File | null>(null);
+    const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (!['image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
+            setError('Only PNG, JPG, and JPEG files are accepted.');
+            return;
+        }
+        setScreenshot(file);
+        setScreenshotPreview(URL.createObjectURL(file));
+        setError('');
+    };
+
+    const onSubmit = async (data: TaskForm) => {
+        if (!screenshot) { setError('Please upload a screenshot of your completed task.'); return; }
+        setError('');
+        setLoading(true);
+        try {
+            let recaptchaToken: string | undefined;
+            if (!USE_MOCK && RECAPTCHA_SITE_KEY) {
+                recaptchaToken = await getRecaptchaToken(RECAPTCHA_SITE_KEY);
+            }
+
+            await api.submitTask({
+                ambassadorCode,
+                taskKey: task.key,
+                name: data.name,
+                email: data.email,
+                githubUsername: task.needsGithub ? data.githubUrl : undefined,
+                screenshotFile: screenshot,
+                recaptchaToken,
+            });
+            setSuccess(true);
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Submission failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (success) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="glass-card rounded-2xl border border-green-500/20 p-6 sm:p-8 text-center"
+            >
+                <div className="w-14 h-14 rounded-full bg-green-500/15 flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="w-7 h-7 text-green-400" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-1 flex items-center justify-center gap-2">
+                    Submitted! <Sparkles className="w-4 h-4 text-amber-400" />
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                    {task.title} is pending review. You&apos;ll be notified once it&apos;s verified.
+                </p>
+            </motion.div>
+        );
+    }
+
+    return (
+        <div className="glass-card rounded-2xl border border-border/50 p-6 sm:p-8">
+            <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <task.icon className="w-5 h-5 text-primary" />
+                </div>
+                <h2 className="text-lg font-bold text-foreground">{task.title}</h2>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3">{task.instructions}</p>
+            <a
+                href={task.ctaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors mb-6 break-all"
+            >
+                {task.ctaLabel} <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+            </a>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div>
+                    <Label htmlFor={`${task.key}-name`}>Full Name</Label>
+                    <Input id={`${task.key}-name`} placeholder="Your name" {...register('name')} className="mt-1.5" />
+                    {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
+                </div>
+
+                <div>
+                    <Label htmlFor={`${task.key}-email`}>Email</Label>
+                    <Input id={`${task.key}-email`} type="email" placeholder="you@example.com" {...register('email')} className="mt-1.5" />
+                    {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+                </div>
+
+                {task.needsGithub && (
+                    <div>
+                        <Label htmlFor={`${task.key}-github`}>GitHub Profile URL</Label>
+                        <Input id={`${task.key}-github`} placeholder="https://github.com/yourusername" {...register('githubUrl')} className="mt-1.5" />
+                        {errors.githubUrl && <p className="text-xs text-destructive mt-1">{errors.githubUrl.message}</p>}
+                    </div>
+                )}
+
+                <div>
+                    <Label>Screenshot Proof</Label>
+                    {!screenshotPreview ? (
+                        <label className="mt-1.5 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border/60 hover:border-primary/40 transition-colors p-6 cursor-pointer text-center">
+                            <Upload className="w-5 h-5 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">PNG or JPG, up to 5MB</span>
+                            <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={handleFileChange} />
+                        </label>
+                    ) : (
+                        <div className="mt-1.5 relative rounded-xl overflow-hidden border border-border/60">
+                            <img src={screenshotPreview} alt="Screenshot preview" className="w-full max-h-48 object-cover" />
+                            <button
+                                type="button"
+                                onClick={() => { setScreenshot(null); setScreenshotPreview(null); }}
+                                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {error && (
+                    <div className="flex items-start gap-2 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : `Submit ${task.title}`}
+                </Button>
+            </form>
+        </div>
+    );
+}
 
 export default function ReferralLanding() {
     const { code } = useParams<{ code: string }>();
     const navigate = useNavigate();
     const [ambassador, setAmbassador] = useState<User | null>(null);
     const [notFound, setNotFound] = useState(false);
-    const [screenshot, setScreenshot] = useState<File | null>(null);
-    const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
     const recaptchaReady = useRef(false);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-        resolver: zodResolver(schema),
-    });
-
-    // Pre-load reCAPTCHA script (only in real API mode)
     useEffect(() => {
         if (!USE_MOCK && RECAPTCHA_SITE_KEY) {
             loadRecaptcha(RECAPTCHA_SITE_KEY).then(() => { recaptchaReady.current = true; });
@@ -83,46 +260,6 @@ export default function ReferralLanding() {
         });
     }, [code]);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        if (!['image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
-            setError('Only PNG, JPG, and JPEG files are accepted.');
-            return;
-        }
-        setScreenshot(file);
-        setScreenshotPreview(URL.createObjectURL(file));
-        setError('');
-    };
-
-    const onSubmit = async (data: FormData) => {
-        if (!screenshot) { setError('Please upload a screenshot of your completed task.'); return; }
-        if (!code) return;
-        setError('');
-        setLoading(true);
-        try {
-            // Obtain reCAPTCHA token (only in real API mode)
-            let recaptchaToken: string | undefined;
-            if (!USE_MOCK && RECAPTCHA_SITE_KEY) {
-                recaptchaToken = await getRecaptchaToken(RECAPTCHA_SITE_KEY);
-            }
-
-            await api.submitTask({
-                ambassadorCode: code,
-                name: data.name,
-                phone: data.phone,
-                githubUsername: data.githubUsername,
-                screenshotFile: screenshot,
-                recaptchaToken,
-            });
-            setSuccess(true);
-        } catch (e) {
-            setError(e instanceof Error ? e.message : 'Submission failed. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     if (notFound) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center px-4">
@@ -134,32 +271,6 @@ export default function ReferralLanding() {
                     <p className="text-muted-foreground mb-6">This referral link doesn't exist or has expired.</p>
                     <Button onClick={() => navigate('/')} variant="outline">Go to Home</Button>
                 </div>
-            </div>
-        );
-    }
-
-    if (success) {
-        return (
-            <div className="min-h-screen bg-background flex items-center justify-center px-4">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center max-w-md"
-                >
-                    <div className="w-20 h-20 rounded-full bg-green-500/15 flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle2 className="w-10 h-10 text-green-400" />
-                    </div>
-                    <h1 className="text-3xl font-bold text-foreground mb-3 flex items-center justify-center gap-2">Task Submitted! <Sparkles className="w-8 h-8 text-amber-400" /></h1>
-                    <p className="text-muted-foreground mb-2">
-                        Your submission has been received and is pending review.
-                    </p>
-                    <p className="text-muted-foreground text-sm mb-8">
-                        Referred by <span className="text-primary font-medium">{ambassador?.name}</span>
-                    </p>
-                    <div className="glass-card rounded-2xl p-4 border border-green-500/20 text-sm text-muted-foreground mb-6">
-                        You'll be notified once your submission is verified by the Ignite Room team.
-                    </div>
-                </motion.div>
             </div>
         );
     }
@@ -188,23 +299,31 @@ export default function ReferralLanding() {
                 </div>
             </header>
 
-            <div className="max-w-5xl mx-auto px-4 py-20 flex items-center justify-center">
+            <div className="max-w-4xl mx-auto px-4 py-14 sm:py-20">
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center max-w-md glass-card rounded-3xl p-12 border border-border/50"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center mb-10"
                 >
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                        <Flame className="w-8 h-8 text-primary" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-foreground mb-3">No Active Tasks</h1>
-                    <p className="text-muted-foreground mb-8">
-                        There are currently no active tasks available for submission. We'll be back soon with new challenges and rewards!
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">Complete a Task</h1>
+                    <p className="text-muted-foreground max-w-xl mx-auto">
+                        Two tasks are open right now. Complete either (or both) and submit proof below —
+                        {ambassador ? <> <span className="text-primary font-medium">{ambassador.name}</span> gets credit for referring you.</> : ' the ambassador who referred you gets credit.'}
                     </p>
-                    <Button onClick={() => navigate('/')} className="px-8">
-                        Visit Ignite Room
-                    </Button>
                 </motion.div>
+
+                <div className="grid sm:grid-cols-2 gap-5">
+                    {TASKS.map((task, i) => (
+                        <motion.div
+                            key={task.key}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                        >
+                            <TaskCard task={task} ambassadorCode={code || ''} />
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </div>
     );

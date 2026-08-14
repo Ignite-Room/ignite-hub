@@ -284,18 +284,29 @@ export default function AmbassadorDashboard() {
                         </div>
                     </motion.div>
 
-                    {/* No Task Banner */}
+                    {/* Active Tasks Banner */}
                     <motion.div variants={itemVariants}
-                        className="rounded-2xl p-4 sm:p-5 border border-border/50 bg-secondary/20 flex items-center justify-between gap-4 flex-wrap"
+                        className="rounded-2xl p-4 sm:p-5 border border-border/50 bg-secondary/20"
                     >
-                        <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-9 h-9 rounded-xl bg-secondary/50 flex items-center justify-center flex-shrink-0">
-                                <Flame className="w-4 h-4 text-muted-foreground" />
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
+                                <Flame className="w-4 h-4 text-primary" />
                             </div>
                             <div className="min-w-0">
-                                <p className="font-semibold text-foreground text-sm">No Active Task Currently</p>
-                                <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">We'll notify you when a new task is available. Keep sharing your referral link!</p>
+                                <p className="font-semibold text-foreground text-sm">2 Active Tasks</p>
+                                <p className="text-xs text-muted-foreground mt-0.5">Share your referral link — anyone who completes a task through it earns you leaderboard points.</p>
                             </div>
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-2.5">
+                            {[
+                                { title: 'CodeKitchen Sign Up', desc: 'Sign up on CodeKitchen with a screenshot proof.' },
+                                { title: 'Star the Anakin Repo', desc: 'Star Anakin-Inc/anakin on GitHub with a screenshot proof.' },
+                            ].map((t) => (
+                                <div key={t.title} className="rounded-xl border border-border/40 bg-background/40 px-3.5 py-3">
+                                    <p className="text-sm font-medium text-foreground">{t.title}</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">{t.desc}</p>
+                                </div>
+                            ))}
                         </div>
                     </motion.div>
 

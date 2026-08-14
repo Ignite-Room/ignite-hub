@@ -24,10 +24,16 @@ interface Application {
     college: string | null; enrollmentId: string | null; createdAt: string; accountStatus: string;
 }
 interface Submission {
-    id: string; name: string; phone: string; githubUsername: string;
+    id: string; taskKey: string; name: string; email: string | null; phone: string | null; githubUsername: string | null;
     screenshotUrl: string; status: string; createdAt: string;
     ambassador: { id: string; name: string; email: string; college: string | null };
 }
+
+const TASK_LABELS: Record<string, string> = {
+    GITHUB_STAR: 'GitHub Star (legacy)',
+    CODEKITCHEN_SIGNUP: 'CodeKitchen Sign Up',
+    ANAKIN_STAR: 'Star the Anakin Repo',
+};
 interface Ambassador {
     id: string; name: string; email: string; phone: string;
     college: string | null; enrollmentId: string | null; referralCode: string; createdAt: string;
@@ -58,7 +64,8 @@ const MOCK_APPS: Application[] = [
     { id: '2', name: 'Rahul Verma', email: 'rahul@example.com', phone: '8765432109', college: 'NIT Trichy', enrollmentId: 'B20CS042', createdAt: new Date().toISOString(), accountStatus: 'PENDING' },
 ];
 const MOCK_SUBS: Submission[] = [
-    { id: 's1', name: 'Priya Sharma', phone: '9876543210', githubUsername: 'priyasharma', screenshotUrl: 'https://placehold.co/400x200', status: 'PENDING', createdAt: new Date().toISOString(), ambassador: { id: '1', name: 'Priya Sharma', email: 'priya@ex.com', college: 'IIT Delhi' } },
+    { id: 's1', taskKey: 'ANAKIN_STAR', name: 'Priya Sharma', email: 'priya@example.com', phone: null, githubUsername: 'https://github.com/priyasharma', screenshotUrl: 'https://placehold.co/400x200', status: 'PENDING', createdAt: new Date().toISOString(), ambassador: { id: '1', name: 'Priya Sharma', email: 'priya@ex.com', college: 'IIT Delhi' } },
+    { id: 's2', taskKey: 'CODEKITCHEN_SIGNUP', name: 'Rahul Verma', email: 'rahul@example.com', phone: null, githubUsername: null, screenshotUrl: 'https://placehold.co/400x200', status: 'PENDING', createdAt: new Date().toISOString(), ambassador: { id: '2', name: 'Rahul Verma', email: 'rahul@ex.com', college: 'NIT Trichy' } },
 ];
 const MOCK_AMBS: Ambassador[] = [
     { id: '1', name: 'Approved User', email: 'approved@ex.com', phone: '9988776655', college: 'IIT Delhi', enrollmentId: 'MT23001', referralCode: 'approved123', createdAt: new Date().toISOString(), leaderboardStats: { verifiedTasks: 2, externalReferrals: 5, totalScore: 7 } },
@@ -88,6 +95,7 @@ export default function AdminDashboard() {
     const [toast, setToast] = useState('');
     const [manageModal, setManageModal] = useState<Ambassador | null>(null);
     const [removeConfirm, setRemoveConfirm] = useState(false);
+    const [revokeAllModal, setRevokeAllModal] = useState(false);
     
     // Mailing state
     const [mailSubject, setMailSubject] = useState('');
@@ -163,6 +171,16 @@ export default function AdminDashboard() {
             setRemoveConfirm(false);
             showToast('Ambassador removed.');
         } catch { showToast('Error removing ambassador'); } finally { setActionLoading(null); }
+    };
+
+    const handleRevokeAll = async () => {
+        setActionLoading('revokeall');
+        try {
+            const res = USE_MOCK ? { ok: true, count: ambassadors.length } : await api.revokeAllAmbassadors();
+            setAmbassadors([]);
+            setRevokeAllModal(false);
+            showToast(`Access revoked for ${res.count} ambassador${res.count === 1 ? '' : 's'}. They've also been removed from the leaderboard.`);
+        } catch { showToast('Error revoking access'); } finally { setActionLoading(null); }
     };
 
     const handleDeleteSubmission = async (id: string) => {
@@ -292,6 +310,31 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Revoke All Access Modal */}
+            {revokeAllModal && (
+                <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setRevokeAllModal(false)}>
+                    <div className="bg-card border border-border rounded-2xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
+                        <h3 className="font-bold text-foreground mb-1">Revoke All Ambassador Access?</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            This immediately blocks <strong>{ambassadors.length}</strong> ambassador{ambassadors.length === 1 ? '' : 's'} from the dashboard and removes them from the public leaderboard.
+                            Their accounts, submissions, and scores aren't deleted — this can be undone by re-approving individual applications.
+                        </p>
+                        <div className="flex gap-2">
+                            <Button variant="outline" className="flex-1" onClick={() => setRevokeAllModal(false)}>Cancel</Button>
+                            <Button
+                                className="flex-1 bg-destructive hover:bg-destructive/90 text-white"
+                                onClick={handleRevokeAll}
+                                disabled={actionLoading === 'revokeall'}
+                            >
+                                {actionLoading === 'revokeall'
+                                    ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    : 'Revoke All Access'}
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -436,12 +479,17 @@ export default function AdminDashboard() {
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
                                                 <p className="font-medium text-foreground">{sub.name}</p>
+                                                <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary">
+                                                    {TASK_LABELS[sub.taskKey] || sub.taskKey}
+                                                </span>
                                                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sub.status === 'VERIFIED' ? 'bg-green-500/15 text-green-400' : sub.status === 'REJECTED' ? 'bg-destructive/15 text-destructive' : 'bg-amber-500/15 text-amber-400'}`}>
                                                     {sub.status}
                                                 </span>
                                             </div>
                                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-0.5">
-                                                <p className="text-sm text-muted-foreground">GitHub: @{sub.githubUsername} · {sub.phone}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {[sub.email, sub.githubUsername, sub.phone].filter(Boolean).join(' · ') || '—'}
+                                                </p>
                                             </div>
                                             <p className="text-xs text-muted-foreground mt-0.5">
                                                 Via: <span className="text-foreground/70">{sub.ambassador.name}</span>
@@ -501,6 +549,16 @@ export default function AdminDashboard() {
                                 <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" onClick={() => setExportModal({ type: 'ambassadors' })}>
                                     <Download className="w-3.5 h-3.5" /> Export
                                 </Button>
+                                {ambassadors.length > 0 && (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="gap-1.5 h-8 text-xs border-destructive/30 text-destructive hover:bg-destructive/10"
+                                        onClick={() => setRevokeAllModal(true)}
+                                    >
+                                        <XCircle className="w-3.5 h-3.5" /> Revoke All Access
+                                    </Button>
+                                )}
                             </div>
                         </div>
                         <div className="space-y-3">
@@ -671,9 +729,11 @@ export default function AdminDashboard() {
                         { id: 'createdAt', label: 'Joined Date' },
                     ] : [
                         { id: 'id', label: 'Sub ID' },
+                        { id: 'taskKey', label: 'Task' },
                         { id: 'ambassador.name', label: 'Ambassador' },
                         { id: 'ambassador.college', label: 'College' },
-                        { id: 'name', label: 'Task Name' },
+                        { id: 'name', label: 'Submitter Name' },
+                        { id: 'email', label: 'Email' },
                         { id: 'githubUsername', label: 'GitHub' },
                         { id: 'status', label: 'Status' },
                         { id: 'createdAt', label: 'Submitted Date' },
