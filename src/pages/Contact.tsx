@@ -4,12 +4,19 @@ import { Send, User, Mail, MessageSquare, CheckCircle2, AlertCircle, Loader2 } f
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { useSEO } from '@/hooks/use-seo';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
 export default function Contact() {
+  useSEO({
+    title: 'Contact',
+    description: 'Get in touch with Ignite Room. Reach out with questions, partnership ideas, or feedback for our student tech community.',
+    path: '/contact',
+  });
+
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');

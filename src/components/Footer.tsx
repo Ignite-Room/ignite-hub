@@ -7,6 +7,7 @@ const footerLinks = {
   community: [
     { name: 'About Us', href: '#about' },
     { name: 'Events', href: '#events' },
+    { name: 'Ambassador Program', href: '/ambassador' },
     { name: 'Join Us', href: '/join-us' },
     { name: 'Careers', href: '/careers' },
   ],

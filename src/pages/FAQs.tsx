@@ -2,8 +2,15 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function FAQs() {
+  useSEO({
+    title: 'FAQs',
+    description: 'Frequently asked questions about Ignite Room — how to join, event participation, mentorship, and how to get involved with the community.',
+    path: '/faqs',
+  });
+
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = [

@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function Disclaimer() {
+  useSEO({
+    title: 'Disclaimer',
+    description: 'Legal disclaimer for Ignite Room content, events, and services.',
+    path: '/disclaimer',
+  });
+
   return (
     <div className="relative min-h-screen bg-background">
       <Navbar />

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { api, EventSummary } from '@/lib/api';
+import { useSEO } from '@/hooks/use-seo';
 
 const CATEGORIES = ['HACKATHON', 'WORKSHOP', 'TECH_TALK', 'WEBINAR', 'COMPETITION', 'CULTURAL', 'SPORTS', 'MEETUP', 'OTHER'];
 const MODES = ['ONLINE', 'OFFLINE', 'HYBRID'];
@@ -89,6 +90,12 @@ function EventCard({ event, past }: { event: EventSummary; past?: boolean }) {
 }
 
 export default function EventsListPage() {
+    useSEO({
+        title: 'Events',
+        description: 'Discover hackathons, workshops, tech talks, and competitions hosted by Ignite Room and its campus chapters. Find and register for upcoming events.',
+        path: '/events',
+    });
+
     const [events, setEvents] = useState<EventSummary[]>([]);
     const [nextCursor, setNextCursor] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);

@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function TermsOfService() {
+  useSEO({
+    title: 'Terms of Service',
+    description: 'The terms and conditions for using Ignite Room and participating in our community and events.',
+    path: '/terms-of-service',
+  });
+
   return (
     <div className="relative min-h-screen bg-background">
       <Navbar />

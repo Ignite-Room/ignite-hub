@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function Accessibility() {
+  useSEO({
+    title: 'Accessibility',
+    description: "Ignite Room's commitment to digital accessibility and how to report accessibility issues.",
+    path: '/accessibility',
+  });
+
   return (
     <div className="relative min-h-screen bg-background">
       <Navbar />

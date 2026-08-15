@@ -3,8 +3,15 @@ import { Users, Target, Zap } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function JoinUs() {
+  useSEO({
+    title: 'Join Us',
+    description: 'Join Ignite Room, a student-driven technology community. Connect with builders and innovators, attend events, and grow your skills together.',
+    path: '/join-us',
+  });
+
   const benefits = [
     {
       icon: Users,

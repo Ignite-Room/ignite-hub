@@ -5,6 +5,7 @@ import { ArrowRight, MapPin, Clock, CalendarDays, Loader2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { useSEO } from '@/hooks/use-seo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -118,6 +119,12 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
 }
 
 export default function CareersPage() {
+    useSEO({
+        title: 'Careers',
+        description: 'Open internships and roles at Ignite Room. Join a student-driven technology community and help build hackathons, workshops, and mentorship programs.',
+        path: '/careers',
+    });
+
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState<Role['type'] | 'ALL'>('ALL');

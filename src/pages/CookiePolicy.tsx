@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function CookiePolicy() {
+  useSEO({
+    title: 'Cookie Policy',
+    description: 'How Ignite Room uses cookies and similar technologies on igniteroom.in.',
+    path: '/cookie-policy',
+  });
+
   return (
     <div className="relative min-h-screen bg-background">
       <Navbar />

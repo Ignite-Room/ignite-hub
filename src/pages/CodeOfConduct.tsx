@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function CodeOfConduct() {
+  useSEO({
+    title: 'Code of Conduct',
+    description: 'Community guidelines and code of conduct for Ignite Room members, events, and online spaces.',
+    path: '/code-of-conduct',
+  });
+
   return (
     <div className="relative min-h-screen bg-background">
       <Navbar />

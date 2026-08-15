@@ -1,19 +1,19 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
+Disallow: /ambassador/dashboard
+Disallow: /ambassador/profile
+Disallow: /ambassador/admin
+Disallow: /ambassador/pending
+Disallow: /ambassador/forgot-password
+Disallow: /account
+Disallow: /home
+Disallow: /ref/
+Disallow: /events/organizer
+Disallow: /events/ticket/
+Disallow: /events/collaborator
+Disallow: /evaluate
+Disallow: /login
+Disallow: /signup
+Disallow: /staff-login
 
-User-agent: *
-Allow: /
-
-Sitemap: https://igniteroom.in/sitemap.xml
+Sitemap: https://www.igniteroom.in/sitemap.xml

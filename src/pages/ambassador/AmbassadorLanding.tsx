@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-    Flame, Trophy, Star, Users, ArrowRight, Zap,
-    CheckCircle2, Gift, Camera, Link as LinkIcon
+    Flame, Trophy, Users, ArrowRight, Zap,
+    CheckCircle2, Gift, UtensilsCrossed, Github
 } from 'lucide-react';
 import igniteLogo from '@/assets/ignite-logo.png';
 import { Button } from '@/components/ui/button';
 import AmbassadorChatbot from '@/components/AmbassadorChatbot';
+import { useSEO } from '@/hooks/use-seo';
 
 const perks = [
     { icon: Trophy, title: 'Compete on Leaderboard', desc: 'Top ambassadors win exclusive Ignite Room merchandise and recognition.' },
@@ -30,6 +31,12 @@ const faqs = [
 ];
 
 export default function AmbassadorLanding() {
+    useSEO({
+        title: 'Campus Ambassador Program',
+        description: 'Become a Campus Ambassador for Ignite Room. Lead your campus community, complete tasks, earn rewards, and climb the leaderboard — free to join.',
+        path: '/ambassador',
+    });
+
     return (
         <>
             <div className="min-h-screen bg-background text-foreground font-sans">
@@ -189,23 +196,32 @@ export default function AmbassadorLanding() {
                     </div>
                 </section>
 
-                {/* ── No Active Task ─────────────────────────────────────────── */}
+                {/* ── Active Tasks ───────────────────────────────────────────── */}
                 <section className="relative z-10 py-12 px-4">
                     <div className="max-w-3xl mx-auto">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="glass-card rounded-2xl p-8 border border-border/50 bg-secondary/10 text-center"
-                        >
-                            <div className="w-14 h-14 rounded-2xl bg-secondary/30 flex items-center justify-center mx-auto mb-5">
-                                <Flame className="w-7 h-7 text-muted-foreground" />
-                            </div>
-                            <h2 className="text-2xl font-bold text-foreground mb-3">No Active Task</h2>
-                            <p className="text-muted-foreground leading-relaxed max-w-lg mx-auto">
-                                There are currently no active tasks available for submission. We're busy cooking up new challenges and rewards for our ambassadors!
+                        <div className="text-center mb-8">
+                            <span className="text-primary text-sm font-semibold uppercase tracking-widest">Live Right Now</span>
+                            <h2 className="text-3xl font-bold mt-2">2 Active Tasks</h2>
+                            <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
+                                Once you're an ambassador, share your referral link — anyone who completes a task through it earns you points.
                             </p>
-                        </motion.div>
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-5">
+                            {[
+                                { icon: UtensilsCrossed, title: 'CodeKitchen Sign Up', desc: 'Refer people to sign up on CodeKitchen with a screenshot proof.' },
+                                { icon: Github, title: 'Star the Anakin Repo', desc: 'Refer people to star Anakin-Inc/anakin on GitHub with proof.' },
+                            ].map((t) => (
+                                <div key={t.title} className="glass-card rounded-2xl p-6 border border-primary/20 flex gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                                        <t.icon className="w-6 h-6 text-primary" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-foreground mb-1">{t.title}</h3>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{t.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </section>
 

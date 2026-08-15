@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { api } from '@/lib/api';
 import type { TaskKey } from '@/lib/mock-api';
 import type { User } from '@/lib/auth-context';
+import { useSEO } from '@/hooks/use-seo';
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
 const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false';
@@ -239,6 +240,12 @@ function TaskCard({ task, ambassadorCode }: { task: TaskDef; ambassadorCode: str
 }
 
 export default function ReferralLanding() {
+    useSEO({
+        title: 'Complete a Task',
+        description: 'Complete an Ignite Room ambassador task to help the referring ambassador earn leaderboard points.',
+        noindex: true,
+    });
+
     const { code } = useParams<{ code: string }>();
     const navigate = useNavigate();
     const [ambassador, setAmbassador] = useState<User | null>(null);

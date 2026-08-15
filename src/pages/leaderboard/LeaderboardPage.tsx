@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth-context';
 import type { LeaderboardEntry } from '@/lib/mock-api';
+import { useSEO } from '@/hooks/use-seo';
 
 const Logo3DStatic = lazy(() => import('@/components/Logo3DStatic'));
 
@@ -19,6 +20,12 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 export default function LeaderboardPage() {
+    useSEO({
+        title: 'Campus Ambassador Leaderboard',
+        description: 'Live rankings of Ignite Room Campus Ambassadors, based on verified tasks and external referrals.',
+        path: '/ambassador/leaderboard',
+    });
+
     const { isAuthenticated, isAdmin } = useAuth();
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);

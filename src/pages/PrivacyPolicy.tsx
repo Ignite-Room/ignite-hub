@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function PrivacyPolicy() {
+  useSEO({
+    title: 'Privacy Policy',
+    description: 'How Ignite Room collects, uses, and protects your personal information.',
+    path: '/privacy-policy',
+  });
+
   return (
     <div className="relative min-h-screen bg-background">
       <Navbar />

@@ -4,10 +4,12 @@ import HeroSection from '@/components/sections/HeroSection';
 import AboutSection from '@/components/sections/AboutSection';
 // import ActiveEventSection from '@/components/sections/ActiveEventSection'; // re-enable for next live event
 import EventsSection from '@/components/sections/EventsSection';
+import AmbassadorSection from '@/components/sections/AmbassadorSection';
 import ChaptersSection from '@/components/sections/ChaptersSection';
 import AppSection from '@/components/sections/AppSection';
 import CollaborationsSection from '@/components/sections/CollaborationsSection';
 import Footer from '@/components/Footer';
+import AmbassadorTasksPopup from '@/components/AmbassadorTasksPopup';
 
 // Lazy load 3D background for performance
 const Logo3DBackground = lazy(() => import('@/components/Logo3DBackground'));
@@ -29,6 +31,7 @@ const Index = () => {
         <AboutSection />
         {/* <ActiveEventSection /> — re-enable when next event goes live */}
         <EventsSection />
+        <AmbassadorSection />
         <ChaptersSection />
         <AppSection />
         <CollaborationsSection />
@@ -38,6 +41,9 @@ const Index = () => {
       <footer className="relative z-20 pointer-events-auto">
         <Footer />
       </footer>
+
+      {/* Ambassador Program announcement */}
+      <AmbassadorTasksPopup />
     </div>
   );
 };
