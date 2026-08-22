@@ -47,6 +47,7 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import AccountPage from "./pages/profile/AccountPage";
 import ExternalVerificationPage from "./pages/admin/ExternalVerificationPage";
+import TaskBoardAdmin from "./pages/admin/TaskBoardAdmin";
 
 // Events platform pages
 import EventsListPage from "./pages/events/EventsListPage";
@@ -199,6 +200,9 @@ const App = () => (
             } />
             <Route path="/ambassador/admin/external-verification" element={
               <AdminRoute><ExternalVerificationPage /></AdminRoute>
+            } />
+            <Route path="/ambassador/admin/tasks" element={
+              <AdminRoute><TaskBoardAdmin /></AdminRoute>
             } />
             <Route path="/ambassador/admin/careers" element={
               <AdminRoute><CareersAdmin /></AdminRoute>

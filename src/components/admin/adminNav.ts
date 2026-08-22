@@ -1,6 +1,6 @@
 import {
     LayoutDashboard, Users, FileCheck, Building2, Trophy, ShieldCheck,
-    CalendarDays, UserCog, Briefcase, Send, Mail, Landmark, type LucideIcon,
+    CalendarDays, UserCog, Briefcase, Send, Mail, Landmark, ListChecks, type LucideIcon,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -28,6 +28,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
             { label: 'Submissions', to: '/ambassador/admin?tab=submissions', icon: FileCheck },
             { label: 'Ambassadors', to: '/ambassador/admin?tab=ambassadors', icon: Building2 },
             { label: 'Leaderboard', to: '/ambassador/admin?tab=leaderboard', icon: Trophy },
+            { label: 'Task Board', to: '/ambassador/admin/tasks', icon: ListChecks },
             { label: 'External Verification', to: '/ambassador/admin/external-verification', icon: ShieldCheck },
         ],
     },
