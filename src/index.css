@@ -6,6 +6,49 @@
 
 @layer base {
   :root {
+    /* Ignite Room Light Theme (default) - Warm Cream with Fire Accents */
+    --background: 36 38% 96%;
+    --foreground: 20 14% 8%;
+
+    --card: 36 30% 98%;
+    --card-foreground: 20 14% 8%;
+
+    --popover: 36 30% 98%;
+    --popover-foreground: 20 14% 8%;
+
+    /* Fire Pink-Red Primary */
+    --primary: 345 88% 47%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Warm Cream Secondary */
+    --secondary: 33 25% 91%;
+    --secondary-foreground: 20 14% 8%;
+
+    --muted: 33 22% 91%;
+    --muted-foreground: 20 8% 40%;
+
+    /* Warm Accent */
+    --accent: 345 75% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 74% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 18% 87%;
+    --input: 30 18% 89%;
+    --ring: 345 88% 47%;
+
+    --radius: 0.75rem;
+
+    /* Custom Ignite Variables */
+    --glow-primary: 0 0 60px hsl(345 88% 47% / 0.18);
+    --glow-soft: 0 0 100px hsl(345 88% 47% / 0.1);
+    --gradient-hero: linear-gradient(135deg, hsl(33 40% 96%) 0%, hsl(36 38% 96%) 50%, hsl(345 35% 95%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(36 32% 98%) 0%, hsl(33 22% 94%) 100%);
+    --gradient-text: linear-gradient(135deg, hsl(345 90% 45%) 0%, hsl(15 90% 50%) 100%);
+  }
+
+  .dark {
     /* Ignite Room Dark Theme - Maroon to Black with Fire Accents */
     --background: 0 0% 4%;
     --foreground: 0 0% 95%;
@@ -16,18 +59,15 @@
     --popover: 0 10% 8%;
     --popover-foreground: 0 0% 95%;
 
-    /* Fire Pink-Red Primary */
     --primary: 345 100% 59%;
     --primary-foreground: 0 0% 100%;
 
-    /* Deep Maroon Secondary */
     --secondary: 345 40% 12%;
     --secondary-foreground: 0 0% 95%;
 
     --muted: 345 20% 15%;
     --muted-foreground: 0 0% 60%;
 
-    /* Warm Accent */
     --accent: 345 80% 45%;
     --accent-foreground: 0 0% 100%;
 
@@ -38,19 +78,11 @@
     --input: 345 20% 15%;
     --ring: 345 100% 59%;
 
-    --radius: 0.75rem;
-
-    /* Custom Ignite Variables */
     --glow-primary: 0 0 60px hsl(345 100% 59% / 0.3);
     --glow-soft: 0 0 100px hsl(345 100% 59% / 0.15);
     --gradient-hero: linear-gradient(135deg, hsl(345 40% 8%) 0%, hsl(0 0% 4%) 50%, hsl(345 30% 6%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(345 20% 10%) 0%, hsl(345 15% 6%) 100%);
     --gradient-text: linear-gradient(135deg, hsl(345 100% 65%) 0%, hsl(20 100% 60%) 100%);
-  }
-
-  .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 95%;
   }
 }
 
@@ -103,6 +135,14 @@
     @apply bg-card/60 backdrop-blur-xl border border-border/50;
   }
 
+  .glow-card {
+    @apply relative rounded-2xl border border-border/60 bg-card overflow-hidden;
+  }
+
+  .glow-card-accent {
+    @apply absolute rounded-full bg-primary/10 blur-[100px] pointer-events-none;
+  }
+
   .section-padding {
     @apply px-6 py-20 md:px-12 lg:px-24 lg:py-32;
   }
@@ -119,6 +159,23 @@
 
   .animate-fade-up {
     animation: fade-up 0.8s ease-out forwards;
+  }
+
+  .animate-marquee {
+    animation: marquee 22s linear infinite;
+  }
+
+  .animate-marquee-slow {
+    animation: marquee 40s linear infinite;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
 
   @keyframes float {

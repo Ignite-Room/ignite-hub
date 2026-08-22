@@ -121,7 +121,7 @@ export default function RoundsEditor({ eventId, rounds, onChange }: { eventId: s
                         <div>
                             <div className="flex items-center gap-2 mb-0.5">
                                 <p className="text-sm font-medium">{round.name}</p>
-                                <Badge variant="secondary" className="text-[10px]">{ROUND_TYPE_LABEL[round.type] ?? round.type}</Badge>
+                                <Badge variant="secondary" className="text-xs">{ROUND_TYPE_LABEL[round.type] ?? round.type}</Badge>
                             </div>
                             {round.submissionDeadline && (
                                 <p className="text-xs text-muted-foreground mt-0.5">

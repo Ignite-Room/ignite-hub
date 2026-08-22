@@ -200,7 +200,7 @@ export default function AmbassadorChatbot() {
                                 <p className="text-xs text-green-400 leading-tight">Online</p>
                             </div>
                             <div className="flex items-center gap-1">
-                                <span className="text-[10px] text-muted-foreground bg-primary/10 border border-primary/20 rounded-full px-2 py-0.5 font-medium flex items-center gap-1">
+                                <span className="text-xs text-muted-foreground bg-primary/10 border border-primary/20 rounded-full px-2 py-0.5 font-medium flex items-center gap-1">
                                     <Sparkles className="w-2.5 h-2.5" /> AI
                                 </span>
                                 <button
@@ -239,7 +239,7 @@ export default function AmbassadorChatbot() {
                                         >
                                             {msg.content}
                                         </div>
-                                        <span className="text-[10px] text-muted-foreground/60 px-1">
+                                        <span className="text-xs text-muted-foreground/60 px-1">
                                             {formatTime(msg.timestamp)}
                                         </span>
                                     </div>
@@ -325,7 +325,7 @@ export default function AmbassadorChatbot() {
                                     )}
                                 </button>
                             </div>
-                            <p className="text-[10px] text-muted-foreground/40 text-center mt-2">
+                            <p className="text-xs text-muted-foreground/40 text-center mt-2">
                                 Ignite Room
                             </p>
                         </div>

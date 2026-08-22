@@ -109,7 +109,7 @@ function TeamSection({ eventId }: { eventId: string }) {
                                 <p className="text-xs text-muted-foreground">{c.email}</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Badge variant="secondary" className="text-[10px]">{ROLE_LABEL[c.role]}</Badge>
+                                <Badge variant="secondary" className="text-xs">{ROLE_LABEL[c.role]}</Badge>
                                 <Badge className={c.status === 'ACCEPTED' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}>
                                     {c.status}
                                 </Badge>

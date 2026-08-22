@@ -673,7 +673,7 @@ export default function AdminDashboard() {
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between">
                                             <Label htmlFor="content">Message Content</Label>
-                                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Markdown &amp; HTML supported</span>
+                                            <span className="text-xs text-muted-foreground uppercase tracking-wider">Markdown &amp; HTML supported</span>
                                         </div>
                                         <Textarea
                                             id="content"
@@ -697,7 +697,7 @@ export default function AdminDashboard() {
                                             )}
                                             Broadcast to Ambassadors
                                         </Button>
-                                        <p className="text-[10px] text-muted-foreground mt-3 flex items-center gap-1.5 px-1">
+                                        <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5 px-1">
                                             <CheckCircle2 className="w-3 h-3 text-green-500" />
                                             This will be sent to currently {ambassadors.length} verified ambassadors.
                                         </p>
