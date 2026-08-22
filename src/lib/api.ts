@@ -2,9 +2,11 @@ import { MockAPI } from './mock-api';
 import type { User } from './auth-context';
 import type { Submission, LeaderboardEntry, TaskKey } from './mock-api';
 
-// Admin/organizer accounts return otpRequired instead of a token; the caller must
-// complete the flow via api.verifyLoginOtp before a session exists.
-export type LoginResponse = { token: string; user: User } | { otpRequired: true; email: string };
+// Admin/organizer accounts (email OTP) and any account with authenticator-app 2FA
+// enabled return otpRequired instead of a token; the caller must complete the flow
+// via api.verifyLoginOtp (method 'email') or api.verifyLoginTotp (method 'totp')
+// before a session exists.
+export type LoginResponse = { token: string; user: User } | { otpRequired: true; email: string; method: 'email' | 'totp' };
 
 // ── Configuration ─────────────────────────────────────────────────────────
 // VITE_USE_MOCK=true → use localStorage mock (development)
@@ -81,6 +83,37 @@ export const api = {
         return real<{ ok: boolean; message: string }>('/auth/resend-login-otp', {
             method: 'POST',
             body: JSON.stringify({ email }),
+        });
+    },
+
+    async verifyLoginTotp(email: string, code: string, rememberMe = false) {
+        if (USE_MOCK) throw new Error('Authenticator login requires the real backend (set VITE_USE_MOCK=false)');
+        return real<{ token: string; user: User }>('/auth/verify-login-totp', {
+            method: 'POST',
+            body: JSON.stringify({ email, code, rememberMe }),
+        });
+    },
+
+    // ── Authenticator-app 2FA (account settings) ──────────────────────────────
+    async get2faStatus() {
+        return real<{ enabled: boolean }>('/profile/2fa/status');
+    },
+
+    async setup2fa() {
+        return real<{ secret: string; qrCodeDataUrl: string }>('/profile/2fa/setup', { method: 'POST' });
+    },
+
+    async verify2fa(code: string) {
+        return real<{ enabled: boolean; backupCodes: string[] }>('/profile/2fa/verify', {
+            method: 'POST',
+            body: JSON.stringify({ code }),
+        });
+    },
+
+    async disable2fa(code: string) {
+        return real<{ enabled: boolean }>('/profile/2fa/disable', {
+            method: 'POST',
+            body: JSON.stringify({ code }),
         });
     },
 
@@ -200,6 +233,12 @@ export const api = {
     async getLeaderboard() {
         if (USE_MOCK) return MockAPI.getLeaderboard();
         return real<LeaderboardEntry[]>('/leaderboard');
+    },
+
+    // ── Site stats (public, aggregate-only) ─────────────────────────────────
+    async getStats() {
+        if (USE_MOCK) return { totalUsers: 0, hostedEvents: 0, approvedAmbassadors: 0 };
+        return real<{ totalUsers: number; hostedEvents: number; approvedAmbassadors: number }>('/stats');
     },
 
     // ── Admin ──────────────────────────────────────────────────────────────

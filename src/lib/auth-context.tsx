@@ -27,11 +27,13 @@ export interface User {
   city?: string;
   degree?: string;
   techStack?: string[];
+  totpEnabled?: boolean;
 }
 
 // Returned by any login entry point. When otpRequired is true, no session has been
-// created yet — the caller must collect a code and call completeOtpLogin.
-export type LoginOutcome = { otpRequired: false } | { otpRequired: true; email: string };
+// created yet — the caller must collect a code and call completeOtpLogin (method
+// 'email') or completeTotpLogin (method 'totp').
+export type LoginOutcome = { otpRequired: false } | { otpRequired: true; email: string; method: 'email' | 'totp' };
 
 interface AuthContextType {
   user: User | null;
@@ -40,6 +42,7 @@ interface AuthContextType {
   login: (email: string, password: string, rememberMe?: boolean) => Promise<LoginOutcome>;
   loginWithGoogle: (credential: string) => Promise<LoginOutcome>;
   completeOtpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<void>;
+  completeTotpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<void>;
   resendLoginOtp: (email: string) => Promise<void>;
   registerGeneral: (data: { name: string; email: string; password: string; phone?: string }) => Promise<void>;
   applyAmbassador: (data: { college: string; enrollmentId: string; phone: string }) => Promise<void>;
@@ -126,20 +129,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string, rememberMe = false): Promise<LoginOutcome> => {
     const res = await api.login(email, password, rememberMe);
-    if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email };
+    if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email, method: res.method };
     persistSession(res.token, res.user, rememberMe);
     return { otpRequired: false };
   };
 
   const loginWithGoogle = async (credential: string): Promise<LoginOutcome> => {
     const res = await api.loginWithGoogle(credential);
-    if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email };
+    if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email, method: res.method };
     persistSession(res.token, res.user, true);
     return { otpRequired: false };
   };
 
   const completeOtpLogin = async (email: string, code: string, rememberMe = false) => {
     const res = await api.verifyLoginOtp(email, code, rememberMe);
+    persistSession(res.token, res.user, rememberMe);
+  };
+
+  const completeTotpLogin = async (email: string, code: string, rememberMe = false) => {
+    const res = await api.verifyLoginTotp(email, code, rememberMe);
     persistSession(res.token, res.user, rememberMe);
   };
 
@@ -179,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       loginWithGoogle,
       completeOtpLogin,
+      completeTotpLogin,
       resendLoginOtp,
       registerGeneral,
       applyAmbassador,
