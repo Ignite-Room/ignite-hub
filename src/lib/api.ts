@@ -40,6 +40,16 @@ function authHeader(): Record<string, string> {
     return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+// Preserves the HTTP status code so callers can reliably branch on it (e.g. 401 ->
+// the token is dead, log out) instead of parsing the message string.
+export class ApiError extends Error {
+    status: number;
+    constructor(message: string, status: number) {
+        super(message);
+        this.status = status;
+    }
+}
+
 // ── Generic fetch wrapper (JSON endpoints) ────────────────────────────────
 async function real<T>(path: string, opts?: RequestInit): Promise<T> {
     const res = await fetch(`${API_BASE}${path}`, {
@@ -52,7 +62,7 @@ async function real<T>(path: string, opts?: RequestInit): Promise<T> {
     });
     if (!res.ok) {
         const err = await res.json().catch(() => ({ message: 'Request failed' }));
-        throw new Error(err.message || `HTTP ${res.status}`);
+        throw new ApiError(err.message || err.error || `HTTP ${res.status}`, res.status);
     }
     return res.json() as Promise<T>;
 }

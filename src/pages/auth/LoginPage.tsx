@@ -8,7 +8,7 @@ import { Eye, EyeOff, LogIn, AlertCircle, Check, ArrowLeft, ShieldCheck, KeyRoun
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth, redirectPathForUser, LoginOutcome } from '@/lib/auth-context';
+import { useAuth, redirectPathForUser, LoginOutcome, User } from '@/lib/auth-context';
 import { maskEmail } from '@/lib/utils';
 import { api } from '@/lib/api';
 import OtpCodeInput from '@/components/OtpCodeInput';
@@ -63,11 +63,8 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
         return () => clearInterval(interval);
     }, [cooldown]);
 
-    const redirectAfterLogin = () => {
-        const savedUser = localStorage.getItem('ignite_user') || sessionStorage.getItem('ignite_user');
-        const user = savedUser ? JSON.parse(savedUser) : null;
-        const destination = from || (user ? redirectPathForUser(user) : '/home');
-        navigate(destination, { replace: true });
+    const redirectAfterLogin = (user: User) => {
+        navigate(from || redirectPathForUser(user), { replace: true });
     };
 
     const handleAuthError = (msg: string) => setError(msg);
@@ -87,7 +84,7 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
             }
             return;
         }
-        redirectAfterLogin();
+        redirectAfterLogin(outcome.user);
     };
 
     const onSubmit = async (data: FormData) => {
@@ -112,9 +109,9 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
         setError('');
         setVerifying(true);
         try {
-            await completeOtpLogin(otpEmail, otpCode, rememberMe);
+            const user = await completeOtpLogin(otpEmail, otpCode, rememberMe);
             setStep('verified');
-            setTimeout(redirectAfterLogin, 800);
+            setTimeout(() => redirectAfterLogin(user), 800);
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Verification failed');
         } finally {
@@ -132,9 +129,9 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
         setError('');
         setVerifying(true);
         try {
-            await completeTotpLogin(otpEmail, code, rememberMe);
+            const user = await completeTotpLogin(otpEmail, code, rememberMe);
             setStep('verified');
-            setTimeout(redirectAfterLogin, 800);
+            setTimeout(() => redirectAfterLogin(user), 800);
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Verification failed');
         } finally {

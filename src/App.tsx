@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./lib/auth-context";
-import { ProtectedRoute, AdminRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute, AdminRoute, PartnerRoute } from "./components/ProtectedRoute";
 import { Analytics } from "@vercel/analytics/react";
 
 // Existing site pages
@@ -118,52 +118,52 @@ const App = () => (
               <ProtectedRoute><CollaboratorAcceptPage /></ProtectedRoute>
             } />
             <Route path="/events/organizer" element={
-              <ProtectedRoute><OrganizerDashboardPage /></ProtectedRoute>
+              <PartnerRoute><OrganizerDashboardPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/events" element={
-              <ProtectedRoute><MyEventsPage /></ProtectedRoute>
+              <PartnerRoute><MyEventsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/profile" element={
-              <ProtectedRoute><OrganizationProfilePage /></ProtectedRoute>
+              <PartnerRoute><OrganizationProfilePage /></PartnerRoute>
             } />
             <Route path="/events/organizer/earnings" element={
-              <ProtectedRoute><EarningsPage /></ProtectedRoute>
+              <PartnerRoute><EarningsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/payout-settings" element={
-              <ProtectedRoute><PayoutSettingsPage /></ProtectedRoute>
+              <PartnerRoute><PayoutSettingsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/new" element={
-              <ProtectedRoute><EventWizard /></ProtectedRoute>
+              <PartnerRoute><EventWizard /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/edit" element={
-              <ProtectedRoute><EventWizard /></ProtectedRoute>
+              <PartnerRoute><EventWizard /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/registrations" element={
-              <ProtectedRoute><OrganizerRegistrationsPage /></ProtectedRoute>
+              <PartnerRoute><OrganizerRegistrationsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/checkin" element={
-              <ProtectedRoute><OrganizerCheckinPage /></ProtectedRoute>
+              <PartnerRoute><OrganizerCheckinPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/rounds/:roundId" element={
-              <ProtectedRoute><OrganizerRoundSubmissionsPage /></ProtectedRoute>
+              <PartnerRoute><OrganizerRoundSubmissionsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/rounds/:roundId/evaluators" element={
-              <ProtectedRoute><EvaluatorsPage /></ProtectedRoute>
+              <PartnerRoute><EvaluatorsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/rounds" element={
-              <ProtectedRoute><EventRoundsListPage /></ProtectedRoute>
+              <PartnerRoute><EventRoundsListPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/communications" element={
-              <ProtectedRoute><CommunicationsPage /></ProtectedRoute>
+              <PartnerRoute><CommunicationsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/analytics" element={
-              <ProtectedRoute><AnalyticsPage /></ProtectedRoute>
+              <PartnerRoute><AnalyticsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id/settings" element={
-              <ProtectedRoute><EventSettingsPage /></ProtectedRoute>
+              <PartnerRoute><EventSettingsPage /></PartnerRoute>
             } />
             <Route path="/events/organizer/:id" element={
-              <ProtectedRoute><EventOverviewPage /></ProtectedRoute>
+              <PartnerRoute><EventOverviewPage /></PartnerRoute>
             } />
             <Route path="/evaluate" element={<EvaluatorPortalPage />} />
             <Route path="/events/ticket/:token/rounds/:roundId" element={<RoundSubmitPage />} />

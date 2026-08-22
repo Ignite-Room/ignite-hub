@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { api } from './api';
+import { api, ApiError } from './api';
 
 // A user's standing in the Ambassador Program and as an Organizer ("Partner") are
 // independent privileges layered on top of one base account — never a separate
@@ -32,8 +32,10 @@ export interface User {
 
 // Returned by any login entry point. When otpRequired is true, no session has been
 // created yet — the caller must collect a code and call completeOtpLogin (method
-// 'email') or completeTotpLogin (method 'totp').
-export type LoginOutcome = { otpRequired: false } | { otpRequired: true; email: string; method: 'email' | 'totp' };
+// 'email') or completeTotpLogin (method 'totp'). When false, `user` is the fresh
+// value from this call's response — read it directly rather than off `useAuth()`,
+// since the context's `user` is still the pre-login closure value until the next render.
+export type LoginOutcome = { otpRequired: false; user: User } | { otpRequired: true; email: string; method: 'email' | 'totp' };
 
 interface AuthContextType {
   user: User | null;
@@ -41,10 +43,10 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<LoginOutcome>;
   loginWithGoogle: (credential: string) => Promise<LoginOutcome>;
-  completeOtpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<void>;
-  completeTotpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<void>;
+  completeOtpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<User>;
+  completeTotpLogin: (email: string, code: string, rememberMe?: boolean) => Promise<User>;
   resendLoginOtp: (email: string) => Promise<void>;
-  registerGeneral: (data: { name: string; email: string; password: string; phone?: string }) => Promise<void>;
+  registerGeneral: (data: { name: string; email: string; password: string; phone?: string }) => Promise<User>;
   applyAmbassador: (data: { college: string; enrollmentId: string; phone: string }) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
@@ -98,6 +100,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
     setLoading(false);
+
+    // Silently refresh role/accountStatus/partnerStatus in the background so a
+    // stale cache (e.g. an ambassador approved after their last login) doesn't
+    // send them to the wrong dashboard tier until they log out and back in.
+    // Non-blocking — `loading` above already resolved from the cached value, and
+    // route guards should never wait on a network round trip. Only a definitive
+    // 401 (dead token) forces a logout; network/server errors just keep the cache.
+    if (savedToken && savedUser) {
+      api.getProfile()
+        .then((freshUser) => {
+          const activeStorage = getActiveStorage();
+          activeStorage?.setItem(USER_KEY, JSON.stringify(freshUser));
+          setUser(freshUser);
+        })
+        .catch((e) => {
+          if (e instanceof ApiError && e.status === 401) {
+            storage?.removeItem(TOKEN_KEY);
+            storage?.removeItem(USER_KEY);
+            localStorage.removeItem(STORAGE_TYPE_KEY);
+            setToken(null);
+            setUser(null);
+          }
+        });
+    }
   }, []);
 
   /**
@@ -131,33 +157,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const res = await api.login(email, password, rememberMe);
     if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email, method: res.method };
     persistSession(res.token, res.user, rememberMe);
-    return { otpRequired: false };
+    return { otpRequired: false, user: res.user };
   };
 
   const loginWithGoogle = async (credential: string): Promise<LoginOutcome> => {
     const res = await api.loginWithGoogle(credential);
     if ('otpRequired' in res && res.otpRequired) return { otpRequired: true, email: res.email, method: res.method };
     persistSession(res.token, res.user, true);
-    return { otpRequired: false };
+    return { otpRequired: false, user: res.user };
   };
 
-  const completeOtpLogin = async (email: string, code: string, rememberMe = false) => {
+  const completeOtpLogin = async (email: string, code: string, rememberMe = false): Promise<User> => {
     const res = await api.verifyLoginOtp(email, code, rememberMe);
     persistSession(res.token, res.user, rememberMe);
+    return res.user;
   };
 
-  const completeTotpLogin = async (email: string, code: string, rememberMe = false) => {
+  const completeTotpLogin = async (email: string, code: string, rememberMe = false): Promise<User> => {
     const res = await api.verifyLoginTotp(email, code, rememberMe);
     persistSession(res.token, res.user, rememberMe);
+    return res.user;
   };
 
   const resendLoginOtp = async (email: string) => {
     await api.resendLoginOtp(email);
   };
 
-  const registerGeneral = async (data: { name: string; email: string; password: string; phone?: string }) => {
+  const registerGeneral = async (data: { name: string; email: string; password: string; phone?: string }): Promise<User> => {
     const res = await api.registerGeneral(data);
     persistSession(res.token, res.user, true);
+    return res.user;
   };
 
   // Upgrades the current account into a pending Ambassador application — same

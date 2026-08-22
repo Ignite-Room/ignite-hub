@@ -95,7 +95,7 @@ export default function Navbar() {
                 <Button variant="outline" size="sm" className="rounded-full" onClick={() => navigate(redirectPathForUser(user))}>
                   Dashboard
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/'); }}>
+                <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/login', { replace: true }); }}>
                   Log Out
                 </Button>
               </>
@@ -154,7 +154,7 @@ export default function Navbar() {
                   <Button variant="outline" className="w-full mt-4 rounded-full" onClick={() => { setIsMobileMenuOpen(false); navigate(redirectPathForUser(user)); }}>
                     Dashboard
                   </Button>
-                  <Button variant="ghost" className="w-full mt-2" onClick={() => { setIsMobileMenuOpen(false); logout(); navigate('/'); }}>
+                  <Button variant="ghost" className="w-full mt-2" onClick={() => { setIsMobileMenuOpen(false); logout(); navigate('/login', { replace: true }); }}>
                     Log Out
                   </Button>
                 </>

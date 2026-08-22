@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ChevronRight, LogOut, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -75,8 +75,14 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ title, breadcrumb, actions, children }: AdminLayoutProps) {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSE_KEY) === '1');
     const [mobileOpen, setMobileOpen] = useState(false);
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login', { replace: true });
+    };
 
     useEffect(() => { localStorage.setItem(COLLAPSE_KEY, collapsed ? '1' : '0'); }, [collapsed]);
 
@@ -142,7 +148,7 @@ export default function AdminLayout({ title, breadcrumb, actions, children }: Ad
                                 <p className="text-xs text-muted-foreground font-normal truncate">{user?.email}</p>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={logout} className="text-destructive focus:text-destructive gap-2">
+                            <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive gap-2">
                                 <LogOut className="w-4 h-4" /> Sign out
                             </DropdownMenuItem>
                         </DropdownMenuContent>

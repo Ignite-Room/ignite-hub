@@ -40,18 +40,12 @@ export default function SignupGeneralPage() {
         resolver: zodResolver(schema),
     });
 
-    const goToDestination = () => {
-        const savedUser = localStorage.getItem('ignite_user') || sessionStorage.getItem('ignite_user');
-        const user = savedUser ? JSON.parse(savedUser) : null;
-        navigate(user ? redirectPathForUser(user) : '/home', { replace: true });
-    };
-
     const onSubmit = async (data: FormData) => {
         setError('');
         setLoading(true);
         try {
-            await registerGeneral({ name: data.name, email: data.email, password: data.password });
-            goToDestination();
+            const user = await registerGeneral({ name: data.name, email: data.email, password: data.password });
+            navigate(redirectPathForUser(user), { replace: true });
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Sign up failed. Please try again.');
         } finally {
