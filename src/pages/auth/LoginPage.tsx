@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, LogIn, AlertCircle, Check, ArrowLeft, ShieldCheck, KeyRound, Users, CalendarDays } from 'lucide-react';
+import { Eye, EyeOff, LogIn, AlertCircle, Check, ArrowLeft, ShieldCheck, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,6 +13,8 @@ import { maskEmail } from '@/lib/utils';
 import { api } from '@/lib/api';
 import OtpCodeInput from '@/components/OtpCodeInput';
 import igniteLogo from '@/assets/ignite-logo.png';
+import AuthSidebar from '@/components/auth/AuthSidebar';
+import AuthBackground from '@/components/auth/AuthBackground';
 
 const schema = z.object({
     email: z.string().email('Enter a valid email'),
@@ -160,38 +162,9 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
 
     return (
         <div className="min-h-screen bg-background flex items-stretch relative overflow-hidden">
-            {/* Background glow effects */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-accent/8 rounded-full blur-3xl" />
-            </div>
+            <AuthBackground />
 
-            {/* Left: stats sidebar (desktop only) */}
-            <div className="hidden lg:flex flex-col justify-center w-[42%] px-16 relative z-10">
-                <Link to="/" className="flex items-center gap-2.5 mb-14">
-                    <img src={igniteLogo} alt="Ignite Room" className="h-8 w-auto" />
-                    <span className="text-xl font-bold text-gradient">Ignite Room</span>
-                </Link>
-
-                <div className="space-y-10">
-                    <div>
-                        <div className="text-5xl font-heading font-bold text-foreground">
-                            {stats ? `${stats.totalUsers.toLocaleString()}+` : ' '}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-1 uppercase tracking-wider">
-                            <Users className="w-3.5 h-3.5" /> Builders active
-                        </div>
-                    </div>
-                    <div>
-                        <div className="text-5xl font-heading font-bold text-foreground">
-                            {stats ? `${stats.hostedEvents}+` : ' '}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-1 uppercase tracking-wider">
-                            <CalendarDays className="w-3.5 h-3.5" /> Events hosted
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <AuthSidebar stats={stats} />
 
             {/* Right: auth card */}
             <div className="flex-1 flex items-center justify-center px-4 py-12 relative z-10">

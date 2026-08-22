@@ -1,9 +1,10 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Users, Calendar, Bell, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Users, Calendar, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import appPhoneMockup from '@/assets/figma/app-phone-mockup.png';
+import appStoreBadge from '@/assets/figma/app-store-badge.png';
+import googlePlayBadge from '@/assets/figma/google-play-badge.png';
 
 const features = [
   {
@@ -86,24 +87,12 @@ export default function AppSection() {
               transition={{ duration: 0.5, delay: 0.5 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button asChild variant="hero" size="lg" className="group">
-                <Link to="/app">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
-                  </svg>
-                  App Store
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button asChild variant="heroOutline" size="lg" className="group">
-                <Link to="/app">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z" />
-                  </svg>
-                  Play Store
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
+              <Link to="/app" className="transition-transform hover:scale-[1.03]">
+                <img src={appStoreBadge} alt="Download on the App Store" className="h-11 w-auto" />
+              </Link>
+              <Link to="/app" className="transition-transform hover:scale-[1.03]">
+                <img src={googlePlayBadge} alt="Get it on Google Play" className="h-11 w-auto" />
+              </Link>
             </motion.div>
           </motion.div>
 
