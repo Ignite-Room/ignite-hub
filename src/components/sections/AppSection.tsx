@@ -1,8 +1,9 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Smartphone, Users, Calendar, Bell, ArrowRight } from 'lucide-react';
+import { Users, Calendar, Bell, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import appPhoneMockup from '@/assets/figma/app-phone-mockup.png';
 
 const features = [
   {
@@ -114,31 +115,12 @@ export default function AppSection() {
             className="relative flex justify-center lg:justify-end"
           >
             <div className="relative">
-              {/* Glow effect */}
               <div className="absolute inset-0 bg-primary/30 blur-[80px] rounded-full scale-75" />
-
-              {/* Phone frame */}
-              <div className="relative w-72 h-[580px] bg-gradient-to-b from-muted to-background rounded-[3rem] border-4 border-border p-3 shadow-2xl animate-float">
-                <div className="w-full h-full bg-background rounded-[2.5rem] overflow-hidden relative">
-                  {/* Notch */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-7 bg-background rounded-b-2xl z-10" />
-
-                  {/* Screen content */}
-                  <div className="w-full h-full bg-gradient-to-b from-secondary to-background p-6 pt-12">
-                    <div className="flex items-center gap-3 mb-8">
-                      <Smartphone className="w-8 h-8 text-primary" />
-                      <span className="font-heading font-bold text-lg text-foreground">Ignite Room</span>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="h-20 bg-primary/20 rounded-xl animate-pulse" />
-                      <div className="h-16 bg-muted rounded-xl" />
-                      <div className="h-16 bg-muted rounded-xl" />
-                      <div className="h-24 bg-primary/10 rounded-xl border border-primary/30" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <img
+                src={appPhoneMockup}
+                alt="Ignite Room app preview"
+                className="relative w-72 drop-shadow-2xl animate-float"
+              />
             </div>
           </motion.div>
         </div>
