@@ -71,7 +71,7 @@ export default function AboutSection() {
           className="text-center mb-16"
         >
           <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
-            Who We Are
+            01 / Who We Are
           </span>
           <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
             Igniting the Next Generation

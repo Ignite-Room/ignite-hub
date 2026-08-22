@@ -307,7 +307,7 @@ export default function EventsSection() {
           className="text-center mb-16"
         >
           <span className="text-primary font-medium text-sm uppercase tracking-wider block mb-4">
-            Our Journey
+            02 / Our Journey
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Events & Experiences

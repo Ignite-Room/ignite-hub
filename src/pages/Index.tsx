@@ -1,4 +1,5 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/sections/HeroSection';
 import AboutSection from '@/components/sections/AboutSection';
@@ -15,12 +16,20 @@ import AmbassadorTasksPopup from '@/components/AmbassadorTasksPopup';
 const Logo3DBackground = lazy(() => import('@/components/Logo3DBackground'));
 
 const Index = () => {
+  // The 3D flame glow was tuned for the near-black dark theme; on the light
+  // background it reads as a solid pink shape over content, so only show it in dark mode.
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <div className="relative min-h-screen bg-background">
-      {/* 3D Background - lazy loaded */}
-      <Suspense fallback={null}>
-        <Logo3DBackground />
-      </Suspense>
+      {/* 3D Background - lazy loaded, dark theme only */}
+      {mounted && resolvedTheme === 'dark' && (
+        <Suspense fallback={null}>
+          <Logo3DBackground />
+        </Suspense>
+      )}
 
       {/* Navigation */}
       <Navbar />

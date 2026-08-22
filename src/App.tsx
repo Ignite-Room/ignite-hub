@@ -19,6 +19,7 @@ import Disclaimer from "./pages/Disclaimer";
 import Accessibility from "./pages/Accessibility";
 import CookiePolicy from "./pages/CookiePolicy";
 import JoinUs from "./pages/JoinUs";
+import PartnersPage from "./pages/PartnersPage";
 import Blog from "./pages/Blog";
 import Newsletter from "./pages/Newsletter";
 import FAQs from "./pages/FAQs";
@@ -91,6 +92,7 @@ const App = () => (
             {/* ── Main Site ─────────────────────────────────────── */}
             <Route path="/" element={<Index />} />
             <Route path="/join-us" element={<JoinUs />} />
+            <Route path="/partners" element={<PartnersPage />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/faqs" element={<FAQs />} />

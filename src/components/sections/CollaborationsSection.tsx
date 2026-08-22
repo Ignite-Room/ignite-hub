@@ -1,5 +1,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 
 const partners = [
   { name: 'Physics Wallah', logo: 'pw.png' },
@@ -31,11 +33,18 @@ export default function CollaborationsSection() {
           className="text-center mb-12"
         >
           <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
-            Our Partners
+            06 / Our Partners
           </span>
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
             Trusted Collaborations
           </h2>
+          <Link
+            to="/partners"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary mt-4 group"
+          >
+            See all partnerships
+            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </Link>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">

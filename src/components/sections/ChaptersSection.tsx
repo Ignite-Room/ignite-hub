@@ -38,7 +38,7 @@ export default function ChaptersSection() {
           className="text-center mb-16"
         >
           <span className="text-primary font-medium text-sm uppercase tracking-wider block mb-4">
-            Across India
+            04 / Across India
           </span>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Our City Chapters

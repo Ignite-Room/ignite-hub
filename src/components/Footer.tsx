@@ -10,6 +10,7 @@ const footerLinks = {
     { name: 'Ambassador Program', href: '/ambassador' },
     { name: 'Join Us', href: '/join-us' },
     { name: 'Careers', href: '/careers' },
+    { name: 'Partners', href: '/partners' },
   ],
   resources: [
     // { name: 'Blog', href: '/blog' },

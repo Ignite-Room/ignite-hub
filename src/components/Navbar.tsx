@@ -15,6 +15,7 @@ const navLinks = [
   { name: 'Chapters', href: '#chapters' },
   { name: 'App', href: '#app' },
   { name: 'Careers', href: '/careers' },
+  { name: 'Partners', href: '/partners' },
 ];
 
 export default function Navbar() {

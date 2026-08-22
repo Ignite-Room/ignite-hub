@@ -34,8 +34,8 @@ export default function AmbassadorSection() {
   return (
     <section id="ambassador" className="section-padding relative overflow-hidden">
       {/* Background gradients */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[100px] rounded-full pointer-events-none translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/20 blur-[80px] rounded-full pointer-events-none -translate-x-1/2 translate-y-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 left-1/2 w-[500px] h-[500px] bg-primary/10 blur-[130px] rounded-full pointer-events-none -translate-x-1/4 translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -50,7 +50,7 @@ export default function AmbassadorSection() {
           >
             <div>
               <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
-                Campus Ambassador Program
+                03 / Campus Ambassador Program
               </span>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-4">
                 <Flame className="w-3 h-3" />
@@ -108,9 +108,6 @@ export default function AmbassadorSection() {
                 </motion.div>
               ))}
             </div>
-
-            {/* Decorative element */}
-            <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-primary/20 to-secondary/20 blur-[60px] rounded-full scale-110" />
           </motion.div>
 
         </div>

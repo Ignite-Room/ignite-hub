@@ -43,7 +43,7 @@ export default function AppSection() {
           >
             <div>
               <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
-                Ignite Room App
+                05 / Ignite Room App
               </span>
               <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
                 Your Community,
