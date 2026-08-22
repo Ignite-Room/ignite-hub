@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,10 +29,10 @@ import AppComingSoon from "./pages/AppComingSoon";
 import CareersPage from "./pages/careers/CareersPage";
 import RoleDetailPage from "./pages/careers/RoleDetailPage";
 import ApplyPage from "./pages/careers/ApplyPage";
-import CareersAdmin from "./pages/admin/CareersAdmin";
+const CareersAdmin = lazy(() => import("./pages/admin/CareersAdmin"));
 import ChallengePage from "./pages/careers/ChallengePage";
 import InterviewPage from "./pages/careers/InterviewPage";
-import MailCenter from "./pages/admin/MailCenter";
+const MailCenter = lazy(() => import("./pages/admin/MailCenter"));
 
 // Ambassador platform pages
 import AmbassadorLanding from "./pages/ambassador/AmbassadorLanding";
@@ -42,12 +43,12 @@ import SignupGeneralPage from "./pages/auth/SignupGeneralPage";
 import AmbassadorDashboard from "./pages/dashboard/AmbassadorDashboard";
 import ReferralLanding from "./pages/referral/ReferralLanding";
 import LeaderboardPage from "./pages/leaderboard/LeaderboardPage";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import AccountPage from "./pages/profile/AccountPage";
-import ExternalVerificationPage from "./pages/admin/ExternalVerificationPage";
-import TaskBoardAdmin from "./pages/admin/TaskBoardAdmin";
+const ExternalVerificationPage = lazy(() => import("./pages/admin/ExternalVerificationPage"));
+const TaskBoardAdmin = lazy(() => import("./pages/admin/TaskBoardAdmin"));
 
 // Events platform pages
 import EventsListPage from "./pages/events/EventsListPage";
@@ -56,27 +57,27 @@ import EventRegisterPage from "./pages/events/EventRegisterPage";
 import EventTicketPage from "./pages/events/EventTicketPage";
 import OrganizerApplyPage from "./pages/events/OrganizerApplyPage";
 import CollaboratorAcceptPage from "./pages/events/CollaboratorAcceptPage";
-import OrganizerDashboardPage from "./pages/events/organizer/OrganizerDashboardPage";
-import MyEventsPage from "./pages/events/organizer/MyEventsPage";
-import OrganizationProfilePage from "./pages/events/organizer/OrganizationProfilePage";
-import EventWizard from "./pages/events/organizer/wizard/EventWizard";
-import EventOverviewPage from "./pages/events/organizer/EventOverviewPage";
-import EventRoundsListPage from "./pages/events/organizer/EventRoundsListPage";
-import EventSettingsPage from "./pages/events/organizer/EventSettingsPage";
-import CommunicationsPage from "./pages/events/organizer/CommunicationsPage";
-import AnalyticsPage from "./pages/events/organizer/AnalyticsPage";
-import OrganizerRegistrationsPage from "./pages/events/organizer/OrganizerRegistrationsPage";
-import OrganizerCheckinPage from "./pages/events/organizer/OrganizerCheckinPage";
-import OrganizerRoundSubmissionsPage from "./pages/events/organizer/OrganizerRoundSubmissionsPage";
-import EvaluatorsPage from "./pages/events/organizer/EvaluatorsPage";
+const OrganizerDashboardPage = lazy(() => import("./pages/events/organizer/OrganizerDashboardPage"));
+const MyEventsPage = lazy(() => import("./pages/events/organizer/MyEventsPage"));
+const OrganizationProfilePage = lazy(() => import("./pages/events/organizer/OrganizationProfilePage"));
+const EventWizard = lazy(() => import("./pages/events/organizer/wizard/EventWizard"));
+const EventOverviewPage = lazy(() => import("./pages/events/organizer/EventOverviewPage"));
+const EventRoundsListPage = lazy(() => import("./pages/events/organizer/EventRoundsListPage"));
+const EventSettingsPage = lazy(() => import("./pages/events/organizer/EventSettingsPage"));
+const CommunicationsPage = lazy(() => import("./pages/events/organizer/CommunicationsPage"));
+const AnalyticsPage = lazy(() => import("./pages/events/organizer/AnalyticsPage"));
+const OrganizerRegistrationsPage = lazy(() => import("./pages/events/organizer/OrganizerRegistrationsPage"));
+const OrganizerCheckinPage = lazy(() => import("./pages/events/organizer/OrganizerCheckinPage"));
+const OrganizerRoundSubmissionsPage = lazy(() => import("./pages/events/organizer/OrganizerRoundSubmissionsPage"));
+const EvaluatorsPage = lazy(() => import("./pages/events/organizer/EvaluatorsPage"));
 import EvaluatorPortalPage from "./pages/evaluate/EvaluatorPortalPage";
-import EarningsPage from "./pages/events/organizer/EarningsPage";
-import PayoutSettingsPage from "./pages/events/organizer/PayoutSettingsPage";
+const EarningsPage = lazy(() => import("./pages/events/organizer/EarningsPage"));
+const PayoutSettingsPage = lazy(() => import("./pages/events/organizer/PayoutSettingsPage"));
 import RoundSubmitPage from "./pages/events/RoundSubmitPage";
-import EventsAdmin from "./pages/admin/EventsAdmin";
-import AdminEventDetail from "./pages/admin/AdminEventDetail";
-import AdminPayoutsPage from "./pages/admin/AdminPayoutsPage";
-import AdminPayoutDetailPage from "./pages/admin/AdminPayoutDetailPage";
+const EventsAdmin = lazy(() => import("./pages/admin/EventsAdmin"));
+const AdminEventDetail = lazy(() => import("./pages/admin/AdminEventDetail"));
+const AdminPayoutsPage = lazy(() => import("./pages/admin/AdminPayoutsPage"));
+const AdminPayoutDetailPage = lazy(() => import("./pages/admin/AdminPayoutDetailPage"));
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,11 @@ const App = () => (
         <Sonner />
         <Analytics />
         <BrowserRouter>
+          <Suspense fallback={
+            <div className="min-h-screen bg-background flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          }>
           <Routes>
             {/* ── Main Site ─────────────────────────────────────── */}
             <Route path="/" element={<Index />} />
@@ -247,6 +253,7 @@ const App = () => (
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
