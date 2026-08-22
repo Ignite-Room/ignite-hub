@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-    Flame, Trophy, Users, ArrowRight, Zap,
-    CheckCircle2, Gift, UtensilsCrossed, Github
-} from 'lucide-react';
+import { Flame, Trophy, Users, Zap, CheckCircle2, Gift } from 'lucide-react';
 import igniteLogo from '@/assets/ignite-logo.png';
 import { Button } from '@/components/ui/button';
+import Navbar from '@/components/Navbar';
+import TaskBoard from '@/components/TaskBoard';
 import AmbassadorChatbot from '@/components/AmbassadorChatbot';
 import { useSEO } from '@/hooks/use-seo';
 
@@ -46,37 +45,10 @@ export default function AmbassadorLanding() {
                     <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[80px]" />
                 </div>
 
-                {/* ── Navbar ─────────────────────────────────────────────────── */}
-                <nav className="relative z-50 border-b border-border/40 bg-background/70 backdrop-blur-xl sticky top-0">
-                    <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-                        <Link to="/" className="flex items-center gap-2.5 group">
-                            <img
-                                src={igniteLogo}
-                                alt="Ignite Room"
-                                className="h-8 w-auto group-hover:scale-105 transition-transform"
-                            />
-                            <span className="font-bold tracking-tight text-gradient">Ignite Room</span>
-                        </Link>
-                        <div className="flex items-center gap-2">
-                            <Link to="/ambassador/leaderboard">
-                                <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                                    <Trophy className="w-4 h-4" /> Leaderboard
-                                </Button>
-                            </Link>
-                            <Link to="/login">
-                                <Button variant="outline" size="sm" className="border-border/50">Log In</Button>
-                            </Link>
-                            <Link to="/ambassador/apply">
-                                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white gap-1.5">
-                                    Join Now <ArrowRight className="w-3.5 h-3.5" />
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                </nav>
+                <Navbar />
 
                 {/* ── Hero ───────────────────────────────────────────────────── */}
-                <section className="relative z-10 pt-24 pb-20 px-4 text-center">
+                <section className="relative z-10 pt-28 pb-20 px-4 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -201,27 +173,12 @@ export default function AmbassadorLanding() {
                     <div className="max-w-3xl mx-auto">
                         <div className="text-center mb-8">
                             <span className="text-primary text-sm font-semibold uppercase tracking-widest">Live Right Now</span>
-                            <h2 className="text-3xl font-bold mt-2">2 Active Tasks</h2>
+                            <h2 className="text-3xl font-bold mt-2">Active Tasks</h2>
                             <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
                                 Once you're an ambassador, share your referral link — anyone who completes a task through it earns you points.
                             </p>
                         </div>
-                        <div className="grid sm:grid-cols-2 gap-5">
-                            {[
-                                { icon: UtensilsCrossed, title: 'CodeKitchen Sign Up', desc: 'Refer people to sign up on CodeKitchen with a screenshot proof.' },
-                                { icon: Github, title: 'Star the Anakin Repo', desc: 'Refer people to star Anakin-Inc/anakin on GitHub with proof.' },
-                            ].map((t) => (
-                                <div key={t.title} className="glass-card rounded-2xl p-6 border border-primary/20 flex gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
-                                        <t.icon className="w-6 h-6 text-primary" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-foreground mb-1">{t.title}</h3>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">{t.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        <TaskBoard />
                     </div>
                 </section>
 

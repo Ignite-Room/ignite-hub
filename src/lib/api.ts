@@ -1,6 +1,20 @@
 import { MockAPI } from './mock-api';
 import type { User } from './auth-context';
-import type { Submission, LeaderboardEntry, TaskKey } from './mock-api';
+import type { Submission, LeaderboardEntry } from './mock-api';
+
+// Dynamic, admin-manageable ambassador task (replaces the old hardcoded TaskKey
+// enum-driven system). `fields` mirrors what used to be a static requirements map.
+export interface Task {
+    id: string;
+    key: string;
+    title: string;
+    description: string;
+    instructions: string | null;
+    ctaUrl: string | null;
+    ctaLabel: string | null;
+    fields: { phone?: boolean; email?: boolean; github?: boolean };
+    points: number;
+}
 
 // Admin/organizer accounts (email OTP) and any account with authenticator-app 2FA
 // enabled return otpRequired instead of a token; the caller must complete the flow
@@ -181,10 +195,16 @@ export const api = {
         return real<Awaited<ReturnType<typeof MockAPI.getMyStats>>>(`/referrals/stats/${ambassadorId}`);
     },
 
+    // ── Ambassador Tasks (dynamic) ────────────────────────────────────────────
+    async getTasks() {
+        if (USE_MOCK) return [];
+        return real<Task[]>('/tasks');
+    },
+
     // ── Task Submissions ────────────────────────────────────────────────────
     async submitTask(data: {
         ambassadorCode: string;
-        taskKey: TaskKey;
+        taskKey: string;
         name: string;
         email?: string;
         phone?: string;
@@ -192,7 +212,7 @@ export const api = {
         screenshotFile: File;
         recaptchaToken?: string;
     }) {
-        if (USE_MOCK) return MockAPI.submitTask(data);
+        if (USE_MOCK) return MockAPI.submitTask(data as Parameters<typeof MockAPI.submitTask>[0]);
 
         const form = new FormData();
         form.append('ambassadorCode', data.ambassadorCode);
@@ -239,6 +259,23 @@ export const api = {
     async getStats() {
         if (USE_MOCK) return { totalUsers: 0, hostedEvents: 0, approvedAmbassadors: 0 };
         return real<{ totalUsers: number; hostedEvents: number; approvedAmbassadors: number }>('/stats');
+    },
+
+    // ── Admin: task board ────────────────────────────────────────────────────
+    async getAdminTasks() {
+        return real<(Task & { status: 'ACTIVE' | 'ARCHIVED' | 'DRAFT'; sortOrder: number; submissionCount: number })[]>('/admin/tasks');
+    },
+
+    async createTask(data: { key: string; title: string; description: string; instructions?: string; ctaUrl?: string; ctaLabel?: string; fields: Task['fields']; points?: number; status?: 'ACTIVE' | 'ARCHIVED' | 'DRAFT' }) {
+        return real<Task>('/admin/tasks', { method: 'POST', body: JSON.stringify(data) });
+    },
+
+    async updateTask(id: string, data: Partial<{ title: string; description: string; instructions: string; ctaUrl: string; ctaLabel: string; fields: Task['fields']; points: number; status: 'ACTIVE' | 'ARCHIVED' | 'DRAFT'; sortOrder: number }>) {
+        return real<Task>(`/admin/tasks/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+    },
+
+    async deleteTask(id: string) {
+        return real<{ ok: boolean }>(`/admin/tasks/${id}`, { method: 'DELETE' });
     },
 
     // ── Admin ──────────────────────────────────────────────────────────────

@@ -27,8 +27,11 @@ interface Submission {
     id: string; taskKey: string; name: string; email: string | null; phone: string | null; githubUsername: string | null;
     screenshotUrl: string; status: string; createdAt: string;
     ambassador: { id: string; name: string; email: string; college: string | null };
+    task?: { title: string; key: string } | null;
 }
 
+// Fallback labels only for historical rows predating the dynamic Task table
+// (taskId null) — everything else displays sub.task.title directly.
 const TASK_LABELS: Record<string, string> = {
     GITHUB_STAR: 'GitHub Star (legacy)',
     CODEKITCHEN_SIGNUP: 'CodeKitchen Sign Up',
@@ -480,7 +483,7 @@ export default function AdminDashboard() {
                                             <div className="flex items-center gap-2 flex-wrap">
                                                 <p className="font-medium text-foreground">{sub.name}</p>
                                                 <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary">
-                                                    {TASK_LABELS[sub.taskKey] || sub.taskKey}
+                                                    {sub.task?.title || TASK_LABELS[sub.taskKey] || sub.taskKey}
                                                 </span>
                                                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sub.status === 'VERIFIED' ? 'bg-green-500/15 text-green-400' : sub.status === 'REJECTED' ? 'bg-destructive/15 text-destructive' : 'bg-amber-500/15 text-amber-400'}`}>
                                                     {sub.status}

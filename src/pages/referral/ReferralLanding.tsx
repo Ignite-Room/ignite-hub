@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Flame, Github, UtensilsCrossed, CheckCircle2, AlertCircle, Upload, X, Loader2, ExternalLink, Sparkles } from 'lucide-react';
+import { Flame, Github, ListChecks, CheckCircle2, AlertCircle, Upload, X, Loader2, ExternalLink, Sparkles } from 'lucide-react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { api } from '@/lib/api';
-import type { TaskKey } from '@/lib/mock-api';
+import { api, type Task } from '@/lib/api';
 import type { User } from '@/lib/auth-context';
 import { useSEO } from '@/hooks/use-seo';
 
@@ -45,56 +44,24 @@ async function getRecaptchaToken(siteKey: string): Promise<string | undefined> {
     }
 }
 
-// ── Active tasks ─────────────────────────────────────────────────────────
-// Both tasks are completed by the person who followed the ambassador's referral
-// link (not the ambassador themselves) — the screenshot is the proof, an admin
-// verifies it, and the referring ambassador gets the leaderboard credit.
-type TaskDef = {
-    key: TaskKey;
-    icon: typeof UtensilsCrossed;
-    title: string;
-    instructions: string;
-    ctaLabel: string;
-    ctaUrl: string;
-    needsGithub: boolean;
-};
+// Every task requires name + email; phone/github are added per-task based on
+// task.fields, mirroring what used to be a static per-key schema switch.
+function buildSchema(task: Task) {
+    return z.object({
+        name: z.string().min(2, 'Full name is required'),
+        email: z.string().email('Enter a valid email address'),
+        phone: task.fields.phone
+            ? z.string().regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit Indian mobile number')
+            : z.string().optional(),
+        githubUrl: task.fields.github
+            ? z.string().min(1, 'GitHub profile link is required').regex(/^https?:\/\/(www\.)?github\.com\/.+/i, 'Enter a valid GitHub profile URL')
+            : z.string().optional(),
+    });
+}
+type TaskForm = { name: string; email: string; phone?: string; githubUrl?: string };
 
-const TASKS: TaskDef[] = [
-    {
-        key: 'CODEKITCHEN_SIGNUP',
-        icon: UtensilsCrossed,
-        title: 'CodeKitchen Sign Up',
-        instructions: 'Sign up here, then upload a screenshot proving you’re signed in.',
-        ctaLabel: 'Sign up on CodeKitchen',
-        ctaUrl: 'https://codekitchen.aim.media/signup?c=mb_agency3',
-        needsGithub: false,
-    },
-    {
-        key: 'ANAKIN_STAR',
-        icon: Github,
-        title: 'Star the Anakin Repo',
-        instructions: 'Please star the following repo, then submit your GitHub profile link and a screenshot showing the star.',
-        ctaLabel: 'Open Anakin-Inc/anakin on GitHub',
-        ctaUrl: 'https://github.com/Anakin-Inc/anakin',
-        needsGithub: true,
-    },
-];
-
-const codeKitchenSchema = z.object({
-    name: z.string().min(2, 'Full name is required'),
-    email: z.string().email('Enter a valid email address'),
-});
-const anakinSchema = z.object({
-    name: z.string().min(2, 'Full name is required'),
-    email: z.string().email('Enter a valid email address'),
-    githubUrl: z.string().min(1, 'GitHub profile link is required').regex(/^https?:\/\/(www\.)?github\.com\/.+/i, 'Enter a valid GitHub profile URL'),
-});
-// Both tasks share this shape — githubUrl is simply unused (and unvalidated) for
-// tasks that don't need it, so one form type + a per-task schema is enough.
-type TaskForm = { name: string; email: string; githubUrl?: string };
-
-function TaskCard({ task, ambassadorCode }: { task: TaskDef; ambassadorCode: string }) {
-    const schema = task.needsGithub ? anakinSchema : codeKitchenSchema;
+function TaskCard({ task, ambassadorCode }: { task: Task; ambassadorCode: string }) {
+    const schema = buildSchema(task);
     const { register, handleSubmit, formState: { errors } } = useForm<TaskForm>({
         resolver: zodResolver(schema) as Resolver<TaskForm>,
     });
@@ -128,10 +95,11 @@ function TaskCard({ task, ambassadorCode }: { task: TaskDef; ambassadorCode: str
 
             await api.submitTask({
                 ambassadorCode,
-                taskKey: task.key,
+                taskKey: task.id,
                 name: data.name,
                 email: data.email,
-                githubUsername: task.needsGithub ? data.githubUrl : undefined,
+                phone: task.fields.phone ? data.phone : undefined,
+                githubUsername: task.fields.github ? data.githubUrl : undefined,
                 screenshotFile: screenshot,
                 recaptchaToken,
             });
@@ -167,38 +135,48 @@ function TaskCard({ task, ambassadorCode }: { task: TaskDef; ambassadorCode: str
         <div className="glass-card rounded-2xl border border-border/50 p-6 sm:p-8">
             <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <task.icon className="w-5 h-5 text-primary" />
+                    {task.fields.github ? <Github className="w-5 h-5 text-primary" /> : <ListChecks className="w-5 h-5 text-primary" />}
                 </div>
                 <h2 className="text-lg font-bold text-foreground">{task.title}</h2>
             </div>
-            <p className="text-sm text-muted-foreground mb-3">{task.instructions}</p>
-            <a
-                href={task.ctaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors mb-6 break-all"
-            >
-                {task.ctaLabel} <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
-            </a>
+            <p className="text-sm text-muted-foreground mb-3">{task.instructions || task.description}</p>
+            {task.ctaUrl && (
+                <a
+                    href={task.ctaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors mb-6 break-all"
+                >
+                    {task.ctaLabel || 'Open task link'} <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                </a>
+            )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                    <Label htmlFor={`${task.key}-name`}>Full Name</Label>
-                    <Input id={`${task.key}-name`} placeholder="Your name" {...register('name')} className="mt-1.5" />
-                    {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
+                    <Label htmlFor={`${task.id}-name`}>Full Name</Label>
+                    <Input id={`${task.id}-name`} placeholder="Your name" {...register('name')} className="mt-1.5" />
+                    {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
                 </div>
 
                 <div>
-                    <Label htmlFor={`${task.key}-email`}>Email</Label>
-                    <Input id={`${task.key}-email`} type="email" placeholder="you@example.com" {...register('email')} className="mt-1.5" />
-                    {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+                    <Label htmlFor={`${task.id}-email`}>Email</Label>
+                    <Input id={`${task.id}-email`} type="email" placeholder="you@example.com" {...register('email')} className="mt-1.5" />
+                    {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
                 </div>
 
-                {task.needsGithub && (
+                {task.fields.phone && (
                     <div>
-                        <Label htmlFor={`${task.key}-github`}>GitHub Profile URL</Label>
-                        <Input id={`${task.key}-github`} placeholder="https://github.com/yourusername" {...register('githubUrl')} className="mt-1.5" />
-                        {errors.githubUrl && <p className="text-xs text-destructive mt-1">{errors.githubUrl.message}</p>}
+                        <Label htmlFor={`${task.id}-phone`}>Phone Number</Label>
+                        <Input id={`${task.id}-phone`} type="tel" placeholder="9876543210" {...register('phone')} className="mt-1.5" />
+                        {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>}
+                    </div>
+                )}
+
+                {task.fields.github && (
+                    <div>
+                        <Label htmlFor={`${task.id}-github`}>GitHub Profile URL</Label>
+                        <Input id={`${task.id}-github`} placeholder="https://github.com/yourusername" {...register('githubUrl')} className="mt-1.5" />
+                        {errors.githubUrl && <p className="text-sm text-destructive mt-1">{errors.githubUrl.message}</p>}
                     </div>
                 )}
 
@@ -207,7 +185,7 @@ function TaskCard({ task, ambassadorCode }: { task: TaskDef; ambassadorCode: str
                     {!screenshotPreview ? (
                         <label className="mt-1.5 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border/60 hover:border-primary/40 transition-colors p-6 cursor-pointer text-center">
                             <Upload className="w-5 h-5 text-muted-foreground" />
-                            <span className="text-xs text-muted-foreground">PNG or JPG, up to 5MB</span>
+                            <span className="text-sm text-muted-foreground">PNG or JPG, up to 5MB</span>
                             <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={handleFileChange} />
                         </label>
                     ) : (
@@ -250,12 +228,17 @@ export default function ReferralLanding() {
     const navigate = useNavigate();
     const [ambassador, setAmbassador] = useState<User | null>(null);
     const [notFound, setNotFound] = useState(false);
+    const [tasks, setTasks] = useState<Task[] | null>(null);
     const recaptchaReady = useRef(false);
 
     useEffect(() => {
         if (!USE_MOCK && RECAPTCHA_SITE_KEY) {
             loadRecaptcha(RECAPTCHA_SITE_KEY).then(() => { recaptchaReady.current = true; });
         }
+    }, []);
+
+    useEffect(() => {
+        api.getTasks().then(setTasks).catch(() => setTasks([]));
     }, []);
 
     useEffect(() => {
@@ -314,23 +297,36 @@ export default function ReferralLanding() {
                 >
                     <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">Complete a Task</h1>
                     <p className="text-muted-foreground max-w-xl mx-auto">
-                        Two tasks are open right now. Complete either (or both) and submit proof below —
-                        {ambassador ? <> <span className="text-primary font-medium">{ambassador.name}</span> gets credit for referring you.</> : ' the ambassador who referred you gets credit.'}
+                        {tasks && tasks.length > 0
+                            ? <>{tasks.length === 1 ? 'One task is' : `${tasks.length} tasks are`} open right now. Complete {tasks.length === 1 ? 'it' : 'any of them'} and submit proof below —{' '}
+                                {ambassador ? <><span className="text-primary font-medium">{ambassador.name}</span> gets credit for referring you.</> : ' the ambassador who referred you gets credit.'}
+                            </>
+                            : 'Checking for open tasks...'}
                     </p>
                 </motion.div>
 
-                <div className="grid sm:grid-cols-2 gap-5">
-                    {TASKS.map((task, i) => (
-                        <motion.div
-                            key={task.key}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                        >
-                            <TaskCard task={task} ambassadorCode={code || ''} />
-                        </motion.div>
-                    ))}
-                </div>
+                {tasks === null ? (
+                    <div className="flex justify-center py-10">
+                        <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                    </div>
+                ) : tasks.length === 0 ? (
+                    <div className="glass-card rounded-2xl border border-border/50 p-8 text-center">
+                        <p className="text-muted-foreground text-sm">No tasks are live right now — check back soon.</p>
+                    </div>
+                ) : (
+                    <div className="grid sm:grid-cols-2 gap-5">
+                        {tasks.map((task, i) => (
+                            <motion.div
+                                key={task.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.1 }}
+                            >
+                                <TaskCard task={task} ambassadorCode={code || ''} />
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

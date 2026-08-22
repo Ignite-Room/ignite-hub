@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
 import type { Submission, LeaderboardEntry, DailyReferral } from '@/lib/mock-api';
+import type { Task } from '@/lib/api';
 import ReferralChart from './components/ReferralChart';
 import SubmissionsTable from './components/SubmissionsTable';
 import StatsCard from './components/StatsCard';
@@ -24,6 +25,7 @@ export default function AmbassadorDashboard() {
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [chartData, setChartData] = useState<DailyReferral[]>([]);
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [loadError, setLoadError] = useState(false);
     const [retrying, setRetrying] = useState(false);
 
@@ -41,11 +43,12 @@ export default function AmbassadorDashboard() {
         if (!user?.id || !isApprovedAmbassador) return;
         setLoadError(false);
         try {
-            const [statsData, subs, chart, lb] = await Promise.allSettled([
+            const [statsData, subs, chart, lb, taskList] = await Promise.allSettled([
                 api.getMyStats(user.id),
                 api.getMySubmissions(user.id),
                 api.getDailyReferrals(user.id),
                 api.getLeaderboard(),
+                api.getTasks(),
             ]);
 
             // Use fulfilled values or safe defaults — never crash on partial failure
@@ -58,6 +61,8 @@ export default function AmbassadorDashboard() {
                 ? chart.value : []);
             setLeaderboard(lb.status === 'fulfilled' && Array.isArray(lb.value)
                 ? lb.value : []);
+            setTasks(taskList.status === 'fulfilled' && Array.isArray(taskList.value)
+                ? taskList.value : []);
         } catch (e) {
             console.error('[Dashboard] Unhandled load error:', e);
             setLoadError(true);
@@ -293,21 +298,20 @@ export default function AmbassadorDashboard() {
                                 <Flame className="w-4 h-4 text-primary" />
                             </div>
                             <div className="min-w-0">
-                                <p className="font-semibold text-foreground text-sm">2 Active Tasks</p>
+                                <p className="font-semibold text-foreground text-sm">{tasks.length} Active Task{tasks.length === 1 ? '' : 's'}</p>
                                 <p className="text-xs text-muted-foreground mt-0.5">Share your referral link — anyone who completes a task through it earns you leaderboard points.</p>
                             </div>
                         </div>
-                        <div className="grid sm:grid-cols-2 gap-2.5">
-                            {[
-                                { title: 'CodeKitchen Sign Up', desc: 'Sign up on CodeKitchen with a screenshot proof.' },
-                                { title: 'Star the Anakin Repo', desc: 'Star Anakin-Inc/anakin on GitHub with a screenshot proof.' },
-                            ].map((t) => (
-                                <div key={t.title} className="rounded-xl border border-border/40 bg-background/40 px-3.5 py-3">
-                                    <p className="text-sm font-medium text-foreground">{t.title}</p>
-                                    <p className="text-xs text-muted-foreground mt-0.5">{t.desc}</p>
-                                </div>
-                            ))}
-                        </div>
+                        {tasks.length > 0 && (
+                            <div className="grid sm:grid-cols-2 gap-2.5">
+                                {tasks.map((t) => (
+                                    <div key={t.id} className="rounded-xl border border-border/40 bg-background/40 px-3.5 py-3">
+                                        <p className="text-sm font-medium text-foreground">{t.title}</p>
+                                        <p className="text-xs text-muted-foreground mt-0.5">{t.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </motion.div>
 
                     {/* Chart + Leaderboard Preview */}
