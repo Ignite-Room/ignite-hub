@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
 import AvatarCropModal from '@/components/AvatarCropModal';
+import TwoFactorSetup from '@/components/TwoFactorSetup';
 import igniteLogo from '@/assets/ignite-logo.png';
 
 const GENDER_OPTIONS = ['Prefer not to say', 'Male', 'Female', 'Non-binary', 'Other'];
@@ -255,6 +256,8 @@ export default function ProfilePage() {
                                     <Lock className="w-3 h-3" /> These fields cannot be changed.
                                 </p>
                             </div>
+
+                            <TwoFactorSetup />
                         </motion.div>
 
                         {/* ── Right: Editable fields ── */}

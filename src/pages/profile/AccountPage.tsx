@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import TwoFactorSetup from '@/components/TwoFactorSetup';
 import { useAuth } from '@/lib/auth-context';
 import { api, MyRegistration } from '@/lib/api';
 
@@ -86,7 +87,7 @@ export default function AccountPage() {
     const [registrations, setRegistrations] = useState<MyRegistration[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [tab, setTab] = useState<'events' | 'transactions'>('events');
+    const [tab, setTab] = useState<'events' | 'transactions' | 'security'>('events');
 
     useEffect(() => {
         api.getMyRegistrations()
@@ -168,7 +169,19 @@ export default function AccountPage() {
                         >
                             Transactions
                         </button>
+                        <button
+                            onClick={() => setTab('security')}
+                            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'security' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+                        >
+                            Security
+                        </button>
                     </motion.div>
+
+                    {tab === 'security' && (
+                        <motion.div variants={itemVariants}>
+                            <TwoFactorSetup />
+                        </motion.div>
+                    )}
 
                     {loading && (
                         <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-primary animate-spin" /></div>
