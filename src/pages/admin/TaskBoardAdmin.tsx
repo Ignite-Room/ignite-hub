@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { api } from '@/lib/api';
+import { useSEO } from '@/hooks/use-seo';
 
 type AdminTask = Awaited<ReturnType<typeof api.getAdminTasks>>[number];
 
@@ -33,6 +34,8 @@ const EMPTY_FORM: FormState = {
 };
 
 export default function TaskBoardAdmin() {
+    useSEO({ title: 'Task Board', description: 'Manage ambassador tasks.', noindex: true });
+
     const [tasks, setTasks] = useState<AdminTask[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');

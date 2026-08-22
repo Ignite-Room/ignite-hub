@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { api, EventDetail } from '@/lib/api';
 import { formatEventDateTime } from '@/components/events/EventPreviewCard';
+import { useSEO, useStructuredData } from '@/hooks/use-seo';
 
 type RegoStatus = 'OPEN' | 'CLOSING_SOON' | 'CLOSED' | 'SOLD_OUT';
 
@@ -53,6 +54,31 @@ export default function EventDetailPage() {
             .catch(e => setError(e instanceof Error ? e.message : 'Event not found'))
             .finally(() => setLoading(false));
     }, [slug]);
+
+    useSEO({
+        title: event ? event.title : 'Event',
+        description: event ? (event.tagline || event.description.slice(0, 160)) : 'Browse hackathons, workshops, and meetups on Ignite Room.',
+        path: slug ? `/events/${slug}` : undefined,
+    });
+
+    useStructuredData(event ? {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: event.title,
+        description: event.tagline || event.description,
+        startDate: event.startAt,
+        endDate: event.endAt,
+        eventAttendanceMode: event.mode === 'ONLINE'
+            ? 'https://schema.org/OnlineEventAttendanceMode'
+            : 'https://schema.org/OfflineEventAttendanceMode',
+        eventStatus: 'https://schema.org/EventScheduled',
+        location: event.mode === 'ONLINE'
+            ? { '@type': 'VirtualLocation', url: `https://www.igniteroom.in/events/${event.slug}` }
+            : { '@type': 'Place', name: event.venueName || 'Venue to be announced', address: event.venueAddress || undefined },
+        image: event.coverImageUrl || undefined,
+        organizer: { '@type': 'Organization', name: event.organizer.orgName },
+        url: `https://www.igniteroom.in/events/${event.slug}`,
+    } : null);
 
     if (loading) {
         return (

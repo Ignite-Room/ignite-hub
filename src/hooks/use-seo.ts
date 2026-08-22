@@ -62,3 +62,32 @@ export function useSEO({ title, description, path, noindex }: SEOOptions) {
         }
     }, [title, description, path, noindex]);
 }
+
+const STRUCTURED_DATA_ID = 'structured-data';
+
+/**
+ * Injects a single JSON-LD <script> tag for the current page (e.g. schema.org
+ * Event or JobPosting), replacing whatever was there before. Pass `null` to
+ * remove it (e.g. while the underlying data is still loading). Only one
+ * structured-data block is supported per page — same pattern as useSEO's
+ * single canonical link, since this SPA has no server-side composition to
+ * merge multiple sources.
+ */
+export function useStructuredData(schema: Record<string, unknown> | null) {
+    useEffect(() => {
+        const existing = document.getElementById(STRUCTURED_DATA_ID);
+        existing?.remove();
+
+        if (!schema) return;
+
+        const script = document.createElement('script');
+        script.id = STRUCTURED_DATA_ID;
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(schema);
+        document.head.appendChild(script);
+
+        return () => {
+            document.getElementById(STRUCTURED_DATA_ID)?.remove();
+        };
+    }, [schema]);
+}

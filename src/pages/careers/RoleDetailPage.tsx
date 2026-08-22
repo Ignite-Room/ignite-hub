@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock, Loader2, MapPin } from 'luc
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { useSEO, useStructuredData } from '@/hooks/use-seo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -29,6 +30,13 @@ const TYPE_LABEL: Record<Role['type'], string> = {
     CONTRACT: 'Contract',
 };
 
+const SCHEMA_EMPLOYMENT_TYPE: Record<Role['type'], string> = {
+    INTERNSHIP: 'INTERN',
+    FULL_TIME: 'FULL_TIME',
+    PART_TIME: 'PART_TIME',
+    CONTRACT: 'CONTRACTOR',
+};
+
 export default function RoleDetailPage() {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
@@ -48,6 +56,33 @@ export default function RoleDetailPage() {
             .catch(() => setNotFound(true))
             .finally(() => setLoading(false));
     }, [slug]);
+
+    useSEO({
+        title: role ? role.title : 'Careers',
+        description: role ? role.description.slice(0, 160) : 'Open roles at Ignite Room.',
+        path: slug ? `/careers/${slug}` : undefined,
+        noindex: !role?.isOpen,
+    });
+
+    useStructuredData(role ? {
+        '@context': 'https://schema.org',
+        '@type': 'JobPosting',
+        title: role.title,
+        description: role.description,
+        datePosted: role.createdAt,
+        validThrough: role.deadline || undefined,
+        employmentType: SCHEMA_EMPLOYMENT_TYPE[role.type],
+        hiringOrganization: {
+            '@type': 'Organization',
+            name: 'Ignite Room',
+            sameAs: 'https://www.igniteroom.in',
+        },
+        jobLocation: {
+            '@type': 'Place',
+            address: { '@type': 'PostalAddress', addressLocality: role.location, addressCountry: 'IN' },
+        },
+        skills: role.skills.join(', '),
+    } : null);
 
     const pastDeadline = role?.deadline && new Date(role.deadline) < new Date();
     const canApply = role?.isOpen && !pastDeadline;
