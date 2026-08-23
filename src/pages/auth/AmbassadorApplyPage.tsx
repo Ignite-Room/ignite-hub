@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/lib/auth-context';
+import { useSEO } from '@/hooks/use-seo';
 
 const schema = z.object({
     college: z.string().min(2, 'College / Institution is required'),
@@ -20,6 +21,12 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function AmbassadorApplyPage() {
+    useSEO({
+        title: 'Become a Campus Ambassador',
+        description: 'Apply to become an Ignite Room Campus Ambassador. Represent your college, grow the community, and earn rewards for referrals and event participation.',
+        path: '/ambassador/apply',
+    });
+
     const { isAuthenticated, user, applyAmbassador } = useAuth();
     const [error, setError] = useState('');
     const [submitted, setSubmitted] = useState(false);

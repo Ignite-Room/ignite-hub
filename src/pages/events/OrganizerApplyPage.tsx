@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
+import { useSEO } from '@/hooks/use-seo';
 
 const schema = z.object({
     orgName: z.string().min(2, 'Organization name is required'),
@@ -26,6 +27,12 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function OrganizerApplyPage() {
+    useSEO({
+        title: 'Become an Organizer',
+        description: 'Apply to host and run events on Ignite Room. Clubs, communities, and individuals can register as organizers to reach student builders nationwide.',
+        path: '/events/organizers/apply',
+    });
+
     const { isAuthenticated, user } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState('');

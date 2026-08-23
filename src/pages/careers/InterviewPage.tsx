@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { CalendarClock, CheckCircle2, Clock, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { useSEO } from '@/hooks/use-seo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -25,6 +26,12 @@ function fmtTime(iso: string) {
 }
 
 export default function InterviewPage() {
+    useSEO({
+        title: 'Your Interview',
+        description: 'Book or view your Ignite Room interview slot.',
+        noindex: true,
+    });
+
     const { token } = useParams<{ token: string }>();
     const [data, setData] = useState<InterviewData | null>(null);
     const [loading, setLoading] = useState(true);

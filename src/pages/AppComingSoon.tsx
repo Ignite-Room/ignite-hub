@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useSEO } from '@/hooks/use-seo';
 
 const Logo3DStatic = lazy(() => import('@/components/Logo3DStatic'));
 
@@ -27,6 +28,12 @@ const cards = [
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export default function AppComingSoon() {
+    useSEO({
+        title: 'Mobile App',
+        description: 'The Ignite Room mobile app is coming soon to iOS and Android. Sign up to get notified the moment early access opens.',
+        path: '/app',
+    });
+
     const [notifyOpen, setNotifyOpen] = useState(false);
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);

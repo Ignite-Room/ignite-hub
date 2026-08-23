@@ -32,6 +32,12 @@
   </url>
 
   <url>
+    <loc>https://www.igniteroom.in/team</loc>
+    <lastmod>2026-08-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
     <loc>https://www.igniteroom.in/join-us</loc>
     <lastmod>2026-08-15</lastmod>
     <priority>0.8</priority>
@@ -65,6 +71,60 @@
     <loc>https://www.igniteroom.in/app</loc>
     <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/blog</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/newsletter</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/events/organizers/apply</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/chapters/delhi</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/chapters/chandigarh</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/chapters/mumbai</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/chapters/hyderabad</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/chapters/bangalore</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.igniteroom.in/chapters/kolkata</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
   </url>
 
   <url>

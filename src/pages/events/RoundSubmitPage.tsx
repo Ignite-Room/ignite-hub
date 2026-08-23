@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { useSEO } from '@/hooks/use-seo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -22,6 +23,12 @@ interface RoundData {
 }
 
 export default function RoundSubmitPage() {
+    useSEO({
+        title: 'Round Submission',
+        description: 'Submit your work for this Ignite Room event round.',
+        noindex: true,
+    });
+
     const { token, roundId } = useParams<{ token: string; roundId: string }>();
     const [round, setRound] = useState<RoundData | null>(null);
     const [loading, setLoading] = useState(true);

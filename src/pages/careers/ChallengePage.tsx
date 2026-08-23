@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { useSEO } from '@/hooks/use-seo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -22,6 +23,12 @@ interface ChallengeData {
 }
 
 export default function ChallengePage() {
+    useSEO({
+        title: 'Your Challenge',
+        description: 'View and submit your Ignite Room hiring challenge.',
+        noindex: true,
+    });
+
     const { token } = useParams<{ token: string }>();
     const [data, setData] = useState<ChallengeData | null>(null);
     const [loading, setLoading] = useState(true);

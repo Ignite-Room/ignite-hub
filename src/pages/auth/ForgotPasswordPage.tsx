@@ -7,8 +7,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { api } from '@/lib/api';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function ForgotPasswordPage() {
+    useSEO({
+        title: 'Reset Password',
+        description: 'Reset your Ignite Room account password.',
+        noindex: true,
+    });
+
     const navigate = useNavigate();
     const [step, setStep] = useState<1 | 2>(1);
 

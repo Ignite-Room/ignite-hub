@@ -11,11 +11,18 @@ import AppSection from '@/components/sections/AppSection';
 import CollaborationsSection from '@/components/sections/CollaborationsSection';
 import Footer from '@/components/Footer';
 import AmbassadorTasksPopup from '@/components/AmbassadorTasksPopup';
+import { useSEO } from '@/hooks/use-seo';
 
 // Lazy load 3D background for performance
 const Logo3DBackground = lazy(() => import('@/components/Logo3DBackground'));
 
 const Index = () => {
+  useSEO({
+    title: 'Ignite Room',
+    description: 'Ignite Room is a student-powered ecosystem for hackathons, mentorship, and events across 6 chapters in India. Join builders and innovators turning ideas into real momentum.',
+    path: '/',
+  });
+
   // The 3D flame glow was tuned for the near-black dark theme; on the light
   // background it reads as a solid pink shape over content, so only show it in dark mode.
   const { resolvedTheme } = useTheme();

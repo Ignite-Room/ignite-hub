@@ -15,5 +15,7 @@ Disallow: /evaluate
 Disallow: /login
 Disallow: /signup
 Disallow: /staff-login
+Disallow: /careers/challenge/
+Disallow: /careers/interview/
 
 Sitemap: https://www.igniteroom.in/sitemap.xml

@@ -5,8 +5,15 @@ import { Clock, CheckCircle2, Mail, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth-context';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function PendingApprovalPage() {
+    useSEO({
+        title: 'Application Pending',
+        description: 'Your Ignite Room Campus Ambassador application is under review.',
+        noindex: true,
+    });
+
     const { user } = useAuth();
 
     // Scroll to top

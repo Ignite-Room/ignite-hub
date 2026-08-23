@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ResumeUpload } from '@/components/ResumeUpload';
+import { useSEO } from '@/hooks/use-seo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false';
@@ -142,6 +143,12 @@ function TermsModal({ onClose }: { onClose: () => void }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ApplyPage() {
+    useSEO({
+        title: 'Apply',
+        description: 'Submit your application for an open role at Ignite Room.',
+        noindex: true,
+    });
+
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
     const [role, setRole] = useState<Role | null>(null);

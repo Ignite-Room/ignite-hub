@@ -4,6 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Calendar, MapPin, CheckCircle2, XCircle, ExternalLink, Clock, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { api, EventTicket, TicketRound } from '@/lib/api';
+import { useSEO } from '@/hooks/use-seo';
 
 const ROUND_STATUS_META: Record<string, { label: string; color: string }> = {
     PENDING: { label: 'Not submitted yet', color: 'text-orange-400' },
@@ -28,6 +29,12 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
 };
 
 export default function EventTicketPage() {
+    useSEO({
+        title: 'Your Ticket',
+        description: 'View your Ignite Room event ticket and registration status.',
+        noindex: true,
+    });
+
     const { token } = useParams<{ token: string }>();
     const [ticket, setTicket] = useState<EventTicket | null>(null);
     const [rounds, setRounds] = useState<TicketRound[]>([]);

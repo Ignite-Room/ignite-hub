@@ -2,8 +2,15 @@ import { motion } from 'framer-motion';
 import { Mail, Bell, CheckCircle, Users, Star } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function Newsletter() {
+  useSEO({
+    title: 'Newsletter',
+    description: 'Subscribe to the Ignite Room newsletter for event announcements, community updates, and opportunities delivered straight to your inbox.',
+    path: '/newsletter',
+  });
+
   const benefits = [
     'Weekly curated tech news and insights',
     'Exclusive tutorials and coding tips',

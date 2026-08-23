@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useSEO } from '@/hooks/use-seo';
 
 export default function Blog() {
+  useSEO({
+    title: 'Blog',
+    description: 'Tutorials, stories, and announcements from the Ignite Room community: hackathon guides, portfolio tips, and mentorship advice for student builders.',
+    path: '/blog',
+  });
+
   const blogPosts = [
     { id: 1, title: 'Getting Started with Ignite', excerpt: 'How to join and get the most out of the community.' },
     { id: 2, title: 'Building a Strong Portfolio', excerpt: 'Tips and project ideas for students.' },

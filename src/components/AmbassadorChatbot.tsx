@@ -176,7 +176,7 @@ export default function AmbassadorChatbot() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.92, y: 20 }}
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                        className="w-[360px] sm:w-[400px] h-[560px] flex flex-col rounded-md overflow-hidden shadow-2xl border border-border/60"
+                        className="relative w-[360px] sm:w-[400px] h-[560px] flex flex-col rounded-md overflow-hidden shadow-2xl border border-border/60"
                         style={{
                             background: 'linear-gradient(180deg, hsl(345 20% 7%) 0%, hsl(0 0% 4%) 100%)',
                             boxShadow: '0 25px 50px rgba(0,0,0,0.6), 0 0 40px hsl(345 100% 59% / 0.12)',

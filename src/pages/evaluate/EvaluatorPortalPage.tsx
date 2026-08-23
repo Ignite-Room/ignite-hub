@@ -12,6 +12,7 @@ import {
     useEvaluatorSubmissions, useEvaluatorProgress, useSaveScores,
     VerifyResponse, EvaluatorAssignment,
 } from './evaluatorPortalApi';
+import { useSEO } from '@/hooks/use-seo';
 
 function LandingForm({ onVerified, error }: { onVerified: (v: VerifyResponse) => void; error: string }) {
     const [code, setCode] = useState('');
@@ -134,6 +135,12 @@ function SubmissionCard({ assignment, criteria, onSaved }: {
 }
 
 export default function EvaluatorPortalPage() {
+    useSEO({
+        title: 'Evaluator Portal',
+        description: 'Score and review submissions as an Ignite Room event evaluator.',
+        noindex: true,
+    });
+
     const [searchParams] = useSearchParams();
     const urlToken = searchParams.get('token');
     const [verified, setVerified] = useState<VerifyResponse | null>(null);
