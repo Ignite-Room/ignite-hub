@@ -13,6 +13,7 @@ import { api } from '@/lib/api';
 import igniteLogo from '@/assets/ignite-logo.png';
 import AuthSidebar from '@/components/auth/AuthSidebar';
 import AuthBackground from '@/components/auth/AuthBackground';
+import WelcomeBackSplash from '@/components/auth/WelcomeBackSplash';
 
 const schema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -27,7 +28,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function SignupGeneralPage() {
-    const { registerGeneral } = useAuth();
+    const { registerGeneral, isAuthenticated, user: currentUser } = useAuth();
     const navigate = useNavigate();
     const [showPass, setShowPass] = useState(false);
     const [error, setError] = useState('');
@@ -54,6 +55,15 @@ export default function SignupGeneralPage() {
             setLoading(false);
         }
     };
+
+    if (isAuthenticated && currentUser) {
+        return (
+            <WelcomeBackSplash
+                email={currentUser.email}
+                onContinue={() => navigate(redirectPathForUser(currentUser), { replace: true })}
+            />
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background flex items-stretch relative overflow-hidden">

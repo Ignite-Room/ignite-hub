@@ -15,6 +15,7 @@ import OtpCodeInput from '@/components/OtpCodeInput';
 import igniteLogo from '@/assets/ignite-logo.png';
 import AuthSidebar from '@/components/auth/AuthSidebar';
 import AuthBackground from '@/components/auth/AuthBackground';
+import WelcomeBackSplash from '@/components/auth/WelcomeBackSplash';
 
 const schema = z.object({
     email: z.string().email('Enter a valid email'),
@@ -30,7 +31,7 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ variant = 'general' }: LoginPageProps) {
-    const { login, completeOtpLogin, completeTotpLogin, resendLoginOtp } = useAuth();
+    const { login, completeOtpLogin, completeTotpLogin, resendLoginOtp, isAuthenticated, user: currentUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const [showPass, setShowPass] = useState(false);
@@ -159,6 +160,15 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
     const subheading = variant === 'staff'
         ? 'Sign in with your organizer or admin account'
         : 'Sign in to your Ignite Room account.';
+
+    if (isAuthenticated && currentUser && step === 'credentials') {
+        return (
+            <WelcomeBackSplash
+                email={currentUser.email}
+                onContinue={() => navigate(from || redirectPathForUser(currentUser), { replace: true })}
+            />
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background flex items-stretch relative overflow-hidden">
