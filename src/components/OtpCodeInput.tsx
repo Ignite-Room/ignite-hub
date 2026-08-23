@@ -54,8 +54,8 @@ export default function OtpCodeInput({ value, onChange, length = 6, disabled, er
                     onChange={e => setDigit(i, e.target.value)}
                     onKeyDown={e => onKeyDown(i, e)}
                     onPaste={onPaste}
-                    className={`w-11 h-12 sm:w-12 sm:h-13 text-center text-lg font-bold rounded-xl bg-secondary/50 border transition-colors focus:outline-none focus:border-primary disabled:opacity-50 ${
-                        error ? 'border-destructive text-destructive' : 'border-border/50 text-foreground'
+                    className={`w-11 h-12 sm:w-12 sm:h-13 text-center text-lg font-bold rounded-xl bg-secondary border-2 transition-colors focus:outline-none focus:border-primary disabled:opacity-50 ${
+                        error ? 'border-destructive text-destructive' : 'border-border text-foreground'
                     }`}
                 />
             ))}

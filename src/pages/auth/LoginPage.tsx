@@ -17,6 +17,7 @@ import Navbar from '@/components/Navbar';
 import AuthStats from '@/components/auth/AuthStats';
 import AuthBackground from '@/components/auth/AuthBackground';
 import WelcomeBackSplash from '@/components/auth/WelcomeBackSplash';
+import { useSEO } from '@/hooks/use-seo';
 
 const schema = z.object({
     email: z.string().email('Enter a valid email'),
@@ -32,6 +33,12 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ variant = 'general' }: LoginPageProps) {
+    useSEO({
+        title: variant === 'staff' ? 'Organizer & Admin Sign In' : 'Sign In',
+        description: 'Sign in to your Ignite Room account.',
+        noindex: true,
+    });
+
     const { login, completeOtpLogin, completeTotpLogin, resendLoginOtp, isAuthenticated, user: currentUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -40,7 +47,8 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const [step, setStep] = useState<'credentials' | 'otp' | 'totp' | 'verified'>('credentials');
+    const [step, setStep] = useState<'credentials' | 'otp' | 'totp' | 'verified' | 'welcome'>('credentials');
+    const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
     const [otpEmail, setOtpEmail] = useState('');
     const [otpCode, setOtpCode] = useState('');
     const [useBackupCode, setUseBackupCode] = useState(false);
@@ -88,7 +96,8 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
             }
             return;
         }
-        redirectAfterLogin(outcome.user);
+        setLoggedInUser(outcome.user);
+        setStep('welcome');
     };
 
     const onSubmit = async (data: FormData) => {
@@ -167,6 +176,16 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
             <WelcomeBackSplash
                 email={currentUser.email}
                 onContinue={() => navigate(from || redirectPathForUser(currentUser), { replace: true })}
+            />
+        );
+    }
+
+    if (step === 'welcome' && loggedInUser) {
+        return (
+            <WelcomeBackSplash
+                email={loggedInUser.email}
+                mode="fresh"
+                onContinue={() => redirectAfterLogin(loggedInUser)}
             />
         );
     }

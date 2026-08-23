@@ -15,6 +15,7 @@ import Navbar from '@/components/Navbar';
 import AuthStats from '@/components/auth/AuthStats';
 import AuthBackground from '@/components/auth/AuthBackground';
 import WelcomeBackSplash from '@/components/auth/WelcomeBackSplash';
+import { useSEO } from '@/hooks/use-seo';
 
 const schema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -29,11 +30,18 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function SignupGeneralPage() {
+    useSEO({
+        title: 'Create Account',
+        description: 'Create your free Ignite Room account to browse events, register, and apply as an organizer.',
+        noindex: true,
+    });
+
     const { registerGeneral, isAuthenticated, user: currentUser } = useAuth();
     const navigate = useNavigate();
     const [showPass, setShowPass] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [justRegistered, setJustRegistered] = useState(false);
 
     const [stats, setStats] = useState<{ totalUsers: number; hostedEvents: number } | null>(null);
     useEffect(() => {
@@ -48,14 +56,24 @@ export default function SignupGeneralPage() {
         setError('');
         setLoading(true);
         try {
-            const user = await registerGeneral({ name: data.name, email: data.email, password: data.password });
-            navigate(redirectPathForUser(user), { replace: true });
+            await registerGeneral({ name: data.name, email: data.email, password: data.password });
+            setJustRegistered(true);
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Sign up failed. Please try again.');
         } finally {
             setLoading(false);
         }
     };
+
+    if (justRegistered && currentUser) {
+        return (
+            <WelcomeBackSplash
+                email={currentUser.email}
+                mode="fresh"
+                onContinue={() => navigate(redirectPathForUser(currentUser), { replace: true })}
+            />
+        );
+    }
 
     if (isAuthenticated && currentUser) {
         return (

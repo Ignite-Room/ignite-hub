@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-    Copy, Check, Share2, Trophy, Users, BadgeCheck, ExternalLink, Flame,
-    LogOut, Star, RefreshCw, AlertTriangle, MessageCircle, Twitter, Linkedin, Sparkles, UserCircle,
+    Copy, Check, Share2, Trophy, BadgeCheck, ExternalLink, Flame,
+    LogOut, RefreshCw, AlertTriangle, MessageCircle, Twitter, Linkedin, UserCircle,
     Clock, XCircle, Award,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,8 @@ import ReferralChart from './components/ReferralChart';
 import SubmissionsTable from './components/SubmissionsTable';
 import StatsCard from './components/StatsCard';
 import igniteLogo from '@/assets/ignite-logo.png';
+import sparkle from '@/assets/figma/sparkle.png';
+import peopleIcon from '@/assets/figma/people-icon.png';
 
 const SITE_URL = window.location.origin;
 
@@ -223,7 +225,7 @@ export default function AmbassadorDashboard() {
                     {/* Welcome */}
                     <motion.div variants={itemVariants}>
                         <h1 className="text-xl sm:text-3xl font-bold text-foreground flex items-center gap-2 flex-wrap">
-                            Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0] ?? ''}</span> <Sparkles className="w-6 h-6 text-orange-400 inline-block mb-1" />
+                            Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0] ?? ''}</span> <img src={sparkle} alt="" aria-hidden="true" className="w-6 h-6 inline-block mb-1" />
                             {isPartner && (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 border border-primary/30 text-primary">
                                     <Award className="w-3 h-3" /> Partner
@@ -235,7 +237,7 @@ export default function AmbassadorDashboard() {
 
                     {/* Stats Cards — 2 col on mobile, 4 on desktop */}
                     <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                        <StatsCard label="Total Referrals" value={stats.totalReferrals} icon={<Users className="w-5 h-5" />} color="primary" />
+                        <StatsCard label="Total Referrals" value={stats.totalReferrals} icon={<img src={peopleIcon} alt="" className="w-5 h-5" />} color="primary" />
                         <StatsCard label="Verified Tasks" value={stats.verifiedTasks} icon={<BadgeCheck className="w-5 h-5" />} color="green" />
                         <StatsCard label="Ext. Referrals" value={stats.externalReferrals} icon={<ExternalLink className="w-5 h-5" />} color="blue" />
                         <StatsCard
@@ -330,7 +332,7 @@ export default function AmbassadorDashboard() {
                             <div className="space-y-2.5">
                                 {leaderboard.slice(0, 5).map((entry) => (
                                     <div key={entry.ambassadorId} className="flex items-center gap-2.5">
-                                        <span className={`w-6 text-center text-sm font-bold flex-shrink-0 flex items-center justify-center ${entry.rank === 1 ? 'text-orange-400' : entry.rank === 2 ? 'text-gray-300' : entry.rank === 3 ? 'text-orange-600' : 'text-muted-foreground'}`}>
+                                        <span className={`w-6 text-center text-sm font-bold flex-shrink-0 flex items-center justify-center ${entry.rank === 1 ? 'text-orange-400' : entry.rank === 2 ? 'text-muted-foreground' : entry.rank === 3 ? 'text-orange-600' : 'text-muted-foreground'}`}>
                                             {entry.rank <= 3 ? <Trophy className="w-4 h-4 mx-auto" /> : `#${entry.rank}`}
                                         </span>
                                         <div className="flex-1 min-w-0">

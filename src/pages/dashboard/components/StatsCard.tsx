@@ -11,32 +11,32 @@ interface StatsCardProps {
 
 const colorMap = {
     primary: {
-        bg: 'bg-primary/10',
-        border: 'border-primary/20',
+        bg: 'bg-primary/15',
+        border: 'border-primary/30',
         icon: 'text-primary',
         value: 'text-primary',
         glow: 'shadow-primary/10',
     },
     green: {
-        bg: 'bg-green-500/10',
-        border: 'border-green-500/20',
-        icon: 'text-green-400',
-        value: 'text-green-400',
+        bg: 'bg-green-500/15',
+        border: 'border-green-500/30',
+        icon: 'text-green-600 dark:text-green-400',
+        value: 'text-green-600 dark:text-green-400',
         glow: 'shadow-green-500/10',
     },
     blue: {
-        bg: 'bg-blue-500/10',
-        border: 'border-blue-500/20',
-        icon: 'text-blue-400',
-        value: 'text-blue-400',
+        bg: 'bg-blue-500/15',
+        border: 'border-blue-500/30',
+        icon: 'text-blue-600 dark:text-blue-400',
+        value: 'text-blue-600 dark:text-blue-400',
         glow: 'shadow-blue-500/10',
     },
     amber: {
-        bg: 'bg-amber-500/10',
-        border: 'border-amber-500/20',
-        icon: 'text-orange-400',
-        value: 'text-orange-400',
-        glow: 'shadow-amber-500/10',
+        bg: 'bg-orange-500/15',
+        border: 'border-orange-500/30',
+        icon: 'text-orange-600 dark:text-orange-400',
+        value: 'text-orange-600 dark:text-orange-400',
+        glow: 'shadow-orange-500/10',
     },
 };
 
@@ -52,11 +52,11 @@ export default function StatsCard({ label, value, icon, color, isString = false 
             {/* Background glow */}
             <div className={`absolute top-0 right-0 w-20 h-20 ${c.bg} rounded-full blur-2xl -translate-y-4 translate-x-4 pointer-events-none`} />
 
-            <div className={`w-9 h-9 ${c.bg} rounded-xl flex items-center justify-center mb-3 ${c.icon}`}>
+            <div className={`w-10 h-10 ${c.bg} rounded-xl flex items-center justify-center mb-3 ${c.icon}`}>
                 {icon}
             </div>
 
-            <p className="text-2xl font-heading font-bold text-foreground">
+            <p className="text-3xl font-heading font-bold text-foreground">
                 {isString
                     ? value
                     : <motion.span
@@ -69,7 +69,7 @@ export default function StatsCard({ label, value, icon, color, isString = false 
                     </motion.span>
                 }
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+            <p className="text-sm text-muted-foreground mt-0.5">{label}</p>
         </motion.div>
     );
 }

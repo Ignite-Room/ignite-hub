@@ -9,10 +9,16 @@ import sparkle from '@/assets/figma/sparkle.png';
 interface WelcomeBackSplashProps {
     email: string;
     onContinue: () => void;
+    /** 'returning' (default): the visitor already had a live session. 'fresh': shown right
+     * after a login/signup just completed in this visit, so "session is still signed in"
+     * would be inaccurate. */
+    mode?: 'returning' | 'fresh';
 }
 
-/** Shown instead of the login form when the visitor already has a live session, matching the Figma "Good to have you back." frame. Follows the site's light/dark theme. */
-export default function WelcomeBackSplash({ email, onContinue }: WelcomeBackSplashProps) {
+/** Shown instead of the login form when the visitor already has a live session, and as a
+ * transitional screen right after a fresh login/signup, matching the Figma "Good to have
+ * you back." frame. Follows the site's light/dark theme. */
+export default function WelcomeBackSplash({ email, onContinue, mode = 'returning' }: WelcomeBackSplashProps) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
@@ -39,7 +45,9 @@ export default function WelcomeBackSplash({ email, onContinue }: WelcomeBackSpla
                     Good to have<br /><em className="font-serif italic font-normal">you back.</em>
                 </h1>
                 <p className="text-muted-foreground text-sm mb-10">
-                    Signed in as {maskEmail(email)}. Your session is still signed in.
+                    {mode === 'fresh'
+                        ? `Signed in as ${maskEmail(email)}.`
+                        : `Signed in as ${maskEmail(email)}. Your session is still signed in.`}
                 </p>
                 <Button onClick={onContinue} size="lg" className="rounded-full gap-2 px-8 h-12">
                     Enter the room <ArrowUpRight className="w-4 h-4" />
