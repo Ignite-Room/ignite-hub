@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./lib/auth-context";
-import { ProtectedRoute, AdminRoute, PartnerRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute, AdminRoute, PartnerRoute, LandingRoute } from "./components/ProtectedRoute";
 import { Analytics } from "@vercel/analytics/react";
 
 // Existing site pages
@@ -99,7 +99,7 @@ const App = () => (
           }>
           <Routes>
             {/* ── Main Site ─────────────────────────────────────── */}
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<LandingRoute><Index /></LandingRoute>} />
             <Route path="/join-us" element={<JoinUs />} />
             <Route path="/partners" element={<PartnersPage />} />
             <Route path="/team" element={<Team />} />
