@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import ReferralChart from '@/pages/dashboard/components/ReferralChart';
 import AdminLayout from '@/components/admin/AdminLayout';
+import StatTile, { StatTileGrid } from '@/components/StatTile';
 import { CATEGORIES, MODES, toLocalInput } from '@/pages/events/organizer/wizard/DetailsStep';
 import {
     fetchAdminEvent, updateAdminEvent, fetchAdminRegistrations, adminEventsExportUrl, refundOrder,
@@ -40,17 +41,6 @@ function formatRupees(paise: number): string {
     return `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
-function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
-    return (
-        <div className="glass-card rounded-md p-4 border border-border/50 flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0">{icon}</div>
-            <div className="min-w-0">
-                <p className="text-lg font-bold text-foreground truncate">{value}</p>
-                <p className="text-xs text-muted-foreground">{label}</p>
-            </div>
-        </div>
-    );
-}
 
 type EditForm = {
     title: string; tagline: string; description: string; category: string; mode: string;
@@ -201,12 +191,12 @@ export default function AdminEventDetail() {
 
                 {tab === 'overview' && (
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <StatTileGrid>
                             <StatTile icon={<Users className="w-4 h-4" />} label="Total registrations" value={event.analytics.totalRegistrations} />
                             <StatTile icon={<CheckCircle2 className="w-4 h-4" />} label="Checked in" value={event.analytics.registrationsByStatus.CHECKED_IN || 0} />
                             <StatTile icon={<IndianRupee className="w-4 h-4" />} label="Revenue" value={formatRupees(event.analytics.revenueInPaise)} />
                             <StatTile icon={<Ticket className="w-4 h-4" />} label="Ticket types" value={event.ticketTypes.length} />
-                        </div>
+                        </StatTileGrid>
 
                         <div className="grid lg:grid-cols-[2fr_1fr] gap-4">
                             <ReferralChart data={event.analytics.registrationsOverTime} title="Registrations over time" label="Registrations" />

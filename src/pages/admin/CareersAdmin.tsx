@@ -871,13 +871,13 @@ export default function CareersAdmin() {
 
             <AdminLayout title="Careers" breadcrumb={['Admin', 'Careers']}>
                 {/* Stats row */}
-                <div className="mb-8 grid grid-cols-3 gap-4">
+                <div className="info-section mb-8 grid grid-cols-3 divide-x divide-border/60">
                     {[
                         { label: 'Total Roles', value: roles.length },
                         { label: 'Open', value: totalOpen },
                         { label: 'Total Applications', value: totalApps },
                     ].map((s) => (
-                        <div key={s.label} className="glass-card rounded-md p-5 text-center">
+                        <div key={s.label} className="info-block p-5 text-center">
                             <p className="font-heading text-2xl font-bold text-gradient">{s.value}</p>
                             <p className="mt-1 text-xs text-muted-foreground">{s.label}</p>
                         </div>

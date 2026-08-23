@@ -6,22 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import OrganizerLayout from '@/components/organizer/OrganizerLayout';
+import StatTile, { StatTileGrid } from '@/components/StatTile';
 import { fetchEarnings, fetchOrganizerPayouts, organizerPayoutInvoiceUrl, Earnings, OrganizerPayout } from './organizerPayoutsApi';
 
 function formatRupees(paise: number): string {
     return `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
-}
-
-function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
-    return (
-        <div className="glass-card rounded-md p-4 border border-border/50 flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0">{icon}</div>
-            <div className="min-w-0">
-                <p className="text-lg font-bold text-foreground truncate">{value}</p>
-                <p className="text-xs text-muted-foreground">{label}</p>
-            </div>
-        </div>
-    );
 }
 
 export default function EarningsPage() {
@@ -44,11 +33,11 @@ export default function EarningsPage() {
 
             {!loading && !error && earnings && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <StatTileGrid cols={3}>
                         <StatTile icon={<IndianRupee className="w-4 h-4" />} label="Total earned" value={formatRupees(earnings.totalEarnedInPaise)} />
                         <StatTile icon={<TrendingUp className="w-4 h-4" />} label="Already paid out" value={formatRupees(earnings.paidOutInPaise)} />
                         <StatTile icon={<Wallet className="w-4 h-4" />} label="Pending payout" value={formatRupees(earnings.pendingInPaise)} />
-                    </div>
+                    </StatTileGrid>
 
                     {earnings.pendingInPaise > 0 && (
                         <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-4 flex items-center gap-3">

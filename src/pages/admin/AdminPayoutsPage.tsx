@@ -5,22 +5,11 @@ import { Search, IndianRupee, Wallet, AlertTriangle, ChevronRight, CheckCircle2,
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import AdminLayout from '@/components/admin/AdminLayout';
+import StatTile, { StatTileGrid } from '@/components/StatTile';
 import { fetchPayoutOrganizers, OrganizerPayoutSummary } from './adminPayoutsApi';
 
 function formatRupees(paise: number): string {
     return `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
-}
-
-function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
-    return (
-        <div className="glass-card rounded-md p-4 border border-border/50 flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0">{icon}</div>
-            <div className="min-w-0">
-                <p className="text-lg font-bold text-foreground truncate">{value}</p>
-                <p className="text-xs text-muted-foreground">{label}</p>
-            </div>
-        </div>
-    );
 }
 
 export default function AdminPayoutsPage() {
@@ -53,11 +42,11 @@ export default function AdminPayoutsPage() {
 
             {!loading && !error && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <StatTileGrid cols={3}>
                         <StatTile icon={<Wallet className="w-4 h-4" />} label="Total pending settlement" value={formatRupees(totals.pendingInPaise)} />
                         <StatTile icon={<IndianRupee className="w-4 h-4" />} label="Total collected all-time" value={formatRupees(totals.earnedInPaise)} />
                         <StatTile icon={<AlertTriangle className="w-4 h-4" />} label="Awaiting payout setup" value={totals.notConfigured} />
-                    </div>
+                    </StatTileGrid>
 
                     <div className="relative max-w-md">
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />

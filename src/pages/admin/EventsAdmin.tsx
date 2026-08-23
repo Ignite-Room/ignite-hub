@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import ReferralChart from '@/pages/dashboard/components/ReferralChart';
 import AdminLayout from '@/components/admin/AdminLayout';
+import StatTile, { StatTileGrid } from '@/components/StatTile';
 import { adminEventsFetch, fetchEventsAnalytics, AdminEventSummary, EventsAnalytics } from './adminEventsApi';
 
 interface OrganizerRow {
@@ -34,17 +35,6 @@ function formatRupees(paise: number): string {
     return `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
-function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
-    return (
-        <div className="glass-card rounded-md p-4 border border-border/50 flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0">{icon}</div>
-            <div className="min-w-0">
-                <p className="text-lg font-bold text-foreground truncate">{value}</p>
-                <p className="text-xs text-muted-foreground">{label}</p>
-            </div>
-        </div>
-    );
-}
 
 export default function EventsAdmin() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -161,12 +151,12 @@ export default function EventsAdmin() {
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                         {analytics && (
                             <>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <StatTileGrid>
                                     <StatTile icon={<CalendarDays className="w-4 h-4" />} label="Published events" value={analytics.publishedEvents} />
                                     <StatTile icon={<Users className="w-4 h-4" />} label="Total registrations" value={analytics.totalRegistrations} />
                                     <StatTile icon={<TrendingUp className="w-4 h-4" />} label="Confirmed" value={analytics.confirmedRegistrations} />
                                     <StatTile icon={<IndianRupee className="w-4 h-4" />} label="Total revenue" value={formatRupees(analytics.totalRevenueInPaise)} />
-                                </div>
+                                </StatTileGrid>
 
                                 <div className="grid lg:grid-cols-[2fr_1fr] gap-4">
                                     <ReferralChart data={analytics.registrationsOverTime} title="Registrations, last 30 days" label="Registrations" />

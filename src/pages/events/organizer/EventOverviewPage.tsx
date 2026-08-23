@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import EventPanelTabs from '@/components/organizer/EventPanelTabs';
+import StatTile, { StatTileGrid } from '@/components/StatTile';
 import { organizerFetch, fetchEventOverviewStats, OrganizerEvent, EventOverviewStats } from './organizerApi';
 
 const STATUS_COLOR: Record<string, string> = {
@@ -20,19 +21,6 @@ function formatRupees(paise: number): string {
     return `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
-function StatTile({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string | number }) {
-    return (
-        <div className="rounded-md bg-gradient-card border border-border/60 p-5 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-                <p className="text-2xl font-bold leading-none">{value}</p>
-                <p className="text-xs text-muted-foreground mt-1">{label}</p>
-            </div>
-        </div>
-    );
-}
 
 export default function EventOverviewPage() {
     const { id } = useParams<{ id: string }>();
@@ -82,11 +70,13 @@ export default function EventOverviewPage() {
                             </div>
                         </div>
 
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                            <StatTile icon={Users} label="Total Registrations" value={stats.totalRegistrations} />
-                            <StatTile icon={CheckCircle2} label="Confirmed" value={stats.confirmedCount} />
-                            <StatTile icon={QrCode} label="Checked In" value={stats.checkedInCount} />
-                            <StatTile icon={IndianRupee} label="Revenue" value={formatRupees(stats.revenueInPaise)} />
+                        <div className="mb-6">
+                            <StatTileGrid>
+                                <StatTile icon={<Users className="w-4 h-4" />} label="Total Registrations" value={stats.totalRegistrations} />
+                                <StatTile icon={<CheckCircle2 className="w-4 h-4" />} label="Confirmed" value={stats.confirmedCount} />
+                                <StatTile icon={<QrCode className="w-4 h-4" />} label="Checked In" value={stats.checkedInCount} />
+                                <StatTile icon={<IndianRupee className="w-4 h-4" />} label="Revenue" value={formatRupees(stats.revenueInPaise)} />
+                            </StatTileGrid>
                         </div>
 
                         {stats.registrationTrend.length > 1 && (
