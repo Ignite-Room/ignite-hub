@@ -166,7 +166,7 @@ export default function ProfilePage() {
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm shadow-lg ${
+                        className={`flex items-center gap-2.5 px-4 py-3 rounded-md border text-sm shadow-lg ${
                             toast.type === 'success'
                                 ? 'bg-green-500/10 border-green-500/30 text-green-400'
                                 : 'bg-destructive/10 border-destructive/30 text-destructive'
@@ -206,7 +206,7 @@ export default function ProfilePage() {
                         {/* ── Left: Avatar + read-only info ── */}
                         <motion.div variants={itemVariants} className="space-y-4">
                             {/* Avatar card */}
-                            <div className="glass-card rounded-2xl p-6 border border-border/50 flex flex-col items-center gap-4">
+                            <div className="glass-card rounded-md p-6 border border-border/50 flex flex-col items-center gap-4">
                                 <div className="relative">
                                     <Avatar url={profile.avatarUrl} name={user?.name} size="lg" />
                                     <button
@@ -231,7 +231,7 @@ export default function ProfilePage() {
                             </div>
 
                             {/* Read-only info */}
-                            <div className="glass-card rounded-2xl p-5 border border-border/50 space-y-3">
+                            <div className="glass-card rounded-md p-5 border border-border/50 space-y-3">
                                 <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                                     <Lock className="w-3.5 h-3.5" /> Account Details
                                 </h3>
@@ -262,7 +262,7 @@ export default function ProfilePage() {
 
                         {/* ── Right: Editable fields ── */}
                         <motion.div variants={itemVariants} className="lg:col-span-2 space-y-4">
-                            <div className="glass-card rounded-2xl p-5 sm:p-6 border border-border/50 space-y-5">
+                            <div className="glass-card rounded-md p-5 sm:p-6 border border-border/50 space-y-5">
                                 <h3 className="font-semibold text-foreground text-sm flex items-center gap-2">
                                     <User className="w-4 h-4 text-primary" /> Personal Details
                                 </h3>

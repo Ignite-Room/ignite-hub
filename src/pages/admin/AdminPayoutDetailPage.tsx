@@ -141,12 +141,12 @@ export default function AdminPayoutDetailPage() {
                 {success && <p className="text-sm text-emerald-400 flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 flex-shrink-0" /> {success}</p>}
 
                 {!detail.payoutDetails ? (
-                    <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 flex items-center gap-3">
+                    <div className="rounded-md border border-destructive/30 bg-destructive/10 p-4 flex items-center gap-3">
                         <AlertTriangle className="w-4 h-4 text-destructive flex-shrink-0" />
                         <p className="text-sm text-destructive">This organizer has not configured payout details yet. They need to add a bank account or UPI ID before a payout can be recorded.</p>
                     </div>
                 ) : (
-                    <div className="glass-card rounded-2xl p-5 border border-border/50">
+                    <div className="glass-card rounded-md p-5 border border-border/50">
                         <div className="flex items-center justify-between mb-3">
                             <h3 className="font-semibold flex items-center gap-2"><Landmark className="w-4 h-4 text-primary" /> Payout Details</h3>
                             <Button size="sm" variant="ghost" className="gap-1.5 text-xs h-7" onClick={() => setRevealed(r => !r)}>
@@ -173,7 +173,7 @@ export default function AdminPayoutDetailPage() {
                     </div>
                 )}
 
-                <div className="glass-card rounded-2xl border border-border/50 overflow-hidden">
+                <div className="glass-card rounded-md border border-border/50 overflow-hidden">
                     <div className="p-5 pb-3 flex items-center justify-between flex-wrap gap-2">
                         <h3 className="font-semibold flex items-center gap-2"><Wallet className="w-4 h-4 text-primary" /> Pending Orders</h3>
                         <p className="text-sm text-muted-foreground">Total pending: <span className="font-bold text-amber-400">{formatRupees(detail.pendingTotalInPaise)}</span></p>
@@ -208,7 +208,7 @@ export default function AdminPayoutDetailPage() {
                 </div>
 
                 {detail.pendingOrders.length > 0 && (
-                    <div className="glass-card rounded-2xl p-6 border border-border/50 space-y-4">
+                    <div className="glass-card rounded-md p-6 border border-border/50 space-y-4">
                         <h3 className="font-semibold">Record Payout</h3>
                         <div className="grid sm:grid-cols-2 gap-4">
                             <div>
@@ -232,7 +232,7 @@ export default function AdminPayoutDetailPage() {
                     </div>
                 )}
 
-                <div className="glass-card rounded-2xl border border-border/50 overflow-hidden">
+                <div className="glass-card rounded-md border border-border/50 overflow-hidden">
                     <div className="p-5 pb-0">
                         <h3 className="font-semibold mb-4">Payout History</h3>
                     </div>

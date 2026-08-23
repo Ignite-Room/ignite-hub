@@ -126,7 +126,7 @@ export default function EventsAdmin() {
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
                         {organizers.length === 0 && <p className="text-muted-foreground text-center py-10">No organizer applications.</p>}
                         {organizers.map(o => (
-                            <div key={o.id} className="rounded-xl border border-border/50 bg-card p-4 flex flex-wrap items-center justify-between gap-4">
+                            <div key={o.id} className="rounded-md border border-border/50 bg-card p-4 flex flex-wrap items-center justify-between gap-4">
                                 <div>
                                     <div className="flex items-center gap-2 mb-1">
                                         <Badge className={ORG_STATUS_COLOR[o.status]}>{o.status}</Badge>
@@ -170,7 +170,7 @@ export default function EventsAdmin() {
 
                                 <div className="grid lg:grid-cols-[2fr_1fr] gap-4">
                                     <ReferralChart data={analytics.registrationsOverTime} title="Registrations, last 30 days" label="Registrations" />
-                                    <div className="glass-card rounded-2xl p-5 border border-border/50">
+                                    <div className="glass-card rounded-md p-5 border border-border/50">
                                         <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                                             <Star className="w-4 h-4 text-primary" /> Top Events
                                         </h3>
@@ -208,7 +208,7 @@ export default function EventsAdmin() {
                         <div className="space-y-3">
                             {filteredEvents.length === 0 && <p className="text-muted-foreground text-center py-10">No events match.</p>}
                             {filteredEvents.map(e => (
-                                <div key={e.id} className="rounded-xl border border-border/50 bg-card p-4 flex flex-wrap items-center justify-between gap-4 hover:border-primary/30 transition-colors">
+                                <div key={e.id} className="rounded-md border border-border/50 bg-card p-4 flex flex-wrap items-center justify-between gap-4 hover:border-primary/30 transition-colors">
                                     <Link to={`/ambassador/admin/events/${e.id}`} className="flex-1 min-w-0 group">
                                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                                             <Badge className={EVENT_STATUS_COLOR[e.status]}>{e.status}</Badge>

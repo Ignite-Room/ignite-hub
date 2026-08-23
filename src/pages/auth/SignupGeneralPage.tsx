@@ -68,7 +68,7 @@ export default function SignupGeneralPage() {
                     transition={{ duration: 0.5, ease: 'easeOut' }}
                     className="w-full max-w-md relative"
                 >
-                    <div className="glass-card rounded-2xl p-6 sm:p-8 border border-border/50 shadow-2xl">
+                    <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50 shadow-2xl">
                         <div className="flex items-center gap-2.5 mb-8 lg:hidden">
                             <img src={igniteLogo} alt="Ignite Room" className="h-8 w-auto" />
                             <Link to="/" className="text-xl font-bold text-gradient">Ignite Room</Link>

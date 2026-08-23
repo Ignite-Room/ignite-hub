@@ -231,13 +231,13 @@ export default function EventWizard() {
                         <WizardStepper steps={STEPS} currentIndex={currentStep} unlocked={unlocked} onSelect={setCurrentStep} />
                     </div>
 
-                    <div className="glass-card rounded-2xl p-6 sm:p-8 border border-border/50 lg:col-span-1">
+                    <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50 lg:col-span-1">
                         {renderStep()}
                     </div>
 
                     <div className="hidden lg:block sticky top-28">
                         <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1.5"><Eye className="w-3.5 h-3.5" /> Live preview</p>
-                        <div className="rounded-2xl border border-border/50 p-6 bg-background/40 max-h-[calc(100vh-9rem)] overflow-y-auto">
+                        <div className="rounded-md border border-border/50 p-6 bg-background/40 max-h-[calc(100vh-9rem)] overflow-y-auto">
                             <EventPreviewCard event={previewData} variant="live" />
                         </div>
                     </div>

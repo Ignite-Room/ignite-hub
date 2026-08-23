@@ -142,7 +142,7 @@ function Toast({ msg, onDone }: { msg: string; onDone: () => void }) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="fixed right-4 top-4 z-[60] flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground shadow-xl"
+            className="fixed right-4 top-4 z-[60] flex items-center gap-2 rounded-md border border-border bg-card px-4 py-3 text-sm text-foreground shadow-xl"
         >
             <CheckCircle2 className="h-4 w-4 text-primary" /> {msg}
         </motion.div>
@@ -364,7 +364,7 @@ function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
                     {/* Contact */}
                     <section>
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Applicant</h3>
-                        <div className="space-y-2 rounded-xl border border-border/40 bg-secondary/20 overflow-hidden">
+                        <div className="space-y-2 rounded-md border border-border/40 bg-secondary/20 overflow-hidden">
                             {[
                                 { label: 'Email', value: app.email },
                                 { label: 'Phone', value: app.phone },
@@ -407,7 +407,7 @@ function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
                     {/* Cover letter */}
                     <section>
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Their words</h3>
-                        <div className="rounded-xl border border-border/40 bg-secondary/20 p-4 text-sm leading-7 text-muted-foreground whitespace-pre-wrap">
+                        <div className="rounded-md border border-border/40 bg-secondary/20 p-4 text-sm leading-7 text-muted-foreground whitespace-pre-wrap">
                             {app.coverLetter}
                         </div>
                     </section>
@@ -415,7 +415,7 @@ function ReviewPanel({ app, onClose, onUpdate, onDelete }: {
                     {/* Resume */}
                     <section>
                         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Resume</h3>
-                        <div className="overflow-hidden rounded-xl border border-border/40 bg-secondary/10" style={{ height: '420px' }}>
+                        <div className="overflow-hidden rounded-md border border-border/40 bg-secondary/10" style={{ height: '420px' }}>
                             <iframe src={app.resumeUrl} title="Resume" className="h-full w-full" />
                         </div>
                         <div className="mt-3 flex gap-2">
@@ -885,7 +885,7 @@ export default function CareersAdmin() {
                 </div>
 
                 {/* Tab bar */}
-                <div className="mb-6 flex gap-1 rounded-xl border border-border/40 bg-secondary/30 p-1">
+                <div className="mb-6 flex gap-1 rounded-md border border-border/40 bg-secondary/30 p-1">
                     {(['roles', 'applications', 'challenges', 'interviews'] as Tab[]).map((t) => (
                         <button
                             key={t}
@@ -930,7 +930,7 @@ export default function CareersAdmin() {
                                 </Button>
                             </div>
                         ) : (
-                            <div className="overflow-hidden rounded-xl border border-border/50">
+                            <div className="overflow-hidden rounded-md border border-border/50">
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr className="border-b border-border/50 bg-secondary/30">
@@ -1053,7 +1053,7 @@ export default function CareersAdmin() {
                             <div className="py-20 text-center text-sm text-muted-foreground">No applications found.</div>
                         ) : (
                             <>
-                                <div className="overflow-hidden rounded-xl border border-border/50">
+                                <div className="overflow-hidden rounded-md border border-border/50">
                                     <table className="w-full text-sm">
                                         <thead>
                                             <tr className="border-b border-border/50 bg-secondary/30">
@@ -1133,7 +1133,7 @@ export default function CareersAdmin() {
                                         <div
                                             key={c.id}
                                             onClick={() => handleSelectChallenge(c)}
-                                            className={`cursor-pointer rounded-xl border p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 ${
+                                            className={`cursor-pointer rounded-md border p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 ${
                                                 selectedChallenge?.id === c.id ? 'border-primary/40 bg-primary/5' : 'border-border/50 bg-secondary/20'
                                             }`}
                                         >
@@ -1264,7 +1264,7 @@ export default function CareersAdmin() {
                                         <div
                                             key={iv.id}
                                             onClick={() => handleSelectInterview(iv)}
-                                            className={`cursor-pointer rounded-xl border p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 ${
+                                            className={`cursor-pointer rounded-md border p-4 transition-colors hover:border-primary/40 hover:bg-primary/5 ${
                                                 selectedInterview?.id === iv.id ? 'border-primary/40 bg-primary/5' : 'border-border/50 bg-secondary/20'
                                             }`}
                                         >
@@ -1494,7 +1494,7 @@ function ChallengeInviteCard({ invite, challengeId, onReview }: {
     };
 
     return (
-        <div className="rounded-xl border border-border/50 bg-secondary/10 overflow-hidden">
+        <div className="rounded-md border border-border/50 bg-secondary/10 overflow-hidden">
             <div className="flex items-center gap-4 p-4 cursor-pointer hover:bg-secondary/20 transition-colors" onClick={() => setExpanded((p) => !p)}>
                 <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground text-sm">{invite.application.name}</p>
@@ -1832,7 +1832,7 @@ function InterviewInviteCard({ invite, interviewId, onReview }: {
     };
 
     return (
-        <div className="rounded-xl border border-border/50 bg-secondary/10 p-4">
+        <div className="rounded-md border border-border/50 bg-secondary/10 p-4">
             <div className="flex items-center gap-4">
                 <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground text-sm">{invite.application.name}</p>

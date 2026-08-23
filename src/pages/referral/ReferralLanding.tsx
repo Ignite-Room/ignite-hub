@@ -116,7 +116,7 @@ function TaskCard({ task, ambassadorCode }: { task: Task; ambassadorCode: string
             <motion.div
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="glass-card rounded-2xl border border-green-500/20 p-6 sm:p-8 text-center"
+                className="glass-card rounded-md border border-green-500/20 p-6 sm:p-8 text-center"
             >
                 <div className="w-14 h-14 rounded-full bg-green-500/15 flex items-center justify-center mx-auto mb-4">
                     <CheckCircle2 className="w-7 h-7 text-green-400" />
@@ -132,7 +132,7 @@ function TaskCard({ task, ambassadorCode }: { task: Task; ambassadorCode: string
     }
 
     return (
-        <div className="glass-card rounded-2xl border border-border/50 p-6 sm:p-8">
+        <div className="glass-card rounded-md border border-border/50 p-6 sm:p-8">
             <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                     {task.fields.github ? <Github className="w-5 h-5 text-primary" /> : <ListChecks className="w-5 h-5 text-primary" />}
@@ -183,7 +183,7 @@ function TaskCard({ task, ambassadorCode }: { task: Task; ambassadorCode: string
                 <div>
                     <Label>Screenshot Proof</Label>
                     {!screenshotPreview ? (
-                        <label className="mt-1.5 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border/60 hover:border-primary/40 transition-colors p-6 cursor-pointer text-center">
+                        <label className="mt-1.5 flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-border/60 hover:border-primary/40 transition-colors p-6 cursor-pointer text-center">
                             <Upload className="w-5 h-5 text-muted-foreground" />
                             <span className="text-sm text-muted-foreground">PNG or JPG, up to 5MB</span>
                             <input type="file" accept="image/png,image/jpeg,image/jpg" className="hidden" onChange={handleFileChange} />
@@ -310,7 +310,7 @@ export default function ReferralLanding() {
                         <Loader2 className="w-6 h-6 text-primary animate-spin" />
                     </div>
                 ) : tasks.length === 0 ? (
-                    <div className="glass-card rounded-2xl border border-border/50 p-8 text-center">
+                    <div className="glass-card rounded-md border border-border/50 p-8 text-center">
                         <p className="text-muted-foreground text-sm">No tasks are live right now — check back soon.</p>
                     </div>
                 ) : (

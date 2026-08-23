@@ -116,7 +116,7 @@ export default function RoundSubmitPage() {
                     )}
 
                     {round.description && (
-                        <div className="mb-8 rounded-xl border border-border/50 bg-secondary/20 p-6">
+                        <div className="mb-8 rounded-md border border-border/50 bg-secondary/20 p-6">
                             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Instructions</h2>
                             {round.description.split('\n').map((line, i) => (
                                 <p key={i} className="mb-3 last:mb-0 leading-7 text-sm text-muted-foreground">{line}</p>
@@ -128,7 +128,7 @@ export default function RoundSubmitPage() {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.97 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-6 text-center"
+                            className="rounded-md border border-emerald-500/20 bg-emerald-500/10 p-6 text-center"
                         >
                             <CheckCircle2 className="mx-auto mb-3 h-8 w-8 text-emerald-400" />
                             <h3 className="mb-1 font-semibold text-foreground">Submission received</h3>
@@ -142,7 +142,7 @@ export default function RoundSubmitPage() {
                             </p>
                         </motion.div>
                     ) : round.deadlinePassed ? (
-                        <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center">
+                        <div className="rounded-md border border-destructive/20 bg-destructive/5 p-6 text-center">
                             <p className="text-sm text-muted-foreground">The submission deadline for this round has passed.</p>
                         </div>
                     ) : (

@@ -85,7 +85,7 @@ export default function EventTicketPage() {
 
     return (
         <div className="min-h-[100dvh] bg-background flex flex-col items-center px-6 py-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom))' }}>
-            <div className="w-full max-w-sm glass-card rounded-2xl p-6 border border-border/50 text-center">
+            <div className="w-full max-w-sm glass-card rounded-md p-6 border border-border/50 text-center">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{ticket.event.organizer.orgName}</p>
                 <h1 className="text-xl font-bold mb-4">{ticket.event.title}</h1>
 

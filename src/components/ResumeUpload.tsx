@@ -70,7 +70,7 @@ export function ResumeUpload({
                 onDrop={handleDrop}
                 whileHover="animate"
                 className={cn(
-                    'group/file relative block w-full cursor-pointer overflow-hidden rounded-xl border border-dashed p-8 transition-colors',
+                    'group/file relative block w-full cursor-pointer overflow-hidden rounded-md border border-dashed p-8 transition-colors',
                     isDragActive ? 'border-primary/70 bg-primary/5' : 'border-border hover:border-primary/40',
                     displayedError && 'border-destructive/60'
                 )}

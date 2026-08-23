@@ -70,7 +70,7 @@ export default function AdminPayoutsPage() {
                             <Link
                                 key={o.organizerId}
                                 to={`/ambassador/admin/payouts/${o.organizerId}`}
-                                className="block rounded-xl border border-border/50 bg-card p-4 hover:border-primary/30 transition-colors"
+                                className="block rounded-md border border-border/50 bg-card p-4 hover:border-primary/30 transition-colors"
                             >
                                 <div className="flex flex-wrap items-center justify-between gap-4">
                                     <div className="min-w-0">

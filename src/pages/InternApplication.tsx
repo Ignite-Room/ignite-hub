@@ -172,7 +172,7 @@ export default function InternApplication() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.25 }}
                     >
-                        <div className="glass-card rounded-2xl p-6 shadow-2xl md:p-8">
+                        <div className="glass-card rounded-md p-6 shadow-2xl md:p-8">
                             {submitted ? (
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.96 }}

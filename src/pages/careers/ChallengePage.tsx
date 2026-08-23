@@ -113,7 +113,7 @@ export default function ChallengePage() {
                     )}
 
                     {/* Challenge brief */}
-                    <div className="mb-8 rounded-xl border border-border/50 bg-secondary/20 p-6">
+                    <div className="mb-8 rounded-md border border-border/50 bg-secondary/20 p-6">
                         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">The Brief</h2>
                         <div className="prose prose-sm max-w-none text-muted-foreground">
                             {data.challenge.description.split('\n').map((line, i) => (
@@ -127,7 +127,7 @@ export default function ChallengePage() {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.97 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-6 text-center"
+                            className="rounded-md border border-emerald-500/20 bg-emerald-500/10 p-6 text-center"
                         >
                             <CheckCircle2 className="mx-auto mb-3 h-8 w-8 text-emerald-400" />
                             <h3 className="mb-1 font-semibold text-foreground">Submission received</h3>
@@ -141,7 +141,7 @@ export default function ChallengePage() {
                             </p>
                         </motion.div>
                     ) : deadlinePassed ? (
-                        <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center">
+                        <div className="rounded-md border border-destructive/20 bg-destructive/5 p-6 text-center">
                             <p className="text-sm text-muted-foreground">The submission deadline for this challenge has passed.</p>
                         </div>
                     ) : (

@@ -36,7 +36,7 @@ export default function AmbassadorTasksPopup() {
                     transition={{ type: 'spring', stiffness: 260, damping: 24 }}
                     className="fixed bottom-5 left-5 right-5 z-50 sm:left-auto sm:w-[380px]"
                 >
-                    <div className="glass-card relative overflow-hidden rounded-2xl p-5 shadow-2xl shadow-black/40">
+                    <div className="glass-card relative overflow-hidden rounded-md p-5 shadow-2xl shadow-black/40">
                         {/* Top accent line */}
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
 

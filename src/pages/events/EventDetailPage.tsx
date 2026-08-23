@@ -221,7 +221,7 @@ export default function EventDetailPage() {
                                 <TabsContent value="prizes">
                                     <div className="grid sm:grid-cols-2 gap-4">
                                         {event.prizes.map((prize, i) => (
-                                            <div key={i} className="rounded-xl border border-border/60 bg-card/40 p-4 flex items-start gap-3">
+                                            <div key={i} className="rounded-md border border-border/60 bg-card/40 p-4 flex items-start gap-3">
                                                 <Trophy className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                                                 <div>
                                                     <p className="font-medium text-sm">{prize.position}</p>
@@ -248,7 +248,7 @@ export default function EventDetailPage() {
                             )}
 
                             <TabsContent value="organizer">
-                                <div className="rounded-xl border border-border/60 bg-card/40 p-5 space-y-3">
+                                <div className="rounded-md border border-border/60 bg-card/40 p-5 space-y-3">
                                     <div className="flex items-center gap-3">
                                         {event.organizer.logoUrl ? (
                                             <img src={event.organizer.logoUrl} alt={event.organizer.orgName} className="w-12 h-12 rounded-full object-cover" />

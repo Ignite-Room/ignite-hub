@@ -61,7 +61,7 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: index * 0.07 }}
-            className="glass-card rounded-2xl p-6 flex flex-col gap-5 hover:border-border/70 transition-colors"
+            className="glass-card rounded-md p-6 flex flex-col gap-5 hover:border-border/70 transition-colors"
         >
             <div className="flex items-start justify-between gap-4">
                 <div>

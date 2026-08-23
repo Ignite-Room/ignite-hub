@@ -84,14 +84,14 @@ export default function TwoFactorSetup() {
 
     if (stage === 'loading') {
         return (
-            <div className="glass-card rounded-2xl p-6 border border-border/50 flex justify-center py-10">
+            <div className="glass-card rounded-md p-6 border border-border/50 flex justify-center py-10">
                 <Loader2 className="w-5 h-5 text-primary animate-spin" />
             </div>
         );
     }
 
     return (
-        <div className="glass-card rounded-2xl p-6 border border-border/50">
+        <div className="glass-card rounded-md p-6 border border-border/50">
             <div className="flex items-start gap-3 mb-1">
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${enabled ? 'bg-green-500/10' : 'bg-primary/10'}`}>
                     {enabled ? <ShieldCheck className="w-4.5 h-4.5 text-green-400" /> : <ShieldCheck className="w-4.5 h-4.5 text-primary" />}

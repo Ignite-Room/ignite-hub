@@ -347,7 +347,7 @@ export default function AdminDashboard() {
             {screenshotModal && (
                 <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setScreenshotModal(null)}>
                     <div className="max-w-2xl w-full" onClick={e => e.stopPropagation()}>
-                        <img src={screenshotModal} alt="Submission screenshot" className="w-full rounded-xl border border-border" />
+                        <img src={screenshotModal} alt="Submission screenshot" className="w-full rounded-md border border-border" />
                         <Button variant="outline" size="sm" className="mt-3 w-full" onClick={() => setScreenshotModal(null)}>Close</Button>
                     </div>
                 </div>
@@ -389,7 +389,7 @@ export default function AdminDashboard() {
                             <p className="text-sm text-muted-foreground">Review and approve/reject campus ambassador applications.</p>
                         </div>
                         {applications.length === 0 ? (
-                            <div className="glass-card rounded-2xl p-12 border border-border/50 text-center text-muted-foreground">
+                            <div className="glass-card rounded-md p-12 border border-border/50 text-center text-muted-foreground">
                                 <CheckCircle2 className="w-10 h-10 mx-auto mb-3 text-green-400/60" />
                                 <p className="font-medium">No pending applications</p>
                                 <p className="text-sm mt-1">All applications have been reviewed.</p>
@@ -531,7 +531,7 @@ export default function AdminDashboard() {
                                     </div>
                                 ))}
                             {submissions.filter(s => subFilter === 'ALL' || s.status === subFilter).length === 0 && (
-                                <div className="glass-card rounded-2xl p-12 border border-border/50 text-center text-muted-foreground">
+                                <div className="glass-card rounded-md p-12 border border-border/50 text-center text-muted-foreground">
                                     <FileCheck className="w-10 h-10 mx-auto mb-3 text-muted-foreground/40" />
                                     <p className="font-medium">No {subFilter !== 'ALL' ? subFilter.toLowerCase() : ''} submissions</p>
                                 </div>
@@ -597,7 +597,7 @@ export default function AdminDashboard() {
                                 </div>
                             ))}
                             {ambassadors.length === 0 && (
-                                <div className="glass-card rounded-2xl p-12 border border-border/50 text-center text-muted-foreground">
+                                <div className="glass-card rounded-md p-12 border border-border/50 text-center text-muted-foreground">
                                     <Users className="w-10 h-10 mx-auto mb-3 text-muted-foreground/40" />
                                     <p className="font-medium">No approved ambassadors yet</p>
                                 </div>
@@ -613,7 +613,7 @@ export default function AdminDashboard() {
                             <h2 className="text-xl font-bold text-foreground">Leaderboard</h2>
                             <p className="text-sm text-muted-foreground">Live rankings of approved ambassadors. Admins are excluded.</p>
                         </div>
-                        <div className="glass-card rounded-2xl border border-border/50 overflow-hidden">
+                        <div className="glass-card rounded-md border border-border/50 overflow-hidden">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead className="border-b border-border/40 bg-secondary/20">
@@ -649,7 +649,7 @@ export default function AdminDashboard() {
                 {/* ── Tab: Mailing ─────────────────────────────── */}
                 {tab === 'mailing' && (
                     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                        <div className="glass-card rounded-2xl border border-border/50 p-6 sm:p-8">
+                        <div className="glass-card rounded-md border border-border/50 p-6 sm:p-8">
                             <div className="max-w-2xl">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="p-3 bg-primary/10 rounded-xl">

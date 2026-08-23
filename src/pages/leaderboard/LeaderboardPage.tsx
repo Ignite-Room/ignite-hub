@@ -180,7 +180,7 @@ export default function LeaderboardPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="glass-card rounded-2xl border border-border/50 overflow-hidden"
+                    className="glass-card rounded-md border border-border/50 overflow-hidden"
                 >
                     <div className="overflow-x-auto">
                         <table className="w-full">

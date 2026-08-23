@@ -265,7 +265,7 @@ export default function EventSettingsPage() {
                         </div>
 
                         {event.status === 'DRAFT' && event._count.registrations === 0 && (
-                            <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-5">
+                            <div className="rounded-md border border-destructive/40 bg-destructive/5 p-5">
                                 <h3 className="font-semibold text-destructive mb-1">Danger Zone</h3>
                                 <p className="text-sm text-muted-foreground mb-3">Delete this draft event permanently. This cannot be undone.</p>
                                 <AlertDialog>

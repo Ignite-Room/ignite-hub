@@ -237,7 +237,7 @@ export default function AppComingSoon() {
                                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                                 className="w-full max-w-md"
                             >
-                                <div className="flex items-center gap-0 rounded-2xl border border-primary/40 bg-secondary/60 backdrop-blur-sm shadow-[0_0_40px_hsl(345_100%_59%_/_0.1)] overflow-hidden px-4 py-1.5">
+                                <div className="flex items-center gap-0 rounded-md border border-primary/40 bg-secondary/60 backdrop-blur-sm shadow-[0_0_40px_hsl(345_100%_59%_/_0.1)] overflow-hidden px-4 py-1.5">
                                     <Bell className="w-4 h-4 text-primary shrink-0" />
                                     <input
                                         ref={inputRef}

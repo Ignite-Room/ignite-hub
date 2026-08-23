@@ -50,7 +50,7 @@ function Toast({ msg, onDone }: { msg: string; onDone: () => void }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-            className="fixed right-4 top-4 z-[60] flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground shadow-xl max-w-md"
+            className="fixed right-4 top-4 z-[60] flex items-center gap-2 rounded-md border border-border bg-card px-4 py-3 text-sm text-foreground shadow-xl max-w-md"
         >
             <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" /> {msg}
         </motion.div>
@@ -280,7 +280,7 @@ export default function MailCenter() {
 
             <AdminLayout title="Mail Center" breadcrumb={['Admin', 'Communications']}>
                 {/* Tab bar */}
-                <div className="mb-6 flex gap-1 rounded-xl border border-border/40 bg-secondary/30 p-1">
+                <div className="mb-6 flex gap-1 rounded-md border border-border/40 bg-secondary/30 p-1">
                     {([
                         { id: 'simple' as Tab, label: 'Quick Send', icon: Send },
                         { id: 'personalized' as Tab, label: 'Personalized', icon: Users },
@@ -297,7 +297,7 @@ export default function MailCenter() {
 
                 {/* Quick Send */}
                 {tab === 'simple' && (
-                    <div className="glass-card rounded-2xl p-6 space-y-5">
+                    <div className="glass-card rounded-md p-6 space-y-5">
                         <div>
                             <Label className="mb-1.5 block text-sm text-muted-foreground">To <span className="text-muted-foreground/40">(comma or newline separated)</span></Label>
                             <Textarea value={simpleEmails} onChange={(e) => setSimpleEmails(e.target.value)} rows={3}
@@ -332,7 +332,7 @@ export default function MailCenter() {
                 {/* Personalized */}
                 {tab === 'personalized' && (
                     <div className="space-y-5">
-                        <div className="glass-card rounded-2xl p-6">
+                        <div className="glass-card rounded-md p-6">
                             <div className="mb-3 flex items-center justify-between">
                                 <Label className="text-sm text-muted-foreground">Recipients</Label>
                                 <div className="flex gap-2">
@@ -372,7 +372,7 @@ export default function MailCenter() {
                             <p className="mt-3 text-xs text-muted-foreground/50">{validRecipients.length} valid recipient(s)</p>
                         </div>
 
-                        <div className="glass-card rounded-2xl p-6 space-y-5">
+                        <div className="glass-card rounded-md p-6 space-y-5">
                             <div>
                                 <Label className="mb-1.5 block text-sm text-muted-foreground">Subject <span className="text-muted-foreground/40">(you can use &lt;name&gt;)</span></Label>
                                 <Input value={pSubject} onChange={(e) => setPSubject(e.target.value)} className="bg-secondary/50 border-border/50 h-10" placeholder="e.g. Interview invitation for <name>" />
@@ -405,7 +405,7 @@ export default function MailCenter() {
 
                 {/* History */}
                 {tab === 'history' && (
-                    <div className="glass-card rounded-2xl overflow-hidden">
+                    <div className="glass-card rounded-md overflow-hidden">
                         {logsLoading ? (
                             <div className="flex justify-center py-16"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
                         ) : logs.length === 0 ? (

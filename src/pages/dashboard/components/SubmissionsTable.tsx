@@ -29,7 +29,7 @@ export default function SubmissionsTable({
     onPreview,
 }: SubmissionsTableProps) {
     return (
-        <div className="glass-card rounded-2xl border border-border/50 overflow-hidden">
+        <div className="glass-card border border-border/50 overflow-hidden">
             <div className="px-5 py-4 border-b border-border/50">
                 <h3 className="font-semibold text-foreground">{title}</h3>
             </div>

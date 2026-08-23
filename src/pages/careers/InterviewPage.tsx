@@ -127,7 +127,7 @@ export default function InterviewPage() {
                     </div>
 
                     {data.interview.description && (
-                        <div className="mb-8 rounded-xl border border-border/50 bg-secondary/20 p-6">
+                        <div className="mb-8 rounded-md border border-border/50 bg-secondary/20 p-6">
                             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">Details</h2>
                             {data.interview.description.split('\n').map((line, i) => (
                                 <p key={i} className="mb-3 last:mb-0 leading-7 text-sm text-muted-foreground">{line}</p>
@@ -139,7 +139,7 @@ export default function InterviewPage() {
 
                     {data.status === 'SCHEDULED' && data.bookedSlot ? (
                         <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
-                            className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-6 text-center">
+                            className="rounded-md border border-emerald-500/20 bg-emerald-500/10 p-6 text-center">
                             <CheckCircle2 className="mx-auto mb-3 h-8 w-8 text-emerald-400" />
                             <h3 className="mb-1 font-semibold text-foreground">You're scheduled</h3>
                             <p className="mb-1 text-sm text-muted-foreground">{fmtDay(data.bookedSlot.startTime)}</p>
@@ -149,15 +149,15 @@ export default function InterviewPage() {
                             </Button>
                         </motion.div>
                     ) : data.status === 'CANCELLED' ? (
-                        <div className="rounded-xl border border-border/50 bg-secondary/20 p-6 text-center">
+                        <div className="rounded-md border border-border/50 bg-secondary/20 p-6 text-center">
                             <p className="text-sm text-muted-foreground">This interview invite has been cancelled. Reach out to us if you think this is a mistake.</p>
                         </div>
                     ) : data.status === 'COMPLETED' || data.status === 'NO_SHOW' ? (
-                        <div className="rounded-xl border border-border/50 bg-secondary/20 p-6 text-center">
+                        <div className="rounded-md border border-border/50 bg-secondary/20 p-6 text-center">
                             <p className="text-sm text-muted-foreground">This interview has already taken place. Thanks for your time, we'll be in touch.</p>
                         </div>
                     ) : data.slots.length === 0 ? (
-                        <div className="rounded-xl border border-border/50 bg-secondary/20 p-6 text-center">
+                        <div className="rounded-md border border-border/50 bg-secondary/20 p-6 text-center">
                             <p className="text-sm text-muted-foreground">No time slots are open right now. We'll follow up with you directly to schedule.</p>
                         </div>
                     ) : (

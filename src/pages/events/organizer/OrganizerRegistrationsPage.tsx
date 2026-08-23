@@ -56,7 +56,7 @@ export default function OrganizerRegistrationsPage() {
                 {!loading && !error && registrations.length === 0 && <p className="text-muted-foreground text-center py-10">No registrations yet.</p>}
 
                 {!loading && registrations.length > 0 && (
-                    <div className="rounded-2xl border border-border/60 overflow-hidden overflow-x-auto">
+                    <div className="rounded-md border border-border/60 overflow-hidden overflow-x-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow>

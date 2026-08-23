@@ -138,13 +138,13 @@ export default function TaskBoardAdmin() {
                 {!loading && error && <p className="text-destructive text-center py-10">{error}</p>}
 
                 {!loading && !error && tasks.length === 0 && (
-                    <div className="glass-card rounded-2xl p-10 border border-border/50 text-center">
+                    <div className="glass-card rounded-md p-10 border border-border/50 text-center">
                         <p className="text-muted-foreground text-sm">No tasks yet. Create the first one.</p>
                     </div>
                 )}
 
                 {!loading && !error && tasks.map((task, i) => (
-                    <div key={task.id} className="rounded-xl border border-border/50 bg-card p-4 flex items-start gap-4">
+                    <div key={task.id} className="rounded-md border border-border/50 bg-card p-4 flex items-start gap-4">
                         <div className="flex flex-col gap-1 pt-1 flex-shrink-0">
                             <button onClick={() => move(task, -1)} disabled={i === 0} className="text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors">
                                 <GripVertical className="w-4 h-4" />
@@ -182,7 +182,7 @@ export default function TaskBoardAdmin() {
                     >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
-                            className="glass-card rounded-2xl border border-border/50 p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
+                            className="glass-card rounded-md border border-border/50 p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex items-center justify-between mb-5">

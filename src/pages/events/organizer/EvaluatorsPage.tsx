@@ -149,7 +149,7 @@ function NormalizeScoresDialog({ eventId, roundId }: { eventId: string; roundId:
                         {result.overallBiasNote && (
                             <p className="text-sm text-muted-foreground p-3 rounded-lg bg-secondary/30 border border-border/40">{result.overallBiasNote}</p>
                         )}
-                        <div className="rounded-xl border border-border/60 overflow-hidden overflow-x-auto">
+                        <div className="rounded-md border border-border/60 overflow-hidden overflow-x-auto">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -277,7 +277,7 @@ export default function EvaluatorsPage() {
                 ) : !evaluators || evaluators.length === 0 ? (
                     <p className="text-muted-foreground text-center py-10">No evaluators added yet.</p>
                 ) : (
-                    <div className="rounded-2xl border border-border/60 overflow-hidden overflow-x-auto">
+                    <div className="rounded-md border border-border/60 overflow-hidden overflow-x-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow>

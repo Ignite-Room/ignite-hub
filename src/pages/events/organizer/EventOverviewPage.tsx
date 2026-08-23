@@ -122,7 +122,7 @@ export default function EventOverviewPage() {
                             <div className="space-y-2">
                                 {event.rounds.map(round => (
                                     <Link key={round.id} to={`/events/organizer/${id}/rounds/${round.id}`}
-                                        className="flex items-center justify-between rounded-xl border border-border/60 bg-card/40 px-4 py-3 hover:border-primary/40 transition-colors">
+                                        className="flex items-center justify-between rounded-md border border-border/60 bg-card/40 px-4 py-3 hover:border-primary/40 transition-colors">
                                         <span className="font-medium text-sm">{round.name}</span>
                                         <span className="text-xs text-muted-foreground">{round._count?.submissions ?? 0} submission(s)</span>
                                     </Link>

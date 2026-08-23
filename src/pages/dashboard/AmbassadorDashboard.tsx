@@ -184,7 +184,7 @@ export default function AmbassadorDashboard() {
             {/* Main content */}
             {!isApprovedAmbassador ? (
                 <main className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
-                    <div className="glass-card rounded-2xl p-8 text-center border border-border/50">
+                    <div className="glass-card rounded-md p-8 text-center border border-border/50">
                         {isPending ? (
                             <>
                                 <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
@@ -248,7 +248,7 @@ export default function AmbassadorDashboard() {
                     </motion.div>
 
                     {/* Referral Card */}
-                    <motion.div variants={itemVariants} className="glass-card rounded-2xl p-4 sm:p-6 border border-border/50">
+                    <motion.div variants={itemVariants} className="glass-card rounded-md p-4 sm:p-6 border border-border/50">
                         <div className="mb-3">
                             <h2 className="font-semibold text-foreground flex items-center gap-2 text-sm sm:text-base">
                                 <Share2 className="w-4 h-4 text-primary" />
@@ -305,7 +305,7 @@ export default function AmbassadorDashboard() {
                         {tasks.length > 0 && (
                             <div className="grid sm:grid-cols-2 gap-2.5">
                                 {tasks.map((t) => (
-                                    <div key={t.id} className="rounded-xl border border-border/40 bg-background/40 px-3.5 py-3">
+                                    <div key={t.id} className="rounded-md border border-border/40 bg-background/40 px-3.5 py-3">
                                         <p className="text-sm font-medium text-foreground">{t.title}</p>
                                         <p className="text-xs text-muted-foreground mt-0.5">{t.description}</p>
                                     </div>
@@ -319,7 +319,7 @@ export default function AmbassadorDashboard() {
                         <div className="lg:col-span-2">
                             <ReferralChart data={chartData} />
                         </div>
-                        <div className="glass-card rounded-2xl p-4 sm:p-5 border border-border/50">
+                        <div className="glass-card rounded-md p-4 sm:p-5 border border-border/50">
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
                                     <Trophy className="w-4 h-4 text-amber-400" />

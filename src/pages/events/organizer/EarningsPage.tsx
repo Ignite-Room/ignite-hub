@@ -51,7 +51,7 @@ export default function EarningsPage() {
                     </div>
 
                     {earnings.pendingInPaise > 0 && (
-                        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 flex items-center gap-3">
+                        <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-4 flex items-center gap-3">
                             <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
                             <p className="text-sm text-amber-300">
                                 {formatRupees(earnings.pendingInPaise)} is awaiting settlement from Ignite Room. Make sure your{' '}
@@ -60,7 +60,7 @@ export default function EarningsPage() {
                         </div>
                     )}
 
-                    <div className="glass-card rounded-2xl border border-border/50 overflow-hidden">
+                    <div className="glass-card rounded-md border border-border/50 overflow-hidden">
                         <div className="p-5 pb-0">
                             <h3 className="font-semibold text-foreground mb-4">By Event</h3>
                         </div>
@@ -91,7 +91,7 @@ export default function EarningsPage() {
                         </div>
                     </div>
 
-                    <div className="glass-card rounded-2xl border border-border/50 overflow-hidden">
+                    <div className="glass-card rounded-md border border-border/50 overflow-hidden">
                         <div className="p-5 pb-0">
                             <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2"><FileText className="w-4 h-4 text-primary" /> Payout History</h3>
                         </div>

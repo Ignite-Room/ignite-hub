@@ -47,7 +47,7 @@ export default function StatsCard({ label, value, icon, color, isString = false 
         <motion.div
             whileHover={{ scale: 1.02, y: -2 }}
             transition={{ duration: 0.2 }}
-            className={`glass-card rounded-2xl p-5 border ${c.border} shadow-lg ${c.glow} relative overflow-hidden`}
+            className={`bg-card p-5 border-t-2 ${c.border} relative overflow-hidden`}
         >
             {/* Background glow */}
             <div className={`absolute top-0 right-0 w-20 h-20 ${c.bg} rounded-full blur-2xl -translate-y-4 translate-x-4 pointer-events-none`} />
@@ -56,7 +56,7 @@ export default function StatsCard({ label, value, icon, color, isString = false 
                 {icon}
             </div>
 
-            <p className="text-2xl font-bold text-foreground font-['Space_Grotesk']">
+            <p className="text-2xl font-heading font-bold text-foreground">
                 {isString
                     ? value
                     : <motion.span

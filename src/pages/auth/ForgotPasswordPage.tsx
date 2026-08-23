@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
                 </div>
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md relative z-10 glass-card rounded-2xl p-8 border border-border/50 text-center">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md relative z-10 glass-card rounded-md p-8 border border-border/50 text-center">
                     <div className="w-16 h-16 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mx-auto mb-6">
                         <CheckCircle2 className="w-8 h-8 text-green-400" />
                     </div>
@@ -101,7 +101,7 @@ export default function ForgotPasswordPage() {
                 className="w-full max-w-md relative z-10"
             >
                 {/* Card */}
-                <div className="glass-card rounded-2xl p-6 sm:p-8 border border-border/50 shadow-2xl">
+                <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50 shadow-2xl">
                     {/* Header */}
                     <div className="flex items-center gap-2.5 mb-8">
                         <img src={igniteLogo} alt="Ignite Room" className="h-8 w-auto" />

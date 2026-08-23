@@ -69,7 +69,7 @@ export default function Contact() {
               </div>
 
               {/* Form card */}
-              <div className="glass-card rounded-2xl border border-border/50 p-6 sm:p-8">
+              <div className="glass-card rounded-md border border-border/50 p-6 sm:p-8">
                 {status === 'success' ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -102,7 +102,7 @@ export default function Contact() {
                           placeholder="Alex Morgan"
                           value={form.name}
                           onChange={(e) => setForm({ ...form, name: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-border/50 bg-secondary/30 text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+                          className="w-full pl-10 pr-4 py-3 rounded-md border border-border/50 bg-secondary/30 text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
                         />
                       </div>
                     </div>
@@ -118,7 +118,7 @@ export default function Contact() {
                           placeholder="you@example.com"
                           value={form.email}
                           onChange={(e) => setForm({ ...form, email: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-border/50 bg-secondary/30 text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+                          className="w-full pl-10 pr-4 py-3 rounded-md border border-border/50 bg-secondary/30 text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
                         />
                       </div>
                     </div>
@@ -134,7 +134,7 @@ export default function Contact() {
                           placeholder="What's on your mind?"
                           value={form.message}
                           onChange={(e) => setForm({ ...form, message: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-border/50 bg-secondary/30 text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all resize-none"
+                          className="w-full pl-10 pr-4 py-3 rounded-md border border-border/50 bg-secondary/30 text-foreground placeholder:text-muted-foreground/50 text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all resize-none"
                         />
                       </div>
                     </div>

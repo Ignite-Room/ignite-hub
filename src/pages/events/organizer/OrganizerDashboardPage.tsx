@@ -103,7 +103,7 @@ export default function OrganizerDashboardPage() {
                     </div>
 
                     {stats.recentEvents.length === 0 ? (
-                        <div className="glass-card rounded-2xl p-8 text-center border border-border/50">
+                        <div className="glass-card rounded-md p-8 text-center border border-border/50">
                             <p className="text-muted-foreground mb-4">You haven't created any events yet.</p>
                             <Button asChild><Link to="/events/organizer/new"><Plus className="w-4 h-4 mr-1" /> Create Your First Event</Link></Button>
                         </div>

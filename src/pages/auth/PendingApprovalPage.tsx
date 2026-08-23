@@ -24,7 +24,7 @@ export default function PendingApprovalPage() {
                 transition={{ duration: 0.5 }}
                 className="w-full max-w-md text-center relative"
             >
-                <div className="glass-card rounded-2xl p-10 border border-border/50 shadow-2xl">
+                <div className="glass-card rounded-md p-10 border border-border/50 shadow-2xl">
                     {/* Logo */}
                     <div className="flex justify-center mb-6">
                         <img src={igniteLogo} alt="Ignite Room" className="h-10 w-auto" />

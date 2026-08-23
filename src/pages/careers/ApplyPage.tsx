@@ -245,7 +245,7 @@ export default function ApplyPage() {
                         </div>
                     )}
 
-                    <div className="glass-card rounded-2xl p-6 shadow-2xl md:p-8">
+                    <div className="glass-card rounded-md p-6 shadow-2xl md:p-8">
                         {submitted ? (
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.96 }}
@@ -376,7 +376,7 @@ export default function ApplyPage() {
                                     </div>
 
                                     {/* Checkboxes */}
-                                    <div className="space-y-3 rounded-xl border border-border/40 bg-secondary/20 p-4">
+                                    <div className="space-y-3 rounded-md border border-border/40 bg-secondary/20 p-4">
                                         {/* Follow socials */}
                                         <Controller
                                             name="followedSocials"

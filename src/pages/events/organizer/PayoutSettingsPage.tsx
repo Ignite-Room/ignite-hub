@@ -103,7 +103,7 @@ export default function PayoutSettingsPage() {
                 <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
             ) : (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
-                    <div className="glass-card rounded-2xl p-6 sm:p-8 border border-border/50 space-y-5">
+                    <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50 space-y-5">
                         <div className="flex items-start gap-3 pb-2">
                             <div className="p-2 rounded-lg bg-primary/10 text-primary flex-shrink-0">
                                 <ShieldCheck className="w-5 h-5" />

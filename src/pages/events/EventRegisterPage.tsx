@@ -177,7 +177,7 @@ export default function EventRegisterPage() {
                     <ArrowLeft className="w-4 h-4" /> Back to Event
                 </button>
 
-                <div className="glass-card rounded-2xl p-6 sm:p-8 border border-border/50">
+                <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50">
                     <h1 className="text-2xl font-bold mb-1">Register for {event.title}</h1>
                     <p className="text-muted-foreground text-sm mb-6">Fill in your details to reserve your spot.</p>
 

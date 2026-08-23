@@ -61,7 +61,7 @@ export default function OrganizerApplyPage() {
         <div className="min-h-screen bg-background">
             <Navbar />
             <main className="pt-28 pb-20 px-6 max-w-xl mx-auto">
-                <div className="glass-card rounded-2xl p-6 sm:p-8 border border-border/50">
+                <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50">
                     <h1 className="text-2xl font-bold mb-1">Become an Organizer</h1>
                     <p className="text-muted-foreground text-sm mb-6">
                         Apply to host hackathons, workshops, or meetups on Ignite Room. Once approved, you can create and publish events freely.

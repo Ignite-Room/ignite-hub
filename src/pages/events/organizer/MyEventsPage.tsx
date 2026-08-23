@@ -65,7 +65,7 @@ export default function MyEventsPage() {
             {loading && <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />}
 
             {!loading && notOrganizer && (
-                <div className="glass-card rounded-2xl p-8 text-center border border-border/50">
+                <div className="glass-card rounded-md p-8 text-center border border-border/50">
                     <p className="text-muted-foreground mb-4">{error}</p>
                     <Button asChild variant="outline"><Link to="/events/organizers/apply">Apply to Become an Organizer</Link></Button>
                 </div>
@@ -76,7 +76,7 @@ export default function MyEventsPage() {
             )}
 
             {!loading && !notOrganizer && !error && events.length === 0 && (
-                <div className="glass-card rounded-2xl p-8 text-center border border-border/50">
+                <div className="glass-card rounded-md p-8 text-center border border-border/50">
                     <p className="text-muted-foreground mb-4">You haven't created any events yet.</p>
                     <Button asChild><Link to="/events/organizer/new"><Plus className="w-4 h-4 mr-1" /> Create Your First Event</Link></Button>
                 </div>

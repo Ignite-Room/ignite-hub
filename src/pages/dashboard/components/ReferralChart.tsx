@@ -18,7 +18,7 @@ function tickFormatter(value: string, index: number) {
 
 export default function ReferralChart({ data, title = 'Referrals Over Time', label = 'Referrals' }: ReferralChartProps) {
     return (
-        <div className="glass-card rounded-2xl p-5 border border-border/50 h-full">
+        <div className="glass-card p-5 border border-border/50 h-full">
             <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                 {title}

@@ -210,7 +210,7 @@ export default function AdminEventDetail() {
 
                         <div className="grid lg:grid-cols-[2fr_1fr] gap-4">
                             <ReferralChart data={event.analytics.registrationsOverTime} title="Registrations over time" label="Registrations" />
-                            <div className="glass-card rounded-2xl p-5 border border-border/50">
+                            <div className="glass-card rounded-md p-5 border border-border/50">
                                 <h3 className="font-semibold text-foreground mb-4">By Status</h3>
                                 <div className="space-y-2.5">
                                     {Object.entries(event.analytics.registrationsByStatus).length === 0 && (
@@ -226,7 +226,7 @@ export default function AdminEventDetail() {
                             </div>
                         </div>
 
-                        <div className="glass-card rounded-2xl border border-border/50 overflow-hidden">
+                        <div className="glass-card rounded-md border border-border/50 overflow-hidden">
                             <div className="p-5 pb-0">
                                 <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2"><Ticket className="w-4 h-4 text-primary" /> Ticket Types</h3>
                             </div>
@@ -260,7 +260,7 @@ export default function AdminEventDetail() {
                         </div>
 
                         {event.rounds.length > 0 && (
-                            <div className="glass-card rounded-2xl p-5 border border-border/50">
+                            <div className="glass-card rounded-md p-5 border border-border/50">
                                 <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2"><Layers className="w-4 h-4 text-primary" /> Rounds</h3>
                                 <div className="space-y-2">
                                     {event.rounds.map(r => (
@@ -276,7 +276,7 @@ export default function AdminEventDetail() {
                 )}
 
                 {tab === 'edit' && (
-                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-2xl p-6 sm:p-8 border border-border/50 max-w-3xl space-y-5">
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-md p-6 sm:p-8 border border-border/50 max-w-3xl space-y-5">
                         {saveError && (
                             <p className="text-sm text-destructive flex items-center gap-1.5"><AlertCircle className="w-4 h-4 flex-shrink-0" /> {saveError}</p>
                         )}
@@ -394,7 +394,7 @@ export default function AdminEventDetail() {
                         {registrations.length === 0 ? (
                             <p className="text-muted-foreground text-center py-10">No registrations yet.</p>
                         ) : (
-                            <div className="rounded-2xl border border-border/60 overflow-hidden overflow-x-auto">
+                            <div className="rounded-md border border-border/60 overflow-hidden overflow-x-auto">
                                 <Table>
                                     <TableHeader>
                                         <TableRow>

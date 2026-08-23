@@ -221,7 +221,7 @@ export default function ExternalVerificationPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Box 1: File Upload */}
-                        <div className="glass-card rounded-2xl p-6 border border-border/50 text-center">
+                        <div className="glass-card rounded-md p-6 border border-border/50 text-center">
                             <UploadCloud className="w-10 h-10 text-primary mx-auto mb-3" />
                             <h2 className="text-xl font-bold mb-2">1. Upload CSV File</h2>
                             <p className="text-sm text-muted-foreground mb-6 h-14">
@@ -242,7 +242,7 @@ export default function ExternalVerificationPage() {
                         </div>
 
                         {/* Box 2: Configuration & Exec */}
-                        <div className="glass-card rounded-2xl p-6 border border-border/50 text-center opacity-100 flex flex-col justify-between">
+                        <div className="glass-card rounded-md p-6 border border-border/50 text-center opacity-100 flex flex-col justify-between">
                            <div>
                                 <Key className="w-10 h-10 text-primary mx-auto mb-3" />
                                 <h2 className="text-xl font-bold mb-2">2. Verify Settings</h2>
@@ -294,7 +294,7 @@ export default function ExternalVerificationPage() {
                     )}
 
                     {dataRows.length > 0 && (
-                        <div className="glass-card rounded-2xl border border-border/50 overflow-hidden mt-6">
+                        <div className="glass-card rounded-md border border-border/50 overflow-hidden mt-6">
                             <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between gap-4">
                                 <div>
                                     <h3 className="font-bold text-lg">Results Workspace</h3>

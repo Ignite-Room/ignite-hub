@@ -52,7 +52,7 @@ function ProgramCard({ icon: Icon, title, description, status, to, cta }: {
 }) {
     const statusStyle = status ? PROGRAM_STATUS_STYLE[status] : null;
     return (
-        <Link to={to} className="flex-1 min-w-[240px] rounded-2xl border border-border/50 bg-card p-5 hover:border-primary/30 transition-colors group">
+        <Link to={to} className="flex-1 min-w-[240px] rounded-md border border-border/50 bg-card p-5 hover:border-primary/30 transition-colors group">
             <div className="flex items-start gap-3 mb-3">
                 <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Icon className="w-4.5 h-4.5 text-primary" />
@@ -112,7 +112,7 @@ export default function AccountPage() {
             <main className="pt-28 pb-20 px-4 sm:px-6 max-w-4xl mx-auto">
                 <motion.div initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.08 } } }} className="space-y-6">
                     {/* Profile summary */}
-                    <motion.div variants={itemVariants} className="glass-card rounded-2xl p-6 border border-border/50 flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+                    <motion.div variants={itemVariants} className="glass-card rounded-md p-6 border border-border/50 flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
                         <Avatar url={user?.avatarUrl} name={user?.name} />
                         <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
@@ -191,7 +191,7 @@ export default function AccountPage() {
                     {!loading && !error && tab === 'events' && (
                         <motion.div variants={itemVariants} className="space-y-3">
                             {registrations.length === 0 && (
-                                <div className="glass-card rounded-2xl p-10 border border-border/50 text-center">
+                                <div className="glass-card rounded-md p-10 border border-border/50 text-center">
                                     <Ticket className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
                                     <p className="text-muted-foreground text-sm">You haven't registered for any events yet.</p>
                                 </div>
@@ -202,7 +202,7 @@ export default function AccountPage() {
                                     <a
                                         key={r.id}
                                         href={`/events/ticket/${r.token}`}
-                                        className="block rounded-xl border border-border/50 bg-card p-4 hover:border-primary/30 transition-colors"
+                                        className="block rounded-md border border-border/50 bg-card p-4 hover:border-primary/30 transition-colors"
                                     >
                                         <div className="flex flex-wrap items-start justify-between gap-3">
                                             <div className="min-w-0">
@@ -232,7 +232,7 @@ export default function AccountPage() {
                     {!loading && !error && tab === 'transactions' && (
                         <motion.div variants={itemVariants} className="space-y-3">
                             {transactions.length === 0 && (
-                                <div className="glass-card rounded-2xl p-10 border border-border/50 text-center">
+                                <div className="glass-card rounded-md p-10 border border-border/50 text-center">
                                     <Receipt className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
                                     <p className="text-muted-foreground text-sm">No payments yet. Paid event registrations will show up here.</p>
                                 </div>
@@ -240,7 +240,7 @@ export default function AccountPage() {
                             {transactions.map(r => {
                                 const orderStatus = ORDER_STATUS_STYLE[r.order!.status] ?? ORDER_STATUS_STYLE.CREATED;
                                 return (
-                                    <div key={r.id} className="rounded-xl border border-border/50 bg-card p-4">
+                                    <div key={r.id} className="rounded-md border border-border/50 bg-card p-4">
                                         <div className="flex flex-wrap items-center justify-between gap-3">
                                             <div className="min-w-0">
                                                 <div className="flex items-center gap-2 mb-1 flex-wrap">
