@@ -21,6 +21,7 @@ import Accessibility from "./pages/Accessibility";
 import CookiePolicy from "./pages/CookiePolicy";
 import JoinUs from "./pages/JoinUs";
 import PartnersPage from "./pages/PartnersPage";
+import ChapterDetailPage from "./pages/chapters/ChapterDetailPage";
 import Blog from "./pages/Blog";
 import Newsletter from "./pages/Newsletter";
 import FAQs from "./pages/FAQs";
@@ -100,6 +101,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/join-us" element={<JoinUs />} />
             <Route path="/partners" element={<PartnersPage />} />
+            <Route path="/chapters/:city" element={<ChapterDetailPage />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/faqs" element={<FAQs />} />

@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Flame, Trophy, Users, Zap, CheckCircle2, Gift } from 'lucide-react';
+import { Flame, Trophy, Users, Zap, CheckCircle2, Gift, ArrowUpRight } from 'lucide-react';
 import igniteLogo from '@/assets/ignite-logo.png';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import TaskBoard from '@/components/TaskBoard';
 import AmbassadorChatbot from '@/components/AmbassadorChatbot';
+import SectionEyebrow from '@/components/design-system/SectionEyebrow';
+import RevealOnScroll from '@/components/design-system/RevealOnScroll';
 import { useSEO } from '@/hooks/use-seo';
 
 const perks = [
@@ -48,43 +50,41 @@ export default function AmbassadorLanding() {
                 <Navbar />
 
                 {/* ── Hero ───────────────────────────────────────────────────── */}
-                <section className="relative z-10 pt-28 pb-20 px-4 text-center">
+                <section className="relative z-10 pt-32 pb-20 px-6 lg:px-8 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                         className="max-w-4xl mx-auto"
                     >
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.4 }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6"
+                        <motion.span
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="inline-flex items-center gap-2 text-primary font-semibold text-sm uppercase tracking-[0.14em] mb-6"
                         >
-                            <Flame className="w-4 h-4" />
-                            Campus Ambassador Program 2026
-                        </motion.div>
+                            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                            Campus Ambassador Program
+                        </motion.span>
 
-                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.05]">
-                            Represent{' '}
-                            <span className="text-gradient">Ignite Room</span>
-                            <br />at Your Campus
+                        <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-[3.75rem] font-bold leading-[1.08] mb-6 text-foreground">
+                            Represent <em className="italic">Ignite Room</em><br />at Your Campus
                         </h1>
 
-                        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+                        <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
                             Become the face of Ignite Room at your college. Spread the word about our upcoming hackathon,
                             earn points for every referral, and compete for top spot on the leaderboard.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Link to="/ambassador/apply">
-                                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white gap-2 text-base px-8 h-12 shadow-lg shadow-primary/20">
-                                    <Zap className="w-5 h-5" /> Become an Ambassador
+                                <Button size="lg" className="rounded-full gap-2 text-base px-8 h-12 shadow-lg shadow-primary/20">
+                                    Become an Ambassador <ArrowUpRight className="w-4 h-4" />
                                 </Button>
                             </Link>
                             <Link to="/ambassador/leaderboard">
-                                <Button size="lg" variant="outline" className="gap-2 text-base px-8 h-12 border-border/50">
-                                    <Trophy className="w-5 h-5" /> View Leaderboard
+                                <Button size="lg" variant="outline" className="rounded-full gap-2 text-base px-8 h-12 border-border/50">
+                                    <Trophy className="w-4 h-4" /> View Leaderboard
                                 </Button>
                             </Link>
                         </div>
@@ -99,12 +99,12 @@ export default function AmbassadorLanding() {
                             {[
                                 { val: '₹0', label: 'Cost to Join' },
                                 { val: '100%', label: 'Free to Participate' },
-                                { val: <Flame className="w-7 h-7 mx-auto text-orange-500" />, label: 'Hackathon by Ignite Room' },
+                                { val: <Flame className="w-7 h-7 mx-auto text-primary" />, label: 'Hackathon by Ignite Room' },
                                 { val: <Trophy className="w-7 h-7 mx-auto text-amber-400" />, label: 'Real Prizes & Perks' },
                             ].map(s => (
                                 <div key={s.label} className="text-center">
-                                    <div className="text-2xl font-bold text-foreground">{s.val}</div>
-                                    <div className="text-xs text-muted-foreground mt-0.5">{s.label}</div>
+                                    <div className="text-2xl font-heading font-bold text-foreground">{s.val}</div>
+                                    <div className="text-xs text-muted-foreground mt-1.5 uppercase tracking-wider">{s.label}</div>
                                 </div>
                             ))}
                         </motion.div>
@@ -112,133 +112,118 @@ export default function AmbassadorLanding() {
                 </section>
 
                 {/* ── How it Works ───────────────────────────────────────────── */}
-                <section className="relative z-10 py-20 px-4">
+                <section className="relative z-10 section-padding pt-0">
                     <div className="max-w-5xl mx-auto">
-                        <div className="text-center mb-14">
-                            <span className="text-primary text-sm font-semibold uppercase tracking-widest">How It Works</span>
-                            <h2 className="text-3xl md:text-4xl font-bold mt-2">Four simple steps to the top</h2>
-                        </div>
+                        <RevealOnScroll className="text-center mb-14">
+                            <SectionEyebrow index="01" label="How It Works" className="justify-center flex" />
+                            <h2 className="font-heading text-3xl md:text-4xl font-bold">Four simple steps to the top</h2>
+                        </RevealOnScroll>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                             {steps.map((s, i) => (
-                                <motion.div
-                                    key={s.n}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="glass-card rounded-2xl p-6 border border-border/50 relative overflow-hidden group hover:border-primary/30 transition-colors"
-                                >
-                                    <div className="text-4xl font-black text-primary/15 absolute top-4 right-4 font-mono">{s.n}</div>
-                                    <div className="text-2xl font-bold text-primary mb-2">{s.n}</div>
-                                    <h3 className="font-bold text-foreground mb-2">{s.title}</h3>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-                                </motion.div>
+                                <RevealOnScroll key={s.n} delay={i * 0.08}>
+                                    <div className="glow-card p-6 h-full hover:border-primary/40 transition-colors group relative">
+                                        <div className="text-4xl font-black text-primary/10 absolute top-4 right-4 font-mono">{s.n}</div>
+                                        <div className="text-2xl font-heading font-bold text-primary mb-2">{s.n}</div>
+                                        <h3 className="font-heading font-semibold text-foreground mb-2">{s.title}</h3>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+                                    </div>
+                                </RevealOnScroll>
                             ))}
                         </div>
                     </div>
                 </section>
 
                 {/* ── Perks ──────────────────────────────────────────────────── */}
-                <section className="relative z-10 py-20 px-4">
+                <section className="relative z-10 section-padding pt-0">
                     <div className="max-w-5xl mx-auto">
-                        <div className="text-center mb-14">
-                            <span className="text-primary text-sm font-semibold uppercase tracking-widest">Why Join</span>
-                            <h2 className="text-3xl md:text-4xl font-bold mt-2">Perks of being an Ambassador</h2>
-                        </div>
+                        <RevealOnScroll className="text-center mb-14">
+                            <SectionEyebrow index="02" label="Why Join" className="justify-center flex" />
+                            <h2 className="font-heading text-3xl md:text-4xl font-bold">Perks of being an Ambassador</h2>
+                        </RevealOnScroll>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             {perks.map((p, i) => (
-                                <motion.div
-                                    key={p.title}
-                                    initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="glass-card rounded-2xl p-6 border border-border/50 flex gap-4 hover:border-primary/30 transition-colors group"
-                                >
-                                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
-                                        <p.icon className="w-6 h-6 text-primary" />
+                                <RevealOnScroll key={p.title} delay={i * 0.08}>
+                                    <div className="glow-card p-6 flex gap-4 h-full hover:border-primary/40 transition-colors group">
+                                        <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                                            <p.icon className="w-6 h-6 text-primary" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-heading font-semibold text-foreground mb-1">{p.title}</h3>
+                                            <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 className="font-bold text-foreground mb-1">{p.title}</h3>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
-                                    </div>
-                                </motion.div>
+                                </RevealOnScroll>
                             ))}
                         </div>
                     </div>
                 </section>
 
                 {/* ── Active Tasks ───────────────────────────────────────────── */}
-                <section className="relative z-10 py-12 px-4">
+                <section className="relative z-10 section-padding pt-0">
                     <div className="max-w-3xl mx-auto">
-                        <div className="text-center mb-8">
-                            <span className="text-primary text-sm font-semibold uppercase tracking-widest">Live Right Now</span>
-                            <h2 className="text-3xl font-bold mt-2">Active Tasks</h2>
+                        <RevealOnScroll className="text-center mb-8">
+                            <SectionEyebrow index="03" label="Live Right Now" className="justify-center flex" />
+                            <h2 className="font-heading text-3xl font-bold">Active Tasks</h2>
                             <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
                                 Once you're an ambassador, share your referral link — anyone who completes a task through it earns you points.
                             </p>
-                        </div>
+                        </RevealOnScroll>
                         <TaskBoard />
                     </div>
                 </section>
 
                 {/* ── FAQ ────────────────────────────────────────────────────── */}
-                <section className="relative z-10 py-20 px-4">
+                <section className="relative z-10 section-padding pt-0">
                     <div className="max-w-3xl mx-auto">
-                        <div className="text-center mb-12">
-                            <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
-                        </div>
+                        <RevealOnScroll className="text-center mb-12">
+                            <SectionEyebrow index="04" label="FAQ" className="justify-center flex" />
+                            <h2 className="font-heading text-3xl font-bold">Frequently Asked Questions</h2>
+                        </RevealOnScroll>
                         <div className="space-y-3">
                             {faqs.map((f, i) => (
-                                <motion.div
-                                    key={f.q}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.05 }}
-                                    className="glass-card rounded-xl p-5 border border-border/50"
-                                >
-                                    <div className="flex gap-3">
-                                        <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-foreground mb-1">{f.q}</p>
-                                            <p className="text-sm text-muted-foreground">{f.a}</p>
+                                <RevealOnScroll key={f.q} delay={i * 0.05}>
+                                    <div className="glow-card p-5">
+                                        <div className="flex gap-3">
+                                            <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-semibold text-foreground mb-1">{f.q}</p>
+                                                <p className="text-sm text-muted-foreground">{f.a}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </motion.div>
+                                </RevealOnScroll>
                             ))}
                         </div>
                     </div>
                 </section>
 
                 {/* ── CTA ────────────────────────────────────────────────────── */}
-                <section className="relative z-10 py-24 px-4">
+                <section className="relative z-10 section-padding pt-0">
                     <div className="max-w-2xl mx-auto text-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="glass-card rounded-3xl p-12 border border-primary/20"
-                            style={{ background: 'radial-gradient(ellipse at center, hsl(345 100% 59% / 0.06) 0%, transparent 70%)' }}
-                        >
-                            <Flame className="w-12 h-12 text-primary mx-auto mb-5" />
-                            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Ignite?</h2>
-                            <p className="text-muted-foreground mb-8 text-lg">
-                                Join the campus ambassador program today and represent Ignite Room at your college.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                                <Link to="/ambassador/apply">
-                                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-white gap-2 px-8 h-12 shadow-lg shadow-primary/20">
-                                        <Zap className="w-5 h-5" /> Create Account
-                                    </Button>
-                                </Link>
-                                <Link to="/login">
-                                    <Button size="lg" variant="outline" className="border-border/50 px-8 h-12">
-                                        Already have an account
-                                    </Button>
-                                </Link>
+                        <RevealOnScroll>
+                            <div
+                                className="glow-card p-12 relative overflow-hidden"
+                            >
+                                <div className="glow-card-accent w-96 h-96 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                <Flame className="w-12 h-12 text-primary mx-auto mb-5 relative z-10" />
+                                <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4 relative z-10">Ready to Ignite?</h2>
+                                <p className="text-muted-foreground mb-8 text-lg relative z-10">
+                                    Join the campus ambassador program today and represent Ignite Room at your college.
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-3 justify-center relative z-10">
+                                    <Link to="/ambassador/apply">
+                                        <Button size="lg" className="rounded-full gap-2 px-8 h-12 shadow-lg shadow-primary/20">
+                                            <Zap className="w-5 h-5" /> Create Account
+                                        </Button>
+                                    </Link>
+                                    <Link to="/login">
+                                        <Button size="lg" variant="outline" className="rounded-full border-border/50 px-8 h-12">
+                                            Already have an account
+                                        </Button>
+                                    </Link>
+                                </div>
                             </div>
-                        </motion.div>
+                        </RevealOnScroll>
                     </div>
                 </section>
 

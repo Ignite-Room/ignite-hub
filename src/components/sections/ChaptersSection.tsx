@@ -1,5 +1,7 @@
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowUpRight } from 'lucide-react'
 import indiaMapLight from '@/assets/figma/india-map-light.png'
 import indiaMapDark from '@/assets/figma/india-map-dark.png'
 
@@ -10,6 +12,15 @@ const chapters = [
 export default function ChaptersSection() {
   const headerRef = useRef<HTMLDivElement | null>(null)
   const isHeaderInView = useInView(headerRef, { once: true })
+  const navigate = useNavigate()
+
+  const [portal, setPortal] = useState<{ city: string; x: number; y: number } | null>(null)
+
+  const openChapter = (city: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setPortal({ city, x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
+    window.setTimeout(() => navigate(`/chapters/${city.toLowerCase()}`), 620)
+  }
 
   return (
     <section
@@ -36,14 +47,34 @@ export default function ChaptersSection() {
               Ignite Room&apos;s community spans 6 cities nationwide, born out of the
               HackArena 2.0 zonal rounds, with Delhi hosting the national Grand Finale.
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               {chapters.map((city) => (
-                <span
+                <motion.button
                   key={city}
-                  className="rounded-full border border-border/60 bg-card px-4 py-1.5 text-sm font-medium text-foreground"
+                  type="button"
+                  onClick={(e) => openChapter(city, e)}
+                  whileHover="hover"
+                  whileTap={{ scale: 0.94 }}
+                  initial="rest"
+                  animate="rest"
+                  className="group relative overflow-hidden rounded-full border border-border/60 bg-card px-4 py-1.5 text-sm font-medium text-foreground cursor-pointer"
                 >
-                  {city}
-                </span>
+                  <motion.span
+                    variants={{ rest: { x: '-101%' }, hover: { x: 0 } }}
+                    transition={{ duration: 0.35, ease: [0.65, 0, 0.35, 1] }}
+                    className="absolute inset-0 rounded-full bg-primary"
+                  />
+                  <span className="relative z-10 inline-flex items-center gap-1 group-hover:text-primary-foreground transition-colors duration-200">
+                    {city}
+                    <motion.span
+                      variants={{ rest: { opacity: 0, x: -4, width: 0 }, hover: { opacity: 1, x: 0, width: 14 } }}
+                      transition={{ duration: 0.25 }}
+                      className="inline-flex overflow-hidden"
+                    >
+                      <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0" />
+                    </motion.span>
+                  </span>
+                </motion.button>
               ))}
             </div>
           </motion.div>
@@ -58,6 +89,34 @@ export default function ChaptersSection() {
           </motion.div>
         </div>
       </div>
+
+      {/* Portal transition: the clicked chip expands into a full-bleed reveal before the route changes */}
+      <AnimatePresence>
+        {portal && (
+          <motion.div
+            key="chapter-portal"
+            className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-primary"
+            style={{ originX: 0.5, originY: 0.5 }}
+            initial={{
+              clipPath: `circle(0px at ${portal.x}px ${portal.y}px)`,
+            }}
+            animate={{
+              clipPath: `circle(150% at ${portal.x}px ${portal.y}px)`,
+            }}
+            transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.35 }}
+              className="text-center text-primary-foreground"
+            >
+              <span className="block text-xs uppercase tracking-[0.3em] mb-3 opacity-80">Entering chapter</span>
+              <span className="font-heading text-5xl md:text-6xl font-bold">{portal.city}</span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
