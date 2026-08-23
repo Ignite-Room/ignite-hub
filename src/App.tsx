@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./lib/auth-context";
 import { ProtectedRoute, AdminRoute, PartnerRoute, LandingRoute } from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
 
 // Existing site pages
@@ -92,6 +93,7 @@ const App = () => (
         <Sonner />
         <Analytics />
         <BrowserRouter>
+          <ScrollToTop />
           <Suspense fallback={
             <div className="min-h-screen bg-background flex items-center justify-center">
               <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />

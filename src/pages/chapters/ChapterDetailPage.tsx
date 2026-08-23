@@ -54,7 +54,7 @@ export default function ChapterDetailPage() {
     const past = events.filter(e => new Date(e.startAt).getTime() < now);
 
     return (
-        <div className="relative min-h-screen bg-background">
+        <div className="relative min-h-screen bg-background overflow-x-hidden">
             <Navbar />
 
             <main className="relative z-10">
@@ -130,28 +130,28 @@ export default function ChapterDetailPage() {
                         )}
 
                         {!loading && events.length === 0 && (
-                            <RevealOnScroll className="info-section rounded-md border border-border/60 p-12 text-center max-w-xl mx-auto">
-                                <img src={sparkle} alt="" aria-hidden="true" className="w-8 h-8 mx-auto mb-4" />
-                                <h2 className="font-heading text-xl font-bold mb-2">The {chapter.name} chapter is just getting started</h2>
-                                <p className="text-muted-foreground mb-6">
-                                    No events have been announced here yet. Check back soon, or bring one to your campus yourself.
-                                </p>
-                                <Link to="/ambassador/apply">
-                                    <Button className="rounded-full gap-2">
-                                        Become a Campus Ambassador <ArrowUpRight className="w-4 h-4" />
-                                    </Button>
-                                </Link>
-                            </RevealOnScroll>
+                            <div className="info-section w-screen relative left-1/2 -translate-x-1/2">
+                                <RevealOnScroll className="max-w-xl mx-auto px-6 py-16 text-center">
+                                    <img src={sparkle} alt="" aria-hidden="true" className="w-8 h-8 mx-auto mb-4" />
+                                    <h2 className="font-heading text-xl font-bold mb-2">The {chapter.name} chapter is just getting started</h2>
+                                    <p className="text-muted-foreground mb-6">
+                                        No events have been announced here yet. Check back soon, or bring one to your campus yourself.
+                                    </p>
+                                    <Link to="/ambassador/apply">
+                                        <Button className="rounded-full gap-2">
+                                            Become a Campus Ambassador <ArrowUpRight className="w-4 h-4" />
+                                        </Button>
+                                    </Link>
+                                </RevealOnScroll>
+                            </div>
                         )}
                     </div>
                 </section>
 
                 {/* CTA */}
                 <section className="section-padding pt-0">
-                    <div className="max-w-3xl mx-auto">
-                        <RevealOnScroll
-                            className="info-section rounded-md border border-border/60 p-10 md:p-12 text-center"
-                        >
+                    <div className="info-section w-screen relative left-1/2 -translate-x-1/2">
+                        <RevealOnScroll className="max-w-3xl mx-auto px-6 py-16 md:py-20 text-center">
                             <h2 className="font-heading text-3xl font-bold mb-3">Want more Ignite Room in {chapter.name}?</h2>
                             <p className="text-muted-foreground mb-8">
                                 Lead the next hackathon, workshop, or meetup on your campus as a Campus Ambassador.
