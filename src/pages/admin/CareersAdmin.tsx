@@ -930,7 +930,7 @@ export default function CareersAdmin() {
                                 </Button>
                             </div>
                         ) : (
-                            <div className="overflow-hidden rounded-md border border-border/50">
+                            <div className="overflow-x-auto rounded-md border border-border/50">
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr className="border-b border-border/50 bg-secondary/30">
@@ -1053,7 +1053,7 @@ export default function CareersAdmin() {
                             <div className="py-20 text-center text-sm text-muted-foreground">No applications found.</div>
                         ) : (
                             <>
-                                <div className="overflow-hidden rounded-md border border-border/50">
+                                <div className="overflow-x-auto rounded-md border border-border/50">
                                     <table className="w-full text-sm">
                                         <thead>
                                             <tr className="border-b border-border/50 bg-secondary/30">

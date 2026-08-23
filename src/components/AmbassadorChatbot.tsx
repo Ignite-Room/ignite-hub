@@ -136,7 +136,7 @@ export default function AmbassadorChatbot() {
 
     // ── Render ───────────────────────────────────────────────────────────────
     return (
-        <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col items-end gap-3">
             {/* ── Chat window ───────────────────────────────────────────── */}
             <AnimatePresence>
                 {open && (
@@ -146,7 +146,7 @@ export default function AmbassadorChatbot() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.92, y: 20 }}
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                        className="relative w-[360px] sm:w-[400px] h-[560px] flex flex-col rounded-md overflow-hidden shadow-2xl border border-border/60 bg-card"
+                        className="relative w-[calc(100vw-32px)] max-w-[360px] sm:w-[400px] h-[min(560px,calc(100vh-104px))] flex flex-col rounded-md overflow-hidden shadow-2xl border border-border/60 bg-card"
                         style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.35), 0 0 40px hsl(345 100% 59% / 0.12)' }}
                     >
                         {/* Header */}

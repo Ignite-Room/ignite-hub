@@ -169,7 +169,7 @@ export default function LeaderboardPage() {
                 )}
 
                 {/* Score legend */}
-                <div className="flex items-center justify-center gap-6 mb-6 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-6 mb-6 text-xs text-muted-foreground text-center">
                     <span className="flex items-center gap-1.5"><Star className="w-3 h-3 text-green-400" /> Verified Tasks</span>
                     <span className="flex items-center gap-1.5"><Users className="w-3 h-3 text-blue-400" /> External Referrals (Unstop)</span>
                     <span className="flex items-center gap-1.5"><Award className="w-3 h-3 text-orange-400" /> Total Score = Tasks + Referrals</span>
