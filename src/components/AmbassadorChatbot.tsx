@@ -10,29 +10,10 @@ interface Message {
     timestamp: Date;
 }
 
-// ─── Groq API Configuration ───────────────────────────────────────────────────
-// Splitting the token to safely bypass git strict secret scanning blockers
-const GROQ_API_KEY = 'gsk' + '_2K43yqG65tw' + 'b6Oi6Te' + 'tOWGdyb3FYOk' + 'PdrOylJCHmA2JIoRmDKTEw';
-
-// ─── System prompt ────────────────────────────────────────────────────────────
-const SYSTEM_PROMPT = `You are the official AI assistant for the Ignite Room Campus Ambassador Program 2026. You are helpful, enthusiastic, and knowledgeable about the program.
-
-Key facts you know:
-- The program is FREE to join, no cost at all
-- Campus Ambassadors represent Ignite Room at their college
-- Points system: Total Score = Verified Task Submissions + External Referrals
-- Current active task: None at the moment! We'll be back soon with exciting new tasks.
-- Each external referral (from Unstop or other platforms) also boosts the leaderboard score
-- Leaderboard updates in real-time
-- Winners announced after the hackathon concludes; top ambassadors contacted directly
-- Prizes: exclusive Ignite Room merchandise, certificates, access to events
-- Any college student in India passionate about tech can join, no prior experience needed
-- Log in (or sign up) at igniteroom.in/login, then apply from igniteroom.in/ambassador/apply
-- Referral links are unique and used to track tasks
-- Contact: admin@igniteroom.in
-- Website: igniteroom.in
-
-Keep responses concise, friendly, and action-oriented. Do not use emojis. If asked anything outside the Campus Ambassador Program or Ignite Room, politely redirect the user.`;
+const API_BASE = (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim() !== '')
+    ? import.meta.env.VITE_API_URL
+    : 'http://localhost:3001/api';
+const CHATBOT_API_URL = `${API_BASE}/chatbot/message`;
 
 // ─── Suggested questions ──────────────────────────────────────────────────────
 const SUGGESTIONS = [
@@ -109,29 +90,18 @@ export default function AmbassadorChatbot() {
         ];
 
         try {
-            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            const response = await fetch(CHATBOT_API_URL, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${GROQ_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    model: 'llama-3.1-8b-instant',
-                    messages: [
-                        { role: 'system', content: SYSTEM_PROMPT },
-                        ...history
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 500
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages: history }),
             });
 
             if (!response.ok) {
-                throw new Error(`Groq API Error: ${response.status}`);
+                throw new Error(`Chatbot API Error: ${response.status}`);
             }
 
             const data = await response.json();
-            const reply: string = data.choices[0]?.message?.content || "Sorry, I couldn't get a response. Please try again!";
+            const reply: string = data.reply || "Sorry, I couldn't get a response. Please try again!";
 
             const assistantMsg: Message = {
                 id: crypto.randomUUID(),
@@ -141,7 +111,7 @@ export default function AmbassadorChatbot() {
             };
             setMessages(prev => [...prev, assistantMsg]);
         } catch (err) {
-            console.error('[Chatbot] Groq error:', err);
+            console.error('[Chatbot] error:', err);
             const errMsg: Message = {
                 id: crypto.randomUUID(),
                 role: 'assistant',
