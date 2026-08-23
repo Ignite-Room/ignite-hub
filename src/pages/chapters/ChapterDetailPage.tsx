@@ -11,6 +11,7 @@ import { useSEO } from '@/hooks/use-seo';
 import SectionEyebrow from '@/components/design-system/SectionEyebrow';
 import RevealOnScroll from '@/components/design-system/RevealOnScroll';
 import sparkle from '@/assets/figma/sparkle.png';
+import { cityIcons } from '@/lib/city-icons';
 
 const CHAPTERS: Record<string, { name: string; blurb: string }> = {
     delhi: { name: 'Delhi', blurb: 'Home to our national Grand Finale, the beating heart of the Ignite Room hackathon circuit.' },
@@ -65,6 +66,12 @@ export default function ChapterDetailPage() {
                     className="section-padding pb-14 relative overflow-hidden"
                 >
                     <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px] pointer-events-none" />
+                    <img
+                        src={cityIcons[key]}
+                        alt=""
+                        aria-hidden="true"
+                        className="hidden md:block absolute -bottom-8 -right-8 w-72 lg:w-96 opacity-[0.07] dark:opacity-[0.1] dark:invert pointer-events-none select-none"
+                    />
                     <div className="max-w-4xl mx-auto relative z-10">
                         <Link to="/#chapters" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8">
                             <ArrowLeft className="w-4 h-4" /> All chapters

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import indiaMapLight from '@/assets/figma/india-map-light.png'
 import indiaMapDark from '@/assets/figma/india-map-dark.png'
+import { cityIcons } from '@/lib/city-icons'
 
 const chapters = [
   'Delhi', 'Chandigarh', 'Mumbai', 'Hyderabad', 'Bangalore', 'Kolkata',
@@ -111,8 +112,14 @@ export default function ChaptersSection() {
               transition={{ delay: 0.25, duration: 0.35 }}
               className="text-center text-primary-foreground"
             >
-              <span className="block text-xs uppercase tracking-[0.3em] mb-3 opacity-80">Entering chapter</span>
-              <span className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold break-words">{portal.city}</span>
+              <img
+                src={cityIcons[portal.city.toLowerCase()]}
+                alt=""
+                aria-hidden="true"
+                className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-5 object-contain brightness-0 invert"
+              />
+              <span className="block text-sm uppercase tracking-[0.3em] mb-3 opacity-80">Entering chapter</span>
+              <span className="font-heading text-5xl sm:text-6xl md:text-7xl font-bold break-words">{portal.city}</span>
             </motion.div>
           </motion.div>
         )}
