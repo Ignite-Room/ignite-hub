@@ -87,14 +87,18 @@ export default function AmbassadorSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="info-section grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/60">
-              {perks.map((perk, index) => (
+            <div className="info-section grid grid-cols-1 sm:grid-cols-2">
+              {perks.map((perk, index) => {
+                const mobileTop = index > 0 ? 'border-t' : '';
+                const desktopLeft = index % 2 === 1 ? 'sm:border-l' : '';
+                const desktopTop = index >= 2 ? 'sm:border-t' : 'sm:border-t-0';
+                return (
                 <motion.div
                   key={perk.title}
                   initial={{ opacity: 0, y: 30 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  className="info-block p-6 group"
+                  className={`info-block p-6 group border-border/60 ${mobileTop} ${desktopLeft} ${desktopTop}`}
                 >
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                     <perk.icon className="w-6 h-6 text-primary" />
@@ -106,7 +110,7 @@ export default function AmbassadorSection() {
                     {perk.description}
                   </p>
                 </motion.div>
-              ))}
+              );})}
             </div>
           </motion.div>
 
