@@ -76,7 +76,7 @@ export default function ActiveEventSection() {
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="relative rounded-2xl border border-primary/25 overflow-hidden bg-gradient-card shadow-[0_0_60px_hsl(345_100%_59%_/_0.08)]"
+          className="relative rounded-md border border-primary/25 overflow-hidden bg-gradient-card shadow-[0_0_60px_hsl(345_100%_59%_/_0.08)]"
         >
           {/* Top accent bar */}
           <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />

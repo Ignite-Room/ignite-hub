@@ -162,18 +162,18 @@ function EventCard({ event, index }: { event: Event; index: number }) {
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative rounded-2xl bg-gradient-card border border-border/60 overflow-hidden hover:border-primary/40 transition-all"
+      className="group relative overflow-hidden"
     >
       {/* Accent Bar */}
-      <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary to-purple-500 opacity-70" />
+      <div className="h-[3px] bg-gradient-to-r from-primary to-purple-500 opacity-70 mb-4" />
 
-      <div className="p-6 space-y-4">
-        <span className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-secondary text-muted-foreground">
+      <div className="space-y-4">
+        <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-secondary text-muted-foreground">
           Past Event
         </span>
 
         <div>
-          <h3 className="text-2xl font-bold group-hover:text-gradient transition-all">
+          <h3 className="font-heading text-2xl font-bold group-hover:text-gradient transition-all">
             {event.title}
           </h3>
           <p className="text-primary font-medium mt-1">
@@ -240,7 +240,7 @@ function UpcomingEventsTeaser() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="relative rounded-2xl border border-dashed border-primary/40 bg-gradient-to-br from-primary/5 to-transparent p-8 overflow-hidden"
+      className="relative rounded-md border border-dashed border-primary/40 bg-gradient-to-br from-primary/5 to-transparent p-8 overflow-hidden"
     >
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent"

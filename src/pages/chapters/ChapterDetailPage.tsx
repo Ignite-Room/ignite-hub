@@ -122,7 +122,7 @@ export default function ChapterDetailPage() {
                         )}
 
                         {!loading && events.length === 0 && (
-                            <RevealOnScroll className="glow-card p-12 text-center max-w-xl mx-auto">
+                            <RevealOnScroll className="info-section p-12 text-center max-w-xl mx-auto">
                                 <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
                                 <h2 className="font-heading text-xl font-bold mb-2">The {chapter.name} chapter is just getting started</h2>
                                 <p className="text-muted-foreground mb-6">
@@ -142,14 +142,13 @@ export default function ChapterDetailPage() {
                 <section className="section-padding pt-0">
                     <div className="max-w-3xl mx-auto">
                         <RevealOnScroll
-                            className="glow-card p-10 md:p-12 text-center relative overflow-hidden"
+                            className="info-section p-10 md:p-12 text-center"
                         >
-                            <div className="glow-card-accent w-72 h-72 -top-20 -right-20" />
-                            <h2 className="font-heading text-3xl font-bold mb-3 relative z-10">Want more Ignite Room in {chapter.name}?</h2>
-                            <p className="text-muted-foreground mb-8 relative z-10">
+                            <h2 className="font-heading text-3xl font-bold mb-3">Want more Ignite Room in {chapter.name}?</h2>
+                            <p className="text-muted-foreground mb-8">
                                 Lead the next hackathon, workshop, or meetup on your campus as a Campus Ambassador.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center relative z-10">
+                            <div className="flex flex-col sm:flex-row gap-3 justify-center">
                                 <Link to="/ambassador/apply">
                                     <Button size="lg" className="rounded-full gap-2 px-8">
                                         Become an Ambassador <ArrowUpRight className="w-4 h-4" />
