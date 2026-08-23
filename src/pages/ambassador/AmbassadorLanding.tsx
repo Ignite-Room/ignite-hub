@@ -198,7 +198,7 @@ export default function AmbassadorLanding() {
                 <section className="relative z-10 section-padding pt-0">
                     <div className="max-w-2xl mx-auto text-center">
                         <RevealOnScroll>
-                            <div className="info-section p-12 text-center">
+                            <div className="info-section rounded-md border border-border/60 p-12 text-center">
                                 <Flame className="w-12 h-12 text-primary mx-auto mb-5" />
                                 <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">Ready to Ignite?</h2>
                                 <p className="text-muted-foreground mb-8 text-lg">

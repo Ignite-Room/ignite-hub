@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowUpRight, CalendarDays, MapPin, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, CalendarDays, MapPin } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { api, EventSummary } from '@/lib/api';
 import { useSEO } from '@/hooks/use-seo';
 import SectionEyebrow from '@/components/design-system/SectionEyebrow';
 import RevealOnScroll from '@/components/design-system/RevealOnScroll';
+import sparkle from '@/assets/figma/sparkle.png';
 
 const CHAPTERS: Record<string, { name: string; blurb: string }> = {
     delhi: { name: 'Delhi', blurb: 'Home to our national Grand Finale, the beating heart of the Ignite Room hackathon circuit.' },
@@ -122,8 +123,8 @@ export default function ChapterDetailPage() {
                         )}
 
                         {!loading && events.length === 0 && (
-                            <RevealOnScroll className="info-section p-12 text-center max-w-xl mx-auto">
-                                <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
+                            <RevealOnScroll className="info-section rounded-md border border-border/60 p-12 text-center max-w-xl mx-auto">
+                                <img src={sparkle} alt="" aria-hidden="true" className="w-8 h-8 mx-auto mb-4" />
                                 <h2 className="font-heading text-xl font-bold mb-2">The {chapter.name} chapter is just getting started</h2>
                                 <p className="text-muted-foreground mb-6">
                                     No events have been announced here yet. Check back soon, or bring one to your campus yourself.
@@ -142,7 +143,7 @@ export default function ChapterDetailPage() {
                 <section className="section-padding pt-0">
                     <div className="max-w-3xl mx-auto">
                         <RevealOnScroll
-                            className="info-section p-10 md:p-12 text-center"
+                            className="info-section rounded-md border border-border/60 p-10 md:p-12 text-center"
                         >
                             <h2 className="font-heading text-3xl font-bold mb-3">Want more Ignite Room in {chapter.name}?</h2>
                             <p className="text-muted-foreground mb-8">

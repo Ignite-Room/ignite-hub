@@ -146,19 +146,11 @@ export default function AmbassadorChatbot() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.92, y: 20 }}
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                        className="relative w-[360px] sm:w-[400px] h-[560px] flex flex-col rounded-md overflow-hidden shadow-2xl border border-border/60"
-                        style={{
-                            background: 'linear-gradient(180deg, hsl(345 20% 7%) 0%, hsl(0 0% 4%) 100%)',
-                            boxShadow: '0 25px 50px rgba(0,0,0,0.6), 0 0 40px hsl(345 100% 59% / 0.12)',
-                        }}
+                        className="relative w-[360px] sm:w-[400px] h-[560px] flex flex-col rounded-md overflow-hidden shadow-2xl border border-border/60 bg-card"
+                        style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.35), 0 0 40px hsl(345 100% 59% / 0.12)' }}
                     >
                         {/* Header */}
-                        <div
-                            className="flex items-center gap-3 px-4 py-3 border-b border-border/40 flex-shrink-0"
-                            style={{
-                                background: 'linear-gradient(90deg, hsl(345 40% 10%) 0%, hsl(345 30% 8%) 100%)',
-                            }}
-                        >
+                        <div className="flex items-center gap-3 px-4 py-3 border-b border-border/40 flex-shrink-0 bg-secondary/50">
                             <div className="relative">
                                 <div className="w-9 h-9 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center">
                                     <Flame className="w-5 h-5 text-primary" />
@@ -167,7 +159,7 @@ export default function AmbassadorChatbot() {
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="font-semibold text-foreground text-sm leading-tight">Iggy</p>
-                                <p className="text-xs text-green-400 leading-tight">Online</p>
+                                <p className="text-xs text-green-600 dark:text-green-400 leading-tight">Online</p>
                             </div>
                             <div className="flex items-center gap-1">
                                 <span className="text-xs text-muted-foreground bg-primary/10 border border-primary/20 rounded-full px-2 py-0.5 font-medium flex items-center gap-1">
@@ -295,7 +287,7 @@ export default function AmbassadorChatbot() {
                                     )}
                                 </button>
                             </div>
-                            <p className="text-xs text-muted-foreground/40 text-center mt-2">
+                            <p className="text-xs text-muted-foreground/70 text-center mt-2">
                                 Ignite Room
                             </p>
                         </div>

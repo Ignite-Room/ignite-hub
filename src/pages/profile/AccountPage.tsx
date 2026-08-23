@@ -191,12 +191,12 @@ export default function AccountPage() {
                     {!loading && !error && tab === 'events' && (
                         <motion.div variants={itemVariants}>
                             {registrations.length === 0 && (
-                                <div className="info-section p-10 text-center">
+                                <div className="info-section rounded-md border border-border/60 p-10 text-center">
                                     <Ticket className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
                                     <p className="text-muted-foreground text-sm">You haven't registered for any events yet.</p>
                                 </div>
                             )}
-                            {registrations.length > 0 && <div className="info-section divide-y divide-border/60">
+                            {registrations.length > 0 && <div className="info-section rounded-md border border-border/60 divide-y divide-border/60 overflow-hidden">
                             {registrations.map(r => {
                                 const status = REGISTRATION_STATUS_STYLE[r.status] ?? REGISTRATION_STATUS_STYLE.CONFIRMED;
                                 return (
@@ -234,12 +234,12 @@ export default function AccountPage() {
                     {!loading && !error && tab === 'transactions' && (
                         <motion.div variants={itemVariants}>
                             {transactions.length === 0 && (
-                                <div className="info-section p-10 text-center">
+                                <div className="info-section rounded-md border border-border/60 p-10 text-center">
                                     <Receipt className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
                                     <p className="text-muted-foreground text-sm">No payments yet. Paid event registrations will show up here.</p>
                                 </div>
                             )}
-                            {transactions.length > 0 && <div className="info-section divide-y divide-border/60">
+                            {transactions.length > 0 && <div className="info-section rounded-md border border-border/60 divide-y divide-border/60 overflow-hidden">
                             {transactions.map(r => {
                                 const orderStatus = ORDER_STATUS_STYLE[r.order!.status] ?? ORDER_STATUS_STYLE.CREATED;
                                 return (
