@@ -34,8 +34,8 @@ const colorMap = {
     amber: {
         bg: 'bg-amber-500/10',
         border: 'border-amber-500/20',
-        icon: 'text-amber-400',
-        value: 'text-amber-400',
+        icon: 'text-orange-400',
+        value: 'text-orange-400',
         glow: 'shadow-amber-500/10',
     },
 };

@@ -54,7 +54,7 @@ export default function OrganizerCheckinPage() {
     const resultMeta = {
         idle: { icon: null, bg: 'bg-zinc-900', text: 'Point camera at a ticket QR code' },
         success: { icon: <CheckCircle2 className="w-16 h-16 text-emerald-400" />, bg: 'bg-emerald-500/10', text: '' },
-        already: { icon: <AlertTriangle className="w-16 h-16 text-amber-400" />, bg: 'bg-amber-500/10', text: '' },
+        already: { icon: <AlertTriangle className="w-16 h-16 text-orange-400" />, bg: 'bg-amber-500/10', text: '' },
         invalid: { icon: <XCircle className="w-16 h-16 text-destructive" />, bg: 'bg-destructive/10', text: '' },
     }[result.kind];
 
@@ -87,7 +87,7 @@ export default function OrganizerCheckinPage() {
                                 <p className="text-emerald-400 text-sm font-medium mt-2">Checked In</p>
                             </>
                         )}
-                        {result.kind === 'already' && <p className="text-amber-300 font-medium">{result.message}</p>}
+                        {result.kind === 'already' && <p className="text-orange-300 font-medium">{result.message}</p>}
                         {result.kind === 'invalid' && <p className="text-destructive font-medium">{result.message}</p>}
                     </div>
                 )}

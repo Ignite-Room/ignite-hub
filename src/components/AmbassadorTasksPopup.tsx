@@ -60,7 +60,7 @@ export default function AmbassadorTasksPopup() {
                                     Campus Ambassador Program
                                 </h3>
                                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                                    Two new tasks just dropped — join as an ambassador, share your referral link, and climb the leaderboard.
+                                    Two new tasks just dropped: join as an ambassador, share your referral link, and climb the leaderboard.
                                 </p>
                             </div>
                         </div>

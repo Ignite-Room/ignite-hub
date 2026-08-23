@@ -91,11 +91,11 @@ export default function HeroSection() {
               className="flex flex-wrap gap-x-10 gap-y-4"
             >
               <div>
-                <div className="text-3xl font-heading font-bold text-foreground">{stats ? `${stats.totalUsers.toLocaleString()}+` : '—'}</div>
+                <div className="text-3xl font-heading font-bold text-foreground">{stats ? `${stats.totalUsers.toLocaleString()}+` : '-'}</div>
                 <div className="text-sm text-muted-foreground mt-1">members building</div>
               </div>
               <div>
-                <div className="text-3xl font-heading font-bold text-foreground">{stats ? `${stats.hostedEvents}+` : '—'}</div>
+                <div className="text-3xl font-heading font-bold text-foreground">{stats ? `${stats.hostedEvents}+` : '-'}</div>
                 <div className="text-sm text-muted-foreground mt-1">live events</div>
               </div>
               <div>

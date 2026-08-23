@@ -68,7 +68,7 @@ export default function OrganizerApplyPage() {
                     </p>
 
                     {!isAuthenticated ? (
-                        <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-sm text-amber-300">
+                        <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-sm text-orange-300">
                             You need to be logged in to apply.{' '}
                             <Link to="/login" className="underline font-medium">Log in or sign up</Link> first.
                         </div>

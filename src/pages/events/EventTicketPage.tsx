@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { api, EventTicket, TicketRound } from '@/lib/api';
 
 const ROUND_STATUS_META: Record<string, { label: string; color: string }> = {
-    PENDING: { label: 'Not submitted yet', color: 'text-amber-400' },
+    PENDING: { label: 'Not submitted yet', color: 'text-orange-400' },
     SUBMITTED: { label: 'Submitted', color: 'text-sky-400' },
     SHORTLISTED: { label: 'Shortlisted', color: 'text-emerald-400' },
     REJECTED: { label: 'Not shortlisted', color: 'text-muted-foreground' },
@@ -24,7 +24,7 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
     CANCELLED: { label: 'Cancelled', color: 'text-destructive' },
     NO_SHOW: { label: 'No Show', color: 'text-muted-foreground' },
     REFUNDED: { label: 'Refunded', color: 'text-muted-foreground' },
-    PENDING_PAYMENT: { label: 'Pending Payment', color: 'text-amber-400' },
+    PENDING_PAYMENT: { label: 'Pending Payment', color: 'text-orange-400' },
 };
 
 export default function EventTicketPage() {

@@ -33,7 +33,7 @@ const REG_STATUS_COLOR: Record<string, string> = {
     CHECKED_IN: 'bg-primary/20 text-primary',
     CANCELLED: 'bg-destructive/20 text-destructive',
     NO_SHOW: 'bg-secondary text-muted-foreground',
-    PENDING_PAYMENT: 'bg-amber-500/20 text-amber-400',
+    PENDING_PAYMENT: 'bg-amber-500/20 text-orange-400',
     REFUNDED: 'bg-secondary text-muted-foreground',
 };
 

@@ -13,7 +13,7 @@ type AdminTask = Awaited<ReturnType<typeof api.getAdminTasks>>[number];
 const STATUS_STYLE: Record<AdminTask['status'], string> = {
     ACTIVE: 'bg-green-500/10 text-green-400 border-green-500/30',
     ARCHIVED: 'bg-muted text-muted-foreground border-border/50',
-    DRAFT: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    DRAFT: 'bg-amber-500/10 text-orange-400 border-amber-500/30',
 };
 
 interface FormState {

@@ -110,7 +110,7 @@ function TeamSection({ eventId }: { eventId: string }) {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Badge variant="secondary" className="text-xs">{ROLE_LABEL[c.role]}</Badge>
-                                <Badge className={c.status === 'ACCEPTED' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}>
+                                <Badge className={c.status === 'ACCEPTED' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-orange-400'}>
                                     {c.status}
                                 </Badge>
                                 <button onClick={() => handleRemove(c.id)} className="p-1.5 text-muted-foreground hover:text-destructive transition-colors" title="Remove">

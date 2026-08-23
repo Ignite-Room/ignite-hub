@@ -106,7 +106,7 @@ export default function ChallengePage() {
                     <p className="mb-2 text-sm text-muted-foreground">Hi {data.applicantName.split(' ')[0]},</p>
                     <h1 className="mb-1 font-heading text-2xl font-bold text-foreground">{data.challenge.title}</h1>
                     {deadlineStr && (
-                        <p className={`mb-8 flex items-center gap-1.5 text-sm font-medium ${deadlinePassed ? 'text-destructive' : 'text-amber-400'}`}>
+                        <p className={`mb-8 flex items-center gap-1.5 text-sm font-medium ${deadlinePassed ? 'text-destructive' : 'text-orange-400'}`}>
                             <Clock className="h-4 w-4" />
                             {deadlinePassed ? 'Deadline passed: ' : 'Submit by '}{deadlineStr}
                         </p>

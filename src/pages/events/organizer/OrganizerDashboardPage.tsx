@@ -68,7 +68,7 @@ export default function OrganizerDashboardPage() {
 
                     <div className="grid lg:grid-cols-5 gap-6 mb-8">
                         <div className="lg:col-span-3 rounded-md bg-gradient-card border border-border/60 p-5">
-                            <h3 className="font-semibold mb-4">Revenue — Last 6 Months</h3>
+                            <h3 className="font-semibold mb-4">Revenue: Last 6 Months</h3>
                             <div className="h-[220px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={chartData} margin={{ top: 4, right: 8, left: 8, bottom: 0 }}>

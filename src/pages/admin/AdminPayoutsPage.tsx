@@ -79,7 +79,7 @@ export default function AdminPayoutsPage() {
                                     <div className="flex items-center gap-6 flex-shrink-0">
                                         <div className="text-right">
                                             <p className="text-xs text-muted-foreground">Pending</p>
-                                            <p className={`font-bold ${o.pendingInPaise > 0 ? 'text-amber-400' : 'text-muted-foreground'}`}>{formatRupees(o.pendingInPaise)}</p>
+                                            <p className={`font-bold ${o.pendingInPaise > 0 ? 'text-orange-400' : 'text-muted-foreground'}`}>{formatRupees(o.pendingInPaise)}</p>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-xs text-muted-foreground">Total earned</p>

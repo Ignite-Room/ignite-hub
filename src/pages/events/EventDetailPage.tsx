@@ -17,7 +17,7 @@ type RegoStatus = 'OPEN' | 'CLOSING_SOON' | 'CLOSED' | 'SOLD_OUT';
 
 const STATUS_META: Record<RegoStatus, { label: string; className: string }> = {
     OPEN: { label: 'Registration Open', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-400/30' },
-    CLOSING_SOON: { label: 'Closing Soon', className: 'bg-amber-500/20 text-amber-400 border-amber-400/30' },
+    CLOSING_SOON: { label: 'Closing Soon', className: 'bg-amber-500/20 text-orange-400 border-amber-400/30' },
     CLOSED: { label: 'Registration Closed', className: 'bg-secondary text-muted-foreground' },
     SOLD_OUT: { label: 'Sold Out', className: 'bg-destructive/20 text-destructive border-destructive/30' },
 };
@@ -41,7 +41,7 @@ function formatRupees(paise: number): string {
 
 function formatDuration(startIso: string, endIso: string): string {
     const hours = (new Date(endIso).getTime() - new Date(startIso).getTime()) / 36e5;
-    if (hours <= 0) return '—';
+    if (hours <= 0) return '-';
     if (hours < 24) {
         const rounded = Math.round(hours);
         return `${rounded} hour${rounded === 1 ? '' : 's'}`;

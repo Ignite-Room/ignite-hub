@@ -22,7 +22,7 @@ function formatRupees(paise: number): string {
 const REGISTRATION_STATUS_STYLE: Record<string, { label: string; className: string; icon: typeof CheckCircle2 }> = {
     CONFIRMED: { label: 'Confirmed', className: 'bg-green-500/10 text-green-400 border-green-500/30', icon: CheckCircle2 },
     CHECKED_IN: { label: 'Checked In', className: 'bg-green-500/10 text-green-400 border-green-500/30', icon: CheckCircle2 },
-    PENDING_PAYMENT: { label: 'Payment Pending', className: 'bg-amber-500/10 text-amber-400 border-amber-500/30', icon: Clock },
+    PENDING_PAYMENT: { label: 'Payment Pending', className: 'bg-amber-500/10 text-orange-400 border-amber-500/30', icon: Clock },
     CANCELLED: { label: 'Cancelled', className: 'bg-muted text-muted-foreground border-border/50', icon: XCircle },
     NO_SHOW: { label: 'No Show', className: 'bg-muted text-muted-foreground border-border/50', icon: XCircle },
     REFUNDED: { label: 'Refunded', className: 'bg-blue-500/10 text-blue-400 border-blue-500/30', icon: Receipt },
@@ -30,7 +30,7 @@ const REGISTRATION_STATUS_STYLE: Record<string, { label: string; className: stri
 
 const ORDER_STATUS_STYLE: Record<string, { label: string; className: string }> = {
     PAID: { label: 'Paid', className: 'bg-green-500/10 text-green-400 border-green-500/30' },
-    CREATED: { label: 'Awaiting payment', className: 'bg-amber-500/10 text-amber-400 border-amber-500/30' },
+    CREATED: { label: 'Awaiting payment', className: 'bg-amber-500/10 text-orange-400 border-amber-500/30' },
     FAILED: { label: 'Failed', className: 'bg-destructive/10 text-destructive border-destructive/30' },
     REFUNDED: { label: 'Refunded', className: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
 };
@@ -40,9 +40,9 @@ function Badge({ label, className }: { label: string; className: string }) {
 }
 
 const PROGRAM_STATUS_STYLE: Record<string, { label: string; className: string }> = {
-    PENDING: { label: 'Application under review', className: 'bg-amber-500/10 text-amber-400 border-amber-500/30' },
+    PENDING: { label: 'Application under review', className: 'bg-amber-500/10 text-orange-400 border-amber-500/30' },
     APPROVED: { label: 'Active', className: 'bg-green-500/10 text-green-400 border-green-500/30' },
-    REJECTED: { label: 'Not approved — you can reapply', className: 'bg-muted text-muted-foreground border-border/50' },
+    REJECTED: { label: 'Not approved (you can reapply)', className: 'bg-muted text-muted-foreground border-border/50' },
     SUSPENDED: { label: 'Suspended', className: 'bg-destructive/10 text-destructive border-destructive/30' },
 };
 

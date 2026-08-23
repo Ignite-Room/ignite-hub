@@ -169,11 +169,11 @@ export default function AmbassadorDashboard() {
                         className="rounded-xl p-4 bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-3 flex-wrap"
                     >
                         <div className="flex items-center gap-2.5">
-                            <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                            <p className="text-sm text-amber-300">Couldn't load dashboard data. Check your connection.</p>
+                            <AlertTriangle className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                            <p className="text-sm text-orange-300">Couldn't load dashboard data. Check your connection.</p>
                         </div>
                         <Button size="sm" variant="outline" onClick={handleRetry} disabled={retrying}
-                            className="border-amber-500/30 text-amber-300 hover:bg-amber-500/10 gap-1.5 h-8">
+                            className="border-amber-500/30 text-orange-300 hover:bg-amber-500/10 gap-1.5 h-8">
                             <RefreshCw className={`w-3.5 h-3.5 ${retrying ? 'animate-spin' : ''}`} />
                             Retry
                         </Button>
@@ -188,11 +188,11 @@ export default function AmbassadorDashboard() {
                         {isPending ? (
                             <>
                                 <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
-                                    <Clock className="w-7 h-7 text-amber-400" />
+                                    <Clock className="w-7 h-7 text-orange-400" />
                                 </div>
                                 <h1 className="text-xl font-bold text-foreground mb-2">Application under review</h1>
                                 <p className="text-muted-foreground text-sm">
-                                    We're reviewing your Campus Ambassador application. You'll get an email either way — your Ignite Room account works normally in the meantime.
+                                    We're reviewing your Campus Ambassador application. You'll get an email either way; your Ignite Room account works normally in the meantime.
                                 </p>
                             </>
                         ) : isRejected ? (
@@ -223,7 +223,7 @@ export default function AmbassadorDashboard() {
                     {/* Welcome */}
                     <motion.div variants={itemVariants}>
                         <h1 className="text-xl sm:text-3xl font-bold text-foreground flex items-center gap-2 flex-wrap">
-                            Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0] ?? ''}</span> <Sparkles className="w-6 h-6 text-amber-400 inline-block mb-1" />
+                            Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0] ?? ''}</span> <Sparkles className="w-6 h-6 text-orange-400 inline-block mb-1" />
                             {isPartner && (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/15 border border-primary/30 text-primary">
                                     <Award className="w-3 h-3" /> Partner
@@ -299,7 +299,7 @@ export default function AmbassadorDashboard() {
                             </div>
                             <div className="min-w-0">
                                 <p className="font-semibold text-foreground text-sm">{tasks.length} Active Task{tasks.length === 1 ? '' : 's'}</p>
-                                <p className="text-xs text-muted-foreground mt-0.5">Share your referral link — anyone who completes a task through it earns you leaderboard points.</p>
+                                <p className="text-xs text-muted-foreground mt-0.5">Share your referral link: anyone who completes a task through it earns you leaderboard points.</p>
                             </div>
                         </div>
                         {tasks.length > 0 && (
@@ -322,7 +322,7 @@ export default function AmbassadorDashboard() {
                         <div className="glass-card rounded-md p-4 sm:p-5 border border-border/50">
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
-                                    <Trophy className="w-4 h-4 text-amber-400" />
+                                    <Trophy className="w-4 h-4 text-orange-400" />
                                     Top Ambassadors
                                 </h3>
                                 <Link to="/ambassador/leaderboard" className="text-xs text-primary hover:text-primary/80 transition-colors">View all →</Link>
@@ -330,7 +330,7 @@ export default function AmbassadorDashboard() {
                             <div className="space-y-2.5">
                                 {leaderboard.slice(0, 5).map((entry) => (
                                     <div key={entry.ambassadorId} className="flex items-center gap-2.5">
-                                        <span className={`w-6 text-center text-sm font-bold flex-shrink-0 flex items-center justify-center ${entry.rank === 1 ? 'text-amber-400' : entry.rank === 2 ? 'text-gray-300' : entry.rank === 3 ? 'text-amber-600' : 'text-muted-foreground'}`}>
+                                        <span className={`w-6 text-center text-sm font-bold flex-shrink-0 flex items-center justify-center ${entry.rank === 1 ? 'text-orange-400' : entry.rank === 2 ? 'text-gray-300' : entry.rank === 3 ? 'text-orange-600' : 'text-muted-foreground'}`}>
                                             {entry.rank <= 3 ? <Trophy className="w-4 h-4 mx-auto" /> : `#${entry.rank}`}
                                         </span>
                                         <div className="flex-1 min-w-0">

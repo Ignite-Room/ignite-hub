@@ -41,10 +41,10 @@ export default function EarningsPage() {
 
                     {earnings.pendingInPaise > 0 && (
                         <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-4 flex items-center gap-3">
-                            <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                            <p className="text-sm text-amber-300">
+                            <AlertCircle className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                            <p className="text-sm text-orange-300">
                                 {formatRupees(earnings.pendingInPaise)} is awaiting settlement from Ignite Room. Make sure your{' '}
-                                <Link to="/events/organizer/payout-settings" className="underline hover:text-amber-200">payout details</Link> are up to date.
+                                <Link to="/events/organizer/payout-settings" className="underline hover:text-orange-200">payout details</Link> are up to date.
                             </p>
                         </div>
                     )}
@@ -67,7 +67,7 @@ export default function EarningsPage() {
                                         <TableRow key={e.eventId}>
                                             <TableCell className="font-medium">{e.eventTitle}</TableCell>
                                             <TableCell>{formatRupees(e.totalInPaise)}</TableCell>
-                                            <TableCell className={e.pendingInPaise > 0 ? 'text-amber-400' : 'text-muted-foreground'}>
+                                            <TableCell className={e.pendingInPaise > 0 ? 'text-orange-400' : 'text-muted-foreground'}>
                                                 {formatRupees(e.pendingInPaise)}
                                             </TableCell>
                                         </TableRow>

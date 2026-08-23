@@ -12,9 +12,9 @@ import SectionEyebrow from '@/components/design-system/SectionEyebrow';
 import RevealOnScroll from '@/components/design-system/RevealOnScroll';
 
 const CHAPTERS: Record<string, { name: string; blurb: string }> = {
-    delhi: { name: 'Delhi', blurb: 'Home to our national Grand Finale — the beating heart of the Ignite Room hackathon circuit.' },
+    delhi: { name: 'Delhi', blurb: 'Home to our national Grand Finale, the beating heart of the Ignite Room hackathon circuit.' },
     chandigarh: { name: 'Chandigarh', blurb: 'A HackArena 2.0 zonal round city, bringing builders from across Punjab and Haryana together.' },
-    mumbai: { name: 'Mumbai', blurb: 'Where fintech meets hustle — one of our most active offline hackathon chapters.' },
+    mumbai: { name: 'Mumbai', blurb: 'Where fintech meets hustle, one of our most active offline hackathon chapters.' },
     hyderabad: { name: 'Hyderabad', blurb: 'A growing hub for AI and product builders in the south.' },
     bangalore: { name: 'Bangalore', blurb: "India's startup capital, and one of our earliest and largest chapters." },
     kolkata: { name: 'Kolkata', blurb: 'Bringing the Ignite Room community to the east, one build session at a time.' },
@@ -30,7 +30,7 @@ export default function ChapterDetailPage() {
 
     useSEO({
         title: chapter ? `${chapter.name} Chapter` : 'Chapter',
-        description: chapter ? `Ignite Room's ${chapter.name} chapter — events, hackathons, and the local builder community.` : undefined,
+        description: chapter ? `Ignite Room's ${chapter.name} chapter: events, hackathons, and the local builder community.` : undefined,
         path: `/chapters/${key}`,
     });
 
@@ -79,11 +79,11 @@ export default function ChapterDetailPage() {
 
                         <div className="flex flex-wrap gap-8 mt-10 pt-8 border-t border-border/40">
                             <div>
-                                <div className="text-3xl font-heading font-bold text-foreground">{loading ? '—' : events.length}</div>
+                                <div className="text-3xl font-heading font-bold text-foreground">{loading ? '-' : events.length}</div>
                                 <div className="text-sm text-muted-foreground mt-1 uppercase tracking-wider">Events hosted</div>
                             </div>
                             <div>
-                                <div className="text-3xl font-heading font-bold text-foreground">{loading ? '—' : upcoming.length}</div>
+                                <div className="text-3xl font-heading font-bold text-foreground">{loading ? '-' : upcoming.length}</div>
                                 <div className="text-sm text-muted-foreground mt-1 uppercase tracking-wider">Coming up</div>
                             </div>
                         </div>
@@ -126,7 +126,7 @@ export default function ChapterDetailPage() {
                                 <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
                                 <h2 className="font-heading text-xl font-bold mb-2">The {chapter.name} chapter is just getting started</h2>
                                 <p className="text-muted-foreground mb-6">
-                                    No events have been announced here yet — check back soon, or bring one to your campus yourself.
+                                    No events have been announced here yet. Check back soon, or bring one to your campus yourself.
                                 </p>
                                 <Link to="/ambassador/apply">
                                     <Button className="rounded-full gap-2">

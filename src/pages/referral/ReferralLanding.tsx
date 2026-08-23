@@ -122,7 +122,7 @@ function TaskCard({ task, ambassadorCode }: { task: Task; ambassadorCode: string
                     <CheckCircle2 className="w-7 h-7 text-green-400" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground mb-1 flex items-center justify-center gap-2">
-                    Submitted! <Sparkles className="w-4 h-4 text-amber-400" />
+                    Submitted! <Sparkles className="w-4 h-4 text-orange-400" />
                 </h3>
                 <p className="text-sm text-muted-foreground">
                     {task.title} is pending review. You&apos;ll be notified once it&apos;s verified.
@@ -298,7 +298,7 @@ export default function ReferralLanding() {
                     <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">Complete a Task</h1>
                     <p className="text-muted-foreground max-w-xl mx-auto">
                         {tasks && tasks.length > 0
-                            ? <>{tasks.length === 1 ? 'One task is' : `${tasks.length} tasks are`} open right now. Complete {tasks.length === 1 ? 'it' : 'any of them'} and submit proof below —{' '}
+                            ? <>{tasks.length === 1 ? 'One task is' : `${tasks.length} tasks are`} open right now. Complete {tasks.length === 1 ? 'it' : 'any of them'} and submit proof below:{' '}
                                 {ambassador ? <><span className="text-primary font-medium">{ambassador.name}</span> gets credit for referring you.</> : ' the ambassador who referred you gets credit.'}
                             </>
                             : 'Checking for open tasks...'}
@@ -311,7 +311,7 @@ export default function ReferralLanding() {
                     </div>
                 ) : tasks.length === 0 ? (
                     <div className="glass-card rounded-md border border-border/50 p-8 text-center">
-                        <p className="text-muted-foreground text-sm">No tasks are live right now — check back soon.</p>
+                        <p className="text-muted-foreground text-sm">No tasks are live right now. Check back soon.</p>
                     </div>
                 ) : (
                     <div className="grid sm:grid-cols-2 gap-5">

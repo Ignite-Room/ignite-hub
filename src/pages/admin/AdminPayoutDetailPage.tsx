@@ -102,7 +102,7 @@ export default function AdminPayoutDetailPage() {
                 referenceNumber: referenceNumber.trim(),
                 notes: notes.trim() || undefined,
             });
-            setSuccess(`Payout recorded (${res.invoiceNumber}).${res.invoiceEmailSent ? ' Invoice emailed to the organizer.' : ' The invoice email failed to send — use "Resend" below once ready.'}`);
+            setSuccess(`Payout recorded (${res.invoiceNumber}).${res.invoiceEmailSent ? ' Invoice emailed to the organizer.' : ' The invoice email failed to send; use "Resend" below once ready.'}`);
             setReferenceNumber('');
             setNotes('');
             load();
@@ -176,7 +176,7 @@ export default function AdminPayoutDetailPage() {
                 <div className="glass-card rounded-md border border-border/50 overflow-hidden">
                     <div className="p-5 pb-3 flex items-center justify-between flex-wrap gap-2">
                         <h3 className="font-semibold flex items-center gap-2"><Wallet className="w-4 h-4 text-primary" /> Pending Orders</h3>
-                        <p className="text-sm text-muted-foreground">Total pending: <span className="font-bold text-amber-400">{formatRupees(detail.pendingTotalInPaise)}</span></p>
+                        <p className="text-sm text-muted-foreground">Total pending: <span className="font-bold text-orange-400">{formatRupees(detail.pendingTotalInPaise)}</span></p>
                     </div>
                     <div className="overflow-x-auto">
                         <Table>
@@ -214,7 +214,7 @@ export default function AdminPayoutDetailPage() {
                             <div>
                                 <Label className="text-sm text-muted-foreground mb-1.5 block">Amount (₹)</Label>
                                 <Input type="number" min="0" step="0.01" value={amount} onChange={e => setAmount(e.target.value)} className="bg-secondary/50 border-border/50 h-11" />
-                                <p className="text-xs text-muted-foreground/60 mt-1">Prefilled from selected orders — reduce it to deduct fees if needed.</p>
+                                <p className="text-xs text-muted-foreground/60 mt-1">Prefilled from selected orders; reduce it to deduct fees if needed.</p>
                             </div>
                             <div>
                                 <Label className="text-sm text-muted-foreground mb-1.5 block">Transaction Reference (UTR / UPI Ref)</Label>

@@ -149,7 +149,7 @@ export default function PayoutSettingsPage() {
                                 <div>
                                     <Label className="text-sm text-muted-foreground mb-1.5 block">Account Number</Label>
                                     <Input
-                                        type="text" inputMode="numeric" placeholder={details?.bankAccountNumberMasked ? `Currently ${details.bankAccountNumberMasked} — re-enter to change` : 'Enter account number'}
+                                        type="text" inputMode="numeric" placeholder={details?.bankAccountNumberMasked ? `Currently ${details.bankAccountNumberMasked} (re-enter to change)` : 'Enter account number'}
                                         value={form.bankAccountNumber}
                                         onChange={e => setForm(prev => ({ ...prev, bankAccountNumber: e.target.value.replace(/\D/g, '') }))}
                                         className="bg-secondary/50 border-border/50 h-11"
@@ -188,7 +188,7 @@ export default function PayoutSettingsPage() {
                                 <div>
                                     <Label className="text-sm text-muted-foreground mb-1.5 block">UPI ID</Label>
                                     <Input
-                                        placeholder={details?.upiIdMasked ? `Currently ${details.upiIdMasked} — re-enter to change` : 'yourname@bank'} value={form.upiId}
+                                        placeholder={details?.upiIdMasked ? `Currently ${details.upiIdMasked} (re-enter to change)` : 'yourname@bank'} value={form.upiId}
                                         onChange={e => setForm(prev => ({ ...prev, upiId: e.target.value }))}
                                         className="bg-secondary/50 border-border/50 h-11"
                                     />

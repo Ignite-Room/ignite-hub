@@ -25,7 +25,7 @@ export default function TaskBoard({ className = '' }: { className?: string }) {
     if (tasks.length === 0) {
         return (
             <div className={`glow-card p-8 text-center ${className}`}>
-                <p className="text-muted-foreground text-sm">No tasks are live right now — check back soon.</p>
+                <p className="text-muted-foreground text-sm">No tasks are live right now. Check back soon.</p>
             </div>
         );
     }

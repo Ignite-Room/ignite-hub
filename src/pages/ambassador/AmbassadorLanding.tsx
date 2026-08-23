@@ -34,7 +34,7 @@ const faqs = [
 export default function AmbassadorLanding() {
     useSEO({
         title: 'Campus Ambassador Program',
-        description: 'Become a Campus Ambassador for Ignite Room. Lead your campus community, complete tasks, earn rewards, and climb the leaderboard — free to join.',
+        description: 'Become a Campus Ambassador for Ignite Room. Lead your campus community, complete tasks, earn rewards, and climb the leaderboard, free to join.',
         path: '/ambassador',
     });
 
@@ -100,7 +100,7 @@ export default function AmbassadorLanding() {
                                 { val: '₹0', label: 'Cost to Join' },
                                 { val: '100%', label: 'Free to Participate' },
                                 { val: <Flame className="w-7 h-7 mx-auto text-primary" />, label: 'Hackathon by Ignite Room' },
-                                { val: <Trophy className="w-7 h-7 mx-auto text-amber-400" />, label: 'Real Prizes & Perks' },
+                                { val: <Trophy className="w-7 h-7 mx-auto text-orange-400" />, label: 'Real Prizes & Perks' },
                             ].map(s => (
                                 <div key={s.label} className="text-center">
                                     <div className="text-2xl font-heading font-bold text-foreground">{s.val}</div>
@@ -164,7 +164,7 @@ export default function AmbassadorLanding() {
                             <SectionEyebrow index="03" label="Live Right Now" className="justify-center flex" />
                             <h2 className="font-heading text-3xl font-bold">Active Tasks</h2>
                             <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
-                                Once you're an ambassador, share your referral link — anyone who completes a task through it earns you points.
+                                Once you're an ambassador, share your referral link: anyone who completes a task through it earns you points.
                             </p>
                         </RevealOnScroll>
                         <TaskBoard />

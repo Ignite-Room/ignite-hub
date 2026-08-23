@@ -16,14 +16,14 @@ const CARD_STYLES = {
 
 const ICON_STYLES = {
     pink: 'bg-primary/15 text-primary',
-    amber: 'bg-amber-500/15 text-amber-400',
+    amber: 'bg-amber-500/15 text-orange-400',
     purple: 'bg-purple-500/15 text-purple-400',
     green: 'bg-green-500/15 text-green-400',
 } as const;
 
 const BADGE_STYLES = {
     pink: 'bg-primary/15 text-primary',
-    amber: 'bg-amber-500/15 text-amber-400',
+    amber: 'bg-amber-500/15 text-orange-400',
     purple: 'bg-purple-500/15 text-purple-400',
     green: 'bg-green-500/15 text-green-400',
 } as const;

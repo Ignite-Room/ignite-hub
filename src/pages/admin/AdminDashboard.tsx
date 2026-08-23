@@ -325,7 +325,7 @@ export default function AdminDashboard() {
                         <h3 className="font-bold text-foreground mb-1">Revoke All Ambassador Access?</h3>
                         <p className="text-sm text-muted-foreground mb-4">
                             This immediately blocks <strong>{ambassadors.length}</strong> ambassador{ambassadors.length === 1 ? '' : 's'} from the dashboard and removes them from the public leaderboard.
-                            Their accounts, submissions, and scores aren't deleted — this can be undone by re-approving individual applications.
+                            Their accounts, submissions, and scores aren't deleted; this can be undone by re-approving individual applications.
                         </p>
                         <div className="flex gap-2">
                             <Button variant="outline" className="flex-1" onClick={() => setRevokeAllModal(false)}>Cancel</Button>
@@ -485,13 +485,13 @@ export default function AdminDashboard() {
                                                 <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary">
                                                     {sub.task?.title || TASK_LABELS[sub.taskKey] || sub.taskKey}
                                                 </span>
-                                                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sub.status === 'VERIFIED' ? 'bg-green-500/15 text-green-400' : sub.status === 'REJECTED' ? 'bg-destructive/15 text-destructive' : 'bg-amber-500/15 text-amber-400'}`}>
+                                                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sub.status === 'VERIFIED' ? 'bg-green-500/15 text-green-400' : sub.status === 'REJECTED' ? 'bg-destructive/15 text-destructive' : 'bg-amber-500/15 text-orange-400'}`}>
                                                     {sub.status}
                                                 </span>
                                             </div>
                                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-0.5">
                                                 <p className="text-sm text-muted-foreground">
-                                                    {[sub.email, sub.githubUsername, sub.phone].filter(Boolean).join(' · ') || '—'}
+                                                    {[sub.email, sub.githubUsername, sub.phone].filter(Boolean).join(' · ') || '-'}
                                                 </p>
                                             </div>
                                             <p className="text-xs text-muted-foreground mt-0.5">
@@ -627,7 +627,7 @@ export default function AdminDashboard() {
                                         {leaderboard.map(entry => (
                                             <tr key={entry.ambassadorId} className="border-b border-border/20 hover:bg-secondary/10 transition-colors">
                                                 <td className="px-4 py-3 font-bold text-foreground">
-                                                    {entry.rank <= 3 ? <Trophy className={`w-4 h-4 inline-block ${entry.rank === 1 ? 'text-amber-400' : entry.rank === 2 ? 'text-gray-300' : 'text-amber-600'}`} /> : `#${entry.rank}`}
+                                                    {entry.rank <= 3 ? <Trophy className={`w-4 h-4 inline-block ${entry.rank === 1 ? 'text-orange-400' : entry.rank === 2 ? 'text-gray-300' : 'text-orange-600'}`} /> : `#${entry.rank}`}
                                                 </td>
                                                 <td className="px-4 py-3 font-medium text-foreground">{entry.ambassadorName}</td>
                                                 <td className="px-4 py-3 text-muted-foreground">{entry.college || '–'}</td>

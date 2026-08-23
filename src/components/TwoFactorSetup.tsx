@@ -100,7 +100,7 @@ export default function TwoFactorSetup() {
                     <p className="font-medium text-foreground">Authenticator app (2FA)</p>
                     <p className="text-sm text-muted-foreground mt-0.5">
                         {enabled
-                            ? 'Enabled — a code from your authenticator app is required at login.'
+                            ? 'Enabled: a code from your authenticator app is required at login.'
                             : 'Add an extra layer of security using an app like Google Authenticator or Authy.'}
                     </p>
                 </div>
@@ -166,7 +166,7 @@ export default function TwoFactorSetup() {
                         <div>
                             <p className="text-sm text-foreground font-medium mb-1">Save your backup codes</p>
                             <p className="text-sm text-muted-foreground mb-3">
-                                Each code can be used once to sign in if you lose access to your authenticator app. Store them somewhere safe — they won't be shown again.
+                                Each code can be used once to sign in if you lose access to your authenticator app. Store them somewhere safe; they won't be shown again.
                             </p>
                             <div className="grid grid-cols-2 gap-2 bg-secondary/50 rounded-xl p-4 font-mono text-sm">
                                 {backupCodes.map((c) => <span key={c}>{c}</span>)}

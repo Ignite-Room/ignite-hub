@@ -109,7 +109,7 @@ const TYPE_LABEL: Record<JobType, string> = {
 const STATUS_META: Record<AppStatus, { label: string; color: string }> = {
     PENDING:              { label: 'Pending',             color: 'bg-secondary text-muted-foreground' },
     UNDER_REVIEW:         { label: 'Under Review',        color: 'bg-sky-500/10 text-sky-400' },
-    SHORTLISTED:          { label: 'Shortlisted',         color: 'bg-amber-500/10 text-amber-400' },
+    SHORTLISTED:          { label: 'Shortlisted',         color: 'bg-amber-500/10 text-orange-400' },
     INTERVIEW_SCHEDULED:  { label: 'Interview Scheduled', color: 'bg-violet-500/10 text-violet-400' },
     OFFERED:              { label: 'Offered',             color: 'bg-emerald-500/10 text-emerald-400' },
     HIRED:                { label: 'Hired',               color: 'bg-emerald-600/10 text-emerald-300' },
@@ -1147,11 +1147,11 @@ export default function CareersAdmin() {
                                             {c.role && <p className="mb-3 text-xs text-muted-foreground">{c.role.title}</p>}
                                             <div className="flex gap-3 text-xs text-muted-foreground">
                                                 <span>{c.inviteStats.INVITED + c.inviteStats.SUBMITTED + c.inviteStats.PASSED + c.inviteStats.FAILED} invited</span>
-                                                <span className="text-amber-400">{c.inviteStats.SUBMITTED} submitted</span>
+                                                <span className="text-orange-400">{c.inviteStats.SUBMITTED} submitted</span>
                                                 <span className="text-emerald-400">{c.inviteStats.PASSED} passed</span>
                                             </div>
                                             {c.deadline && (
-                                                <p className={`mt-2 text-xs ${new Date(c.deadline) < new Date() ? 'text-muted-foreground/40' : 'text-amber-400/80'}`}>
+                                                <p className={`mt-2 text-xs ${new Date(c.deadline) < new Date() ? 'text-muted-foreground/40' : 'text-orange-400/80'}`}>
                                                     Deadline: {new Date(c.deadline).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short' })}
                                                 </p>
                                             )}
@@ -1187,7 +1187,7 @@ export default function CareersAdmin() {
                                 </div>
 
                                 {!selectedChallenge.roleId && (
-                                    <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/20 px-4 py-3 text-sm text-amber-400">
+                                    <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/20 px-4 py-3 text-sm text-orange-400">
                                         Link this challenge to a role (edit) to enable sending.
                                     </div>
                                 )}
@@ -1278,7 +1278,7 @@ export default function CareersAdmin() {
                                             {iv.role && <p className="mb-3 text-xs text-muted-foreground">{iv.role.title}</p>}
                                             <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
                                                 <span>{iv._count.slots} slot{iv._count.slots !== 1 ? 's' : ''}</span>
-                                                <span className="text-amber-400">{iv.inviteStats.SCHEDULED} scheduled</span>
+                                                <span className="text-orange-400">{iv.inviteStats.SCHEDULED} scheduled</span>
                                                 <span className="text-emerald-400">{iv.inviteStats.COMPLETED} done</span>
                                             </div>
                                         </div>
@@ -1473,7 +1473,7 @@ function ChallengeModal({ initial, roles, onClose, onSave }: {
 
 const INVITE_STATUS: Record<InviteStatus, { label: string; color: string }> = {
     INVITED:   { label: 'Invited',   color: 'bg-secondary text-muted-foreground' },
-    SUBMITTED: { label: 'Submitted', color: 'bg-amber-500/10 text-amber-400' },
+    SUBMITTED: { label: 'Submitted', color: 'bg-amber-500/10 text-orange-400' },
     PASSED:    { label: 'Passed',    color: 'bg-emerald-500/10 text-emerald-400' },
     FAILED:    { label: 'Failed',    color: 'bg-red-500/10 text-red-400' },
 };
@@ -1812,7 +1812,7 @@ function AddCandidatesModal({ roles, existingApplicationIds, onClose, onAdd }: {
 
 const INTERVIEW_STATUS: Record<InterviewInviteStatus, { label: string; color: string }> = {
     INVITED:   { label: 'Invited',   color: 'bg-secondary text-muted-foreground' },
-    SCHEDULED: { label: 'Scheduled', color: 'bg-amber-500/10 text-amber-400' },
+    SCHEDULED: { label: 'Scheduled', color: 'bg-amber-500/10 text-orange-400' },
     COMPLETED: { label: 'Completed', color: 'bg-emerald-500/10 text-emerald-400' },
     NO_SHOW:   { label: 'No-show',   color: 'bg-red-500/10 text-red-400' },
     CANCELLED: { label: 'Cancelled', color: 'bg-secondary text-muted-foreground/60' },

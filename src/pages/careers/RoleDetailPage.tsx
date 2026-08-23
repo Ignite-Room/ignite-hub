@@ -153,7 +153,7 @@ export default function RoleDetailPage() {
                             {role.deadline && (() => {
                                 const { label, urgent } = deadlineDisplay(role.deadline);
                                 return (
-                                    <span className={`flex items-center gap-1.5 font-medium ${pastDeadline ? 'text-muted-foreground/40 line-through' : urgent ? 'text-amber-400' : ''}`}>
+                                    <span className={`flex items-center gap-1.5 font-medium ${pastDeadline ? 'text-muted-foreground/40 line-through' : urgent ? 'text-orange-400' : ''}`}>
                                         <Clock className="h-4 w-4" /> {label}
                                     </span>
                                 );

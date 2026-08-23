@@ -53,11 +53,11 @@ export default function AmbassadorApplyPage() {
                 <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50">
                     <h1 className="text-2xl font-bold mb-1">Apply for the Campus Ambassador Program</h1>
                     <p className="text-muted-foreground text-sm mb-6">
-                        Lead your campus community, run tasks, and unlock exclusive rewards. Your existing Ignite Room account gets upgraded once approved — no new account needed.
+                        Lead your campus community, run tasks, and unlock exclusive rewards. Your existing Ignite Room account gets upgraded once approved; no new account needed.
                     </p>
 
                     {!isAuthenticated ? (
-                        <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-sm text-amber-300">
+                        <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-sm text-orange-300">
                             You need an Ignite Room account to apply.{' '}
                             <Link to="/login" state={{ from: { pathname: '/ambassador/apply' } }} className="underline font-medium">Log in or sign up</Link> first, then come back here.
                         </div>
@@ -73,10 +73,10 @@ export default function AmbassadorApplyPage() {
                         </div>
                     ) : alreadyPending ? (
                         <div className="p-5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
                             <div>
-                                <p className="font-medium text-amber-300 mb-1">Application already submitted</p>
-                                <p className="text-sm text-amber-400/80">An admin will review it shortly. You'll be notified by email either way.</p>
+                                <p className="font-medium text-orange-300 mb-1">Application already submitted</p>
+                                <p className="text-sm text-orange-400/80">An admin will review it shortly. You'll be notified by email either way.</p>
                             </div>
                         </div>
                     ) : submitted ? (
@@ -84,7 +84,7 @@ export default function AmbassadorApplyPage() {
                             <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                             <div>
                                 <p className="font-medium text-emerald-300 mb-1">Application submitted</p>
-                                <p className="text-sm text-emerald-400/80">An admin will review it shortly. You'll be notified by email either way — your account stays fully usable in the meantime.</p>
+                                <p className="text-sm text-emerald-400/80">An admin will review it shortly. You'll be notified by email either way; your account stays fully usable in the meantime.</p>
                             </div>
                         </div>
                     ) : (

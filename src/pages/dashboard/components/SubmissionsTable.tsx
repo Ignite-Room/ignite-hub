@@ -11,7 +11,7 @@ interface SubmissionsTableProps {
 }
 
 const statusConfig = {
-    pending: { label: 'Pending', className: 'bg-amber-500/15 text-amber-400 border-amber-500/30' },
+    pending: { label: 'Pending', className: 'bg-amber-500/15 text-orange-400 border-amber-500/30' },
     verified: { label: 'Verified', className: 'bg-green-500/15 text-green-400 border-green-500/30' },
     rejected: { label: 'Rejected', className: 'bg-red-500/15 text-red-400 border-red-500/30' },
 };
@@ -74,7 +74,7 @@ export default function SubmissionsTable({
                                             ) : sub.email ? (
                                                 <span className="text-muted-foreground">{sub.email}</span>
                                             ) : (
-                                                <span className="text-muted-foreground">—</span>
+                                                <span className="text-muted-foreground">-</span>
                                             )}
                                         </td>
                                         {showActions && (

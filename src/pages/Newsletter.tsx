@@ -149,7 +149,7 @@ export default function Newsletter() {
                 >
                   <div className="flex items-center gap-1 mb-4">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                      <Star key={i} className="w-4 h-4 text-orange-400 fill-current" />
                     ))}
                   </div>
                   <p className="text-muted-foreground mb-6 italic">"{testimonial.quote}"</p>

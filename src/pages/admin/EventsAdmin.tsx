@@ -18,7 +18,7 @@ interface OrganizerRow {
 }
 
 const ORG_STATUS_COLOR: Record<string, string> = {
-    PENDING: 'bg-amber-500/10 text-amber-400',
+    PENDING: 'bg-amber-500/10 text-orange-400',
     APPROVED: 'bg-emerald-500/10 text-emerald-400',
     REJECTED: 'bg-destructive/10 text-destructive',
     SUSPENDED: 'bg-secondary text-muted-foreground',

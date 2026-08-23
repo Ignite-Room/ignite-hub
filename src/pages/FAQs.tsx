@@ -7,7 +7,7 @@ import { useSEO } from '@/hooks/use-seo';
 export default function FAQs() {
   useSEO({
     title: 'FAQs',
-    description: 'Frequently asked questions about Ignite Room — how to join, event participation, mentorship, and how to get involved with the community.',
+    description: 'Frequently asked questions about Ignite Room: how to join, event participation, mentorship, and how to get involved with the community.',
     path: '/faqs',
   });
 

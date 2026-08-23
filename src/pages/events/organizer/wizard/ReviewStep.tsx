@@ -10,7 +10,7 @@ function ChecklistRow({ ok, label, warn }: { ok: boolean; label: string; warn?: 
     return (
         <div className="flex items-center gap-2.5 text-sm">
             <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-                ok ? 'bg-emerald-500/20 text-emerald-400' : warn ? 'bg-amber-500/20 text-amber-400' : 'bg-secondary text-muted-foreground'
+                ok ? 'bg-emerald-500/20 text-emerald-400' : warn ? 'bg-amber-500/20 text-orange-400' : 'bg-secondary text-muted-foreground'
             }`}>
                 {ok ? <Check className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
             </span>

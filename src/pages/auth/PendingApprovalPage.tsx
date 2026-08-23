@@ -32,7 +32,7 @@ export default function PendingApprovalPage() {
 
                     {/* Icon */}
                     <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-5">
-                        <Clock className="w-8 h-8 text-amber-400" />
+                        <Clock className="w-8 h-8 text-orange-400" />
                     </div>
 
                     <h1 className="text-2xl font-bold text-foreground mb-2">Application Received!</h1>

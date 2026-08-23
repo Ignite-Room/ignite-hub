@@ -317,7 +317,7 @@ export default function MailCenter() {
                                 className="bg-secondary/50 border-border/50 resize-none" placeholder="Write your message…" />
                         </div>
                         {simpleResult && (
-                            <div className={`rounded-lg px-4 py-3 text-sm ${simpleResult.errors.length ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
+                            <div className={`rounded-lg px-4 py-3 text-sm ${simpleResult.errors.length ? 'bg-amber-500/10 text-orange-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
                                 Sent to {simpleResult.sent}/{simpleResult.total} recipient(s).
                                 {simpleResult.errors.length > 0 && <span className="block mt-1 text-xs opacity-80">{simpleResult.errors.length} failed. Check email addresses and try again.</span>}
                             </div>
@@ -390,7 +390,7 @@ export default function MailCenter() {
                                 </div>
                             )}
                             {pResult && (
-                                <div className={`rounded-lg px-4 py-3 text-sm ${pResult.errors.length ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
+                                <div className={`rounded-lg px-4 py-3 text-sm ${pResult.errors.length ? 'bg-amber-500/10 text-orange-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
                                     Sent to {pResult.sent}/{pResult.total} recipient(s).
                                     {pResult.errors.length > 0 && <span className="block mt-1 text-xs opacity-80">{pResult.errors.length} failed.</span>}
                                 </div>

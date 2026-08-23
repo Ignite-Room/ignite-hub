@@ -43,10 +43,10 @@ function deadlineInfo(deadline: string | null): { label: string; cls: string } |
     const hoursLeft = (dl.getTime() - now.getTime()) / 36e5;
     const timeIST = dl.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
     if (hoursLeft < 24) return { label: `Closes today at ${timeIST} IST`, cls: 'text-orange-400 font-medium' };
-    if (hoursLeft < 48) return { label: `Closes tomorrow at ${timeIST} IST`, cls: 'text-amber-400 font-medium' };
+    if (hoursLeft < 48) return { label: `Closes tomorrow at ${timeIST} IST`, cls: 'text-orange-400 font-medium' };
     const daysLeft = Math.ceil(hoursLeft / 24);
     const dateIST = dl.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short' });
-    if (daysLeft <= 5) return { label: `Closes ${dateIST} at ${timeIST} IST`, cls: 'text-amber-500/80' };
+    if (daysLeft <= 5) return { label: `Closes ${dateIST} at ${timeIST} IST`, cls: 'text-orange-500/80' };
     return {
         label: `Closes ${dateIST} at ${timeIST} IST`,
         cls: 'text-muted-foreground',

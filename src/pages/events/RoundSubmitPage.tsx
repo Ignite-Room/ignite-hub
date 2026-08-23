@@ -109,7 +109,7 @@ export default function RoundSubmitPage() {
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <h1 className="mb-1 font-heading text-2xl font-bold text-foreground">{round.name}</h1>
                     {deadlineStr && (
-                        <p className={`mb-8 flex items-center gap-1.5 text-sm font-medium ${round.deadlinePassed ? 'text-destructive' : 'text-amber-400'}`}>
+                        <p className={`mb-8 flex items-center gap-1.5 text-sm font-medium ${round.deadlinePassed ? 'text-destructive' : 'text-orange-400'}`}>
                             <Clock className="h-4 w-4" />
                             {round.deadlinePassed ? 'Deadline passed: ' : 'Submit by '}{deadlineStr}
                         </p>
