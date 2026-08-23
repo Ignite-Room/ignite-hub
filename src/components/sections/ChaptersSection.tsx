@@ -41,7 +41,7 @@ export default function ChaptersSection() {
               04 / Across India
             </span>
             <h2 className="font-heading text-4xl md:text-5xl font-bold mb-6">
-              One community.<br /><em className="italic">Many</em> rooms.
+              One community.<br /><em className="font-serif italic font-normal">Many</em> rooms.
             </h2>
             <p className="text-muted-foreground text-lg max-w-md mb-8">
               Ignite Room&apos;s community spans 6 cities nationwide, born out of the

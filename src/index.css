@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -99,11 +99,13 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'DM Sans', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -131,16 +133,36 @@
     background: var(--gradient-card);
   }
 
+  /* Functional containers (modals, forms) — keeps a light boundary but should
+     be paired with a small or no radius at the call site, not rounded-2xl. */
   .glass-card {
     @apply bg-card/60 backdrop-blur-xl border border-border/50;
   }
 
+  /* Legacy boxed-card look — being phased out in favor of .info-section /
+     .info-block below. Left sharper (smaller radius, thinner border) so
+     remaining call sites read closer to the flat prototype until migrated. */
   .glow-card {
-    @apply relative rounded-2xl border border-border/60 bg-card overflow-hidden;
+    @apply relative rounded-md border border-border/50 bg-card overflow-hidden;
   }
 
   .glow-card-accent {
     @apply absolute rounded-full bg-primary/10 blur-[100px] pointer-events-none;
+  }
+
+  /* Full-bleed flat content band: a subtly tinted section (no radius, no
+     border) that groups several info blocks, matching the prototype's
+     "colored zone + hairline dividers" pattern instead of individually
+     boxed rounded cards. */
+  .info-section {
+    @apply relative bg-secondary/60;
+  }
+
+  /* A single item inside an .info-section grid. No background, no radius,
+     no border of its own — separation comes from divide-x/divide-y (or an
+     explicit border-l/border-t) on the parent grid. */
+  .info-block {
+    @apply relative;
   }
 
   .section-padding {

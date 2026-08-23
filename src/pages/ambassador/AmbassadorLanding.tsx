@@ -68,7 +68,7 @@ export default function AmbassadorLanding() {
                         </motion.span>
 
                         <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-[3.75rem] font-bold leading-[1.08] mb-6 text-foreground">
-                            Represent <em className="italic">Ignite Room</em><br />at Your Campus
+                            Represent <em className="font-serif italic font-normal">Ignite Room</em><br />at Your Campus
                         </h1>
 
                         <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">

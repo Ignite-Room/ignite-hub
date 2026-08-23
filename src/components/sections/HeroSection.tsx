@@ -43,7 +43,7 @@ export default function HeroSection() {
               className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-[3.75rem] font-bold leading-[1.08] mb-6 text-foreground"
             >
               Where Developers,<br />
-              <em className="italic">Builders</em> &amp; Innovators<br />
+              <em className="font-serif italic font-normal">Builders</em> &amp; Innovators<br />
               Meet.
             </motion.h1>
 
