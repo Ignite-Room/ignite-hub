@@ -114,15 +114,15 @@ export default function HeroSection() {
           >
             {/* Concentric ring backdrop */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-[420px] h-[420px] rounded-full border border-border/60" />
+              <div className="w-[460px] h-[460px] rounded-full border border-border/60" />
             </div>
-            <div className="absolute top-6 left-10 h-1.5 w-1.5 rounded-full bg-primary/60" />
-            <div className="absolute bottom-10 right-6 h-1.5 w-1.5 rounded-full bg-primary/60" />
+            <div className="absolute top-4 left-6 h-1.5 w-1.5 rounded-full bg-primary/60" />
+            <div className="absolute bottom-8 right-2 h-1.5 w-1.5 rounded-full bg-primary/60" />
 
             <img
               src={heroDashboardCard}
               alt="Ignite Room dashboard preview"
-              className="relative w-[420px] max-w-full drop-shadow-2xl animate-float"
+              className="relative w-[470px] max-w-full drop-shadow-2xl animate-float"
             />
 
             <motion.img
@@ -130,7 +130,7 @@ export default function HeroSection() {
               alt="Live now: Product teardown, 124 builders in room"
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-2 right-0 z-20 w-40 drop-shadow-xl"
+              className="absolute -top-2 right-0 z-20 w-48 drop-shadow-xl"
             />
 
             <motion.img
@@ -138,7 +138,7 @@ export default function HeroSection() {
               alt="New crew formed: AI for good, 5 members"
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute bottom-4 left-0 z-20 w-40 drop-shadow-xl"
+              className="absolute bottom-0 left-0 z-20 w-48 drop-shadow-xl"
             />
           </motion.div>
         </div>

@@ -19,7 +19,7 @@ export default function ChaptersSection() {
   const openChapter = (city: string, e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     setPortal({ city, x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
-    window.setTimeout(() => navigate(`/chapters/${city.toLowerCase()}`), 620)
+    window.setTimeout(() => navigate(`/chapters/${city.toLowerCase()}`), 1450)
   }
 
   return (
@@ -95,8 +95,8 @@ export default function ChaptersSection() {
         {portal && (
           <motion.div
             key="chapter-portal"
-            className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-primary"
-            style={{ originX: 0.5, originY: 0.5 }}
+            className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-primary px-6"
+            style={{ originX: 0.5, originY: 0.5, willChange: 'clip-path' }}
             initial={{
               clipPath: `circle(0px at ${portal.x}px ${portal.y}px)`,
             }}
@@ -112,7 +112,7 @@ export default function ChaptersSection() {
               className="text-center text-primary-foreground"
             >
               <span className="block text-xs uppercase tracking-[0.3em] mb-3 opacity-80">Entering chapter</span>
-              <span className="font-heading text-5xl md:text-6xl font-bold">{portal.city}</span>
+              <span className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold break-words">{portal.city}</span>
             </motion.div>
           </motion.div>
         )}

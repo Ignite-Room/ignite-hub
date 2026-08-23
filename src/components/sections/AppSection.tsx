@@ -108,7 +108,7 @@ export default function AppSection() {
               <img
                 src={appPhoneMockup}
                 alt="Ignite Room app preview"
-                className="relative w-72 drop-shadow-2xl animate-float"
+                className="relative w-80 sm:w-[22rem] drop-shadow-2xl animate-float"
               />
             </div>
           </motion.div>
