@@ -96,7 +96,7 @@ export default function PartnersPage() {
                   transition={{ duration: 0.4, delay: index * 0.08 }}
                   className="group"
                 >
-                  <div className="aspect-square rounded-2xl bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-secondary hover:border-primary/30 transition-all duration-300">
+                  <div className="aspect-square flex items-center justify-center">
                     <div className="flex flex-col items-center justify-center w-full h-full">
                       <img
                         src={`/partners/${partner.logo}`}
@@ -104,7 +104,7 @@ export default function PartnersPage() {
                         loading="lazy"
                         decoding="async"
                         style={{ imageOrientation: 'from-image' }}
-                        className="block mx-auto max-h-[66%] max-w-[66%] object-contain object-center transform-none transition-all"
+                        className="block mx-auto max-h-[66%] max-w-[66%] object-contain object-center transform-none transition-all opacity-70 group-hover:opacity-100"
                       />
                       <p className="text-sm mt-2 opacity-0 group-hover:opacity-100 text-foreground transition-opacity">
                         {partner.name}
@@ -122,14 +122,14 @@ export default function PartnersPage() {
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-16">
-              <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
+              <span className="font-body text-primary font-bold text-xs uppercase tracking-[0.15em] mb-4 block">
                 Why Partner With Us
               </span>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
                 What partners get
               </h2>
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="info-section grid grid-cols-1 md:grid-cols-3 divide-y divide-x-0 md:divide-y-0 md:divide-x divide-border/60">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={benefit.title}
@@ -137,7 +137,7 @@ export default function PartnersPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="rounded-2xl bg-card border border-border/60 p-8"
+                  className="info-block p-8"
                 >
                   <h3 className="font-heading text-xl font-semibold text-foreground mb-3">{benefit.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>

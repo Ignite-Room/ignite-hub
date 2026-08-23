@@ -26,7 +26,7 @@ function monthLabel(month: string): string {
 
 function StatCard({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string | number }) {
     return (
-        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5 flex items-center gap-4">
+        <div className="rounded-md bg-gradient-card border border-border/60 p-5 flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-primary" />
             </div>
@@ -67,7 +67,7 @@ export default function OrganizerDashboardPage() {
                     </div>
 
                     <div className="grid lg:grid-cols-5 gap-6 mb-8">
-                        <div className="lg:col-span-3 rounded-2xl bg-gradient-card border border-border/60 p-5">
+                        <div className="lg:col-span-3 rounded-md bg-gradient-card border border-border/60 p-5">
                             <h3 className="font-semibold mb-4">Revenue — Last 6 Months</h3>
                             <div className="h-[220px]">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -87,7 +87,7 @@ export default function OrganizerDashboardPage() {
                             </div>
                         </div>
 
-                        <div className="lg:col-span-2 rounded-2xl bg-gradient-card border border-border/60 p-5 space-y-3">
+                        <div className="lg:col-span-2 rounded-md bg-gradient-card border border-border/60 p-5 space-y-3">
                             <h3 className="font-semibold mb-1">Quick Actions</h3>
                             <Button asChild variant="outline" className="w-full justify-start"><Link to="/events/organizer/new"><Plus className="w-4 h-4 mr-2" /> Create New Event</Link></Button>
                             <Button asChild variant="outline" className="w-full justify-start"><Link to="/events/organizer/earnings"><IndianRupee className="w-4 h-4 mr-2" /> View Earnings</Link></Button>
@@ -110,7 +110,7 @@ export default function OrganizerDashboardPage() {
                     ) : (
                         <div className="space-y-3">
                             {stats.recentEvents.map(event => (
-                                <div key={event.id} className="rounded-2xl bg-gradient-card border border-border/60 p-4 flex flex-wrap items-center gap-4 justify-between">
+                                <div key={event.id} className="rounded-md bg-gradient-card border border-border/60 p-4 flex flex-wrap items-center gap-4 justify-between">
                                     <div className="flex items-center gap-3 flex-1 min-w-[200px]">
                                         <div className="w-14 h-10 rounded-lg bg-secondary/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
                                             {event.coverImageUrl ? (

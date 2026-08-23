@@ -82,7 +82,7 @@ export default function OrganizationProfilePage() {
     return (
         <OrganizerLayout title="Organization Profile" breadcrumb={['Organizer']}>
             <form onSubmit={onSubmit} className="max-w-2xl space-y-6">
-                <div className="rounded-2xl bg-gradient-card border border-border/60 p-6 flex items-center gap-5">
+                <div className="rounded-md bg-gradient-card border border-border/60 p-6 flex items-center gap-5">
                     <div className="w-20 h-20 rounded-xl bg-secondary/40 flex items-center justify-center overflow-hidden flex-shrink-0">
                         {profile?.logoUrl ? (
                             <img src={profile.logoUrl} alt="Organization logo" className="w-full h-full object-cover" />
@@ -105,7 +105,7 @@ export default function OrganizationProfilePage() {
                     </div>
                 </div>
 
-                <div className="rounded-2xl bg-gradient-card border border-border/60 p-6 space-y-4">
+                <div className="rounded-md bg-gradient-card border border-border/60 p-6 space-y-4">
                     <div className="grid sm:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                             <Label>Organization Name</Label>

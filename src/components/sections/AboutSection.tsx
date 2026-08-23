@@ -36,18 +36,13 @@ function GoalCard({ goal, index }: { goal: typeof goals[0]; index: number }) {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.15 }}
-      className="group relative p-8 rounded-2xl bg-gradient-card border border-border/50 hover:border-primary/30 transition-all duration-500"
+      className="info-block group relative p-8 h-full"
     >
-      {/* Glow effect on hover */}
-      <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      <div className="relative z-10">
-        <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-          <goal.icon className="w-7 h-7 text-primary" />
-        </div>
-        <h3 className="font-heading text-xl font-semibold text-foreground mb-3">{goal.title}</h3>
-        <p className="text-muted-foreground leading-relaxed">{goal.description}</p>
+      <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+        <goal.icon className="w-7 h-7 text-primary" />
       </div>
+      <h3 className="font-heading text-xl font-semibold text-foreground mb-3">{goal.title}</h3>
+      <p className="text-muted-foreground leading-relaxed">{goal.description}</p>
     </motion.div>
   );
 }
@@ -70,7 +65,7 @@ export default function AboutSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
+          <span className="font-body text-primary font-bold text-xs uppercase tracking-[0.15em] mb-4 block">
             01 / Who We Are
           </span>
           <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -83,7 +78,7 @@ export default function AboutSection() {
         </motion.div>
 
         {/* Goals Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="info-section grid grid-cols-1 lg:grid-cols-4 divide-y divide-x-0 lg:divide-y-0 lg:divide-x divide-border/60">
           {goals.map((goal, index) => (
             <GoalCard key={goal.title} goal={goal} index={index} />
           ))}

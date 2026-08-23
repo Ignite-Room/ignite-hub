@@ -151,7 +151,7 @@ export default function InternApplication() {
                         {highlights.map((item) => (
                             <div
                                 key={item.title}
-                                className="glass-card rounded-xl p-6 transition-colors hover:border-primary/30"
+                                className="glass-card rounded-md p-6 transition-colors hover:border-primary/30"
                             >
                                 <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                                     <item.icon className="h-5 w-5 text-primary" />

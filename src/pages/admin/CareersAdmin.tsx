@@ -200,7 +200,7 @@ function RoleModal({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: 0.2 }}
-                className="glass-card w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 shadow-2xl"
+                className="glass-card w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-md p-6 shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="mb-5 flex items-center justify-between">
@@ -843,7 +843,7 @@ export default function CareersAdmin() {
                             initial={{ opacity: 0, scale: 0.96 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.96 }}
-                            className="glass-card w-full max-w-sm rounded-2xl p-6 shadow-2xl"
+                            className="glass-card w-full max-w-sm rounded-md p-6 shadow-2xl"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <h3 className="font-heading text-base font-semibold text-foreground mb-2">Delete this role?</h3>
@@ -877,7 +877,7 @@ export default function CareersAdmin() {
                         { label: 'Open', value: totalOpen },
                         { label: 'Total Applications', value: totalApps },
                     ].map((s) => (
-                        <div key={s.label} className="glass-card rounded-xl p-5 text-center">
+                        <div key={s.label} className="glass-card rounded-md p-5 text-center">
                             <p className="font-heading text-2xl font-bold text-gradient">{s.value}</p>
                             <p className="mt-1 text-xs text-muted-foreground">{s.label}</p>
                         </div>
@@ -1427,7 +1427,7 @@ function ChallengeModal({ initial, roles, onClose, onSave }: {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-                className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                className="glass-card w-full max-w-lg rounded-md p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
                 <div className="mb-5 flex items-center justify-between">
                     <h2 className="font-heading text-lg font-semibold text-foreground">{initial ? 'Edit Challenge' : 'New Challenge'}</h2>
                     <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
@@ -1638,7 +1638,7 @@ function InterviewModal({ initial, roles, onClose, onSave }: {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-                className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl overflow-y-auto" style={{ maxHeight: '88vh' }} onClick={(e) => e.stopPropagation()}>
+                className="glass-card w-full max-w-lg rounded-md p-6 shadow-2xl overflow-y-auto" style={{ maxHeight: '88vh' }} onClick={(e) => e.stopPropagation()}>
                 <div className="mb-5 flex items-center justify-between">
                     <h2 className="font-heading text-lg font-semibold text-foreground">{initial ? 'Edit Interview' : 'New Interview'}</h2>
                     <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
@@ -1755,7 +1755,7 @@ function AddCandidatesModal({ roles, existingApplicationIds, onClose, onAdd }: {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
             <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
-                className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl flex flex-col" style={{ maxHeight: '85vh' }} onClick={(e) => e.stopPropagation()}>
+                className="glass-card w-full max-w-lg rounded-md p-6 shadow-2xl flex flex-col" style={{ maxHeight: '85vh' }} onClick={(e) => e.stopPropagation()}>
                 <div className="mb-4 flex items-center justify-between">
                     <h2 className="font-heading text-lg font-semibold text-foreground">Add Candidates</h2>
                     <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>

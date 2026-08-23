@@ -15,7 +15,7 @@ function TeamMember({ member, index }: { member: typeof team[0]; index: number }
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative"
     >
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-card border border-border/50 hover:border-primary/40 transition-all duration-500">
+      <div className="relative overflow-hidden rounded-md bg-gradient-card border border-border/50 hover:border-primary/40 transition-all duration-500">
         {/* Image */}
         <div className="aspect-[3/4] overflow-hidden">
           <img
@@ -72,7 +72,7 @@ export default function TeamSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
+          <span className="font-body text-primary font-bold text-xs uppercase tracking-[0.15em] mb-4 block">
             Meet the Team
           </span>
           <h2 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">

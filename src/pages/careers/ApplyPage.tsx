@@ -52,7 +52,7 @@ function TermsModal({ onClose }: { onClose: () => void }) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: 0.2 }}
-                className="glass-card relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl shadow-2xl"
+                className="glass-card relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-md shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="sticky top-0 flex items-center justify-between border-b border-border/50 bg-card/90 px-6 py-4 backdrop-blur-sm">

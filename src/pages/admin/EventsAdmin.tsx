@@ -36,7 +36,7 @@ function formatRupees(paise: number): string {
 
 function StatTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
     return (
-        <div className="glass-card rounded-xl p-4 border border-border/50 flex items-center gap-3">
+        <div className="glass-card rounded-md p-4 border border-border/50 flex items-center gap-3">
             <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0">{icon}</div>
             <div className="min-w-0">
                 <p className="text-lg font-bold text-foreground truncate">{value}</p>

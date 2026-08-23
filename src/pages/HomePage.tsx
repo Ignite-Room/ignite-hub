@@ -144,7 +144,7 @@ export default function HomePage() {
                         >
                             <Link
                                 to={card.to}
-                                className={`group relative rounded-2xl bg-gradient-to-br ${CARD_STYLES[card.color]} border border-border/60 p-6 transition-all flex flex-col h-full overflow-hidden`}
+                                className={`group relative rounded-md bg-gradient-to-br ${CARD_STYLES[card.color]} border border-border/60 p-6 transition-all flex flex-col h-full overflow-hidden`}
                             >
                                 <div className="flex items-start justify-between mb-4">
                                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${ICON_STYLES[card.color]}`}>

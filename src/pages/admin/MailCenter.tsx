@@ -103,7 +103,7 @@ function ImportModal({ onClose, onImport }: { onClose: () => void; onImport: (ro
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
             <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
-                className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl flex flex-col" style={{ maxHeight: '85vh' }} onClick={(e) => e.stopPropagation()}>
+                className="glass-card w-full max-w-lg rounded-md p-6 shadow-2xl flex flex-col" style={{ maxHeight: '85vh' }} onClick={(e) => e.stopPropagation()}>
                 <div className="mb-4 flex items-center justify-between">
                     <h2 className="font-heading text-lg font-semibold text-foreground">Import from Applicants</h2>
                     <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>

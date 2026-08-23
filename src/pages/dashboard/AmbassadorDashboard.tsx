@@ -291,7 +291,7 @@ export default function AmbassadorDashboard() {
 
                     {/* Active Tasks Banner */}
                     <motion.div variants={itemVariants}
-                        className="rounded-2xl p-4 sm:p-5 border border-border/50 bg-secondary/20"
+                        className="rounded-md p-4 sm:p-5 border border-border/50 bg-secondary/20"
                     >
                         <div className="flex items-center gap-3 mb-3">
                             <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">

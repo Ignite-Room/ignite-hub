@@ -38,7 +38,7 @@ export default function EventRoundsListPage() {
                         <h1 className="text-2xl font-bold mb-1">Rounds & Submissions</h1>
                         <p className="text-sm text-muted-foreground mb-6">Manage judging rounds, review submissions, and assign evaluators.</p>
 
-                        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+                        <div className="rounded-md bg-gradient-card border border-border/60 p-5">
                             <RoundsEditor eventId={id} rounds={event.rounds} onChange={load} />
                         </div>
                     </>

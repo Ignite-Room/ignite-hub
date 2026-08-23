@@ -56,7 +56,7 @@ export default function CollaborationsSection() {
               transition={{ duration: 0.4, delay: index * 0.1 }}
               className="group"
             >
-              <div className="aspect-square rounded-2xl bg-secondary/50 border border-border/50 flex items-center justify-center hover:bg-secondary hover:border-primary/30 transition-all duration-300">
+              <div className="aspect-square flex items-center justify-center">
                 <div className="flex flex-col items-center justify-center w-full h-full">
                   <img
                     src={`/partners/${partner.logo}`}
@@ -64,9 +64,9 @@ export default function CollaborationsSection() {
                     loading="lazy"
                     decoding="async"
                     style={{ imageOrientation: 'from-image' }}
-                    className="block mx-auto max-h-[66%] max-w-[66%] object-contain object-center transform-none transition-all"
+                    className="block mx-auto max-h-[66%] max-w-[66%] object-contain object-center transform-none transition-all opacity-70 group-hover:opacity-100"
                   />
-                  <p className="text-xs mt-2 opacity-0 group-hover:opacity-100 text-white transition-opacity">
+                  <p className="text-xs mt-2 opacity-0 group-hover:opacity-100 text-muted-foreground transition-opacity">
                     {partner.name}
                   </p>
                 </div>

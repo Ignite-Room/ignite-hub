@@ -98,7 +98,7 @@ export default function EventPreviewCard({ event, variant, registerHref, registr
                 </div>
 
                 <div className={live ? '' : 'md:col-span-1'}>
-                    <div className={`rounded-2xl bg-gradient-card border border-border/60 p-6 space-y-4 ${live ? '' : 'sticky top-28'}`}>
+                    <div className={`rounded-md bg-gradient-card border border-border/60 p-6 space-y-4 ${live ? '' : 'sticky top-28'}`}>
                         <div className="flex items-start gap-3">
                             <Calendar className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
                             <div>

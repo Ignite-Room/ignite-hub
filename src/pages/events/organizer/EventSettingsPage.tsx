@@ -57,7 +57,7 @@ function TeamSection({ eventId }: { eventId: string }) {
     const active = (collaborators || []).filter(c => c.status !== 'REMOVED');
 
     return (
-        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+        <div className="rounded-md bg-gradient-card border border-border/60 p-5">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">Team</h3>
                 <Dialog open={open} onOpenChange={setOpen}>
@@ -212,7 +212,7 @@ export default function EventSettingsPage() {
 
                 {!loading && event && (
                     <div className="space-y-6">
-                        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+                        <div className="rounded-md bg-gradient-card border border-border/60 p-5">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="font-semibold">Status</h3>
                                 <Badge className={STATUS_COLOR[event.status]}>{event.status}</Badge>
@@ -253,7 +253,7 @@ export default function EventSettingsPage() {
 
                         <TeamSection eventId={id} />
 
-                        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+                        <div className="rounded-md bg-gradient-card border border-border/60 p-5">
                             <h3 className="font-semibold mb-3">Public URL Slug</h3>
                             <div className="flex items-end gap-2 flex-wrap">
                                 <div className="space-y-1.5 flex-1 min-w-[200px]">

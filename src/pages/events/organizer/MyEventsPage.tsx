@@ -85,7 +85,7 @@ export default function MyEventsPage() {
             {!loading && events.length > 0 && (
                 <div className="space-y-4">
                     {events.map(event => (
-                        <div key={event.id} className="rounded-2xl bg-gradient-card border border-border/60 p-5 flex flex-wrap items-center gap-5 justify-between">
+                        <div key={event.id} className="rounded-md bg-gradient-card border border-border/60 p-5 flex flex-wrap items-center gap-5 justify-between">
                             <Link to={`/events/organizer/${event.id}`} className="flex items-center gap-4 flex-1 min-w-[220px]">
                                 <div className="w-20 h-14 rounded-lg bg-secondary/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
                                     {event.coverImageUrl ? (

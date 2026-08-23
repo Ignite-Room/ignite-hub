@@ -61,7 +61,7 @@ export default function ExportModal({ isOpen, onClose, title, data, fields, onEx
 
     return (
         <div className="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="bg-card border border-border rounded-md p-6 max-w-md w-full shadow-2xl" onClick={e => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-2">
                         <Download className="w-5 h-5 text-primary" />

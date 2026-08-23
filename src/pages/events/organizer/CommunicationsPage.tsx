@@ -63,7 +63,7 @@ export default function CommunicationsPage() {
                 <h1 className="text-2xl font-bold mb-1">Communications</h1>
                 <p className="text-sm text-muted-foreground mb-6">Send announcements to your registrants.</p>
 
-                <div className="rounded-2xl bg-gradient-card border border-border/60 p-5 space-y-4 mb-8">
+                <div className="rounded-md bg-gradient-card border border-border/60 p-5 space-y-4 mb-8">
                     <div className="space-y-1.5">
                         <Label>Subject</Label>
                         <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Important update about your registration" />

@@ -43,7 +43,7 @@ function FunnelStep({ icon: Icon, label, value, max }: { icon: typeof Users; lab
 function DemographicList({ title, items }: { title: string; items: { label: string; count: number }[] }) {
     const max = Math.max(...items.map(i => i.count), 1);
     return (
-        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+        <div className="rounded-md bg-gradient-card border border-border/60 p-5">
             <h3 className="font-semibold mb-4">{title}</h3>
             <div className="space-y-2.5">
                 {items.map(item => (
@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
                     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
                 ) : (
                     <div className="space-y-6">
-                        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+                        <div className="rounded-md bg-gradient-card border border-border/60 p-5">
                             <h3 className="font-semibold mb-4">Registration Funnel</h3>
                             <div className="space-y-4">
                                 <FunnelStep icon={Users} label="Registrations" value={data.funnel.registrations} max={data.funnel.registrations} />
@@ -94,7 +94,7 @@ export default function AnalyticsPage() {
                         </div>
 
                         <div className="grid lg:grid-cols-2 gap-6">
-                            <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+                            <div className="rounded-md bg-gradient-card border border-border/60 p-5">
                                 <h3 className="font-semibold mb-4">Daily Registrations</h3>
                                 {data.dailyRegistrations.length > 1 ? (
                                     <div className="h-[200px]">
@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
                                 )}
                             </div>
 
-                            <div className="rounded-2xl bg-gradient-card border border-border/60 p-5">
+                            <div className="rounded-md bg-gradient-card border border-border/60 p-5">
                                 <h3 className="font-semibold mb-4">Revenue by Ticket Type</h3>
                                 {data.ticketRevenue.length > 0 ? (
                                     <div className="h-[200px] flex items-center">

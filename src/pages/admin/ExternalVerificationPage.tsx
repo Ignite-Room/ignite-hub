@@ -272,7 +272,7 @@ export default function ExternalVerificationPage() {
                     </div>
 
                     {loading && (
-                        <div className="glass-card p-6 border-primary/30 border rounded-2xl">
+                        <div className="glass-card p-6 border-primary/30 border rounded-md">
                              <div className="flex justify-between items-end mb-2">
                                  <div>
                                     <p className="font-bold text-primary mb-1">Verifying...</p>

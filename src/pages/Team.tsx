@@ -5,7 +5,7 @@ export default function TeamPage() {
   return (
     <main className="max-w-7xl mx-auto p-6">
       <section className="text-center mb-12">
-        <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
+        <span className="font-body text-primary font-bold text-xs uppercase tracking-[0.15em] mb-4 block">
           Our Team
         </span>
         <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -18,7 +18,7 @@ export default function TeamPage() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {team.map((member) => (
-          <article key={member.name} className="rounded-2xl overflow-hidden bg-gradient-card border border-border/50 p-4">
+          <article key={member.name} className="border-t-2 border-primary/40 pt-4">
             <div className="flex items-center gap-4">
               <img src={member.image} alt={member.name} className="w-20 h-20 rounded-full object-cover" loading="lazy" />
               <div>

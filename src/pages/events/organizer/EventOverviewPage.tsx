@@ -22,7 +22,7 @@ function formatRupees(paise: number): string {
 
 function StatTile({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string | number }) {
     return (
-        <div className="rounded-2xl bg-gradient-card border border-border/60 p-5 flex items-center gap-4">
+        <div className="rounded-md bg-gradient-card border border-border/60 p-5 flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-primary" />
             </div>
@@ -90,7 +90,7 @@ export default function EventOverviewPage() {
                         </div>
 
                         {stats.registrationTrend.length > 1 && (
-                            <div className="rounded-2xl bg-gradient-card border border-border/60 p-5 mb-6">
+                            <div className="rounded-md bg-gradient-card border border-border/60 p-5 mb-6">
                                 <h3 className="font-semibold mb-4">Registrations Over Time</h3>
                                 <div className="h-[160px]">
                                     <ResponsiveContainer width="100%" height="100%">

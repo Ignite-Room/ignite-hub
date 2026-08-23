@@ -89,7 +89,7 @@ export default function AvatarCropModal({ imageDataUrl, onConfirm, onCancel }: A
 
                 <motion.div
                     ref={containerRef}
-                    className="relative z-10 w-full max-w-md bg-background border border-border/60 rounded-2xl overflow-hidden shadow-2xl"
+                    className="relative z-10 w-full max-w-md bg-background border border-border/60 rounded-md overflow-hidden shadow-2xl"
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}

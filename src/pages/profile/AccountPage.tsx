@@ -52,7 +52,7 @@ function ProgramCard({ icon: Icon, title, description, status, to, cta }: {
 }) {
     const statusStyle = status ? PROGRAM_STATUS_STYLE[status] : null;
     return (
-        <Link to={to} className="flex-1 min-w-[240px] rounded-md border border-border/50 bg-card p-5 hover:border-primary/30 transition-colors group">
+        <Link to={to} className="info-block flex-1 min-w-[240px] p-5 group">
             <div className="flex items-start gap-3 mb-3">
                 <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Icon className="w-4.5 h-4.5 text-primary" />
@@ -136,7 +136,7 @@ export default function AccountPage() {
                     </motion.div>
 
                     {/* Programs — apply, or check status */}
-                    <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
+                    <motion.div variants={itemVariants} className="info-section flex flex-wrap divide-x divide-border/60">
                         <ProgramCard
                             icon={Award}
                             title="Campus Ambassador Program"
@@ -189,20 +189,21 @@ export default function AccountPage() {
                     {!loading && error && <p className="text-destructive text-center py-10">{error}</p>}
 
                     {!loading && !error && tab === 'events' && (
-                        <motion.div variants={itemVariants} className="space-y-3">
+                        <motion.div variants={itemVariants}>
                             {registrations.length === 0 && (
-                                <div className="glass-card rounded-md p-10 border border-border/50 text-center">
+                                <div className="info-section p-10 text-center">
                                     <Ticket className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
                                     <p className="text-muted-foreground text-sm">You haven't registered for any events yet.</p>
                                 </div>
                             )}
+                            {registrations.length > 0 && <div className="info-section divide-y divide-border/60">
                             {registrations.map(r => {
                                 const status = REGISTRATION_STATUS_STYLE[r.status] ?? REGISTRATION_STATUS_STYLE.CONFIRMED;
                                 return (
                                     <a
                                         key={r.id}
                                         href={`/events/ticket/${r.token}`}
-                                        className="block rounded-md border border-border/50 bg-card p-4 hover:border-primary/30 transition-colors"
+                                        className="info-block block p-4 hover:bg-secondary/40 transition-colors"
                                     >
                                         <div className="flex flex-wrap items-start justify-between gap-3">
                                             <div className="min-w-0">
@@ -226,21 +227,23 @@ export default function AccountPage() {
                                     </a>
                                 );
                             })}
+                            </div>}
                         </motion.div>
                     )}
 
                     {!loading && !error && tab === 'transactions' && (
-                        <motion.div variants={itemVariants} className="space-y-3">
+                        <motion.div variants={itemVariants}>
                             {transactions.length === 0 && (
-                                <div className="glass-card rounded-md p-10 border border-border/50 text-center">
+                                <div className="info-section p-10 text-center">
                                     <Receipt className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
                                     <p className="text-muted-foreground text-sm">No payments yet. Paid event registrations will show up here.</p>
                                 </div>
                             )}
+                            {transactions.length > 0 && <div className="info-section divide-y divide-border/60">
                             {transactions.map(r => {
                                 const orderStatus = ORDER_STATUS_STYLE[r.order!.status] ?? ORDER_STATUS_STYLE.CREATED;
                                 return (
-                                    <div key={r.id} className="rounded-md border border-border/50 bg-card p-4">
+                                    <div key={r.id} className="info-block p-4">
                                         <div className="flex flex-wrap items-center justify-between gap-3">
                                             <div className="min-w-0">
                                                 <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -257,6 +260,7 @@ export default function AccountPage() {
                                     </div>
                                 );
                             })}
+                            </div>}
                         </motion.div>
                     )}
                 </motion.div>

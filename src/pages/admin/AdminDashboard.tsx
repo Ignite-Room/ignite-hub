@@ -223,7 +223,7 @@ export default function AdminDashboard() {
         <>
             {/* Toast */}
             {toast && (
-                <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-xl bg-card border border-border shadow-xl text-sm text-foreground animate-in fade-in slide-in-from-top-2">
+                <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-md bg-card border border-border shadow-xl text-sm text-foreground animate-in fade-in slide-in-from-top-2">
                     {toast}
                 </div>
             )}
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
             {/* Manage Ambassador Detail Modal */}
             {manageModal && (
                 <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setManageModal(null)}>
-                    <div className="bg-card border border-border rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                    <div className="bg-card border border-border rounded-md p-6 max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                         <div className="flex items-center gap-3 mb-5">
                             <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl flex-shrink-0">
                                 {manageModal.name.charAt(0)}
@@ -243,21 +243,21 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Stats grid */}
-                        <div className="grid grid-cols-3 gap-2 mb-5">
+                        <div className="info-section grid grid-cols-3 divide-x divide-border/60 mb-5">
                             {[
                                 { label: 'Verified Tasks', value: manageModal.leaderboardStats?.verifiedTasks ?? 0, color: 'text-green-400' },
                                 { label: 'Ext. Referrals', value: manageModal.leaderboardStats?.externalReferrals ?? 0, color: 'text-blue-400' },
                                 { label: 'Total Score', value: manageModal.leaderboardStats?.totalScore ?? 0, color: 'text-primary' },
                             ].map(s => (
-                                <div key={s.label} className="bg-secondary/40 rounded-xl p-3 text-center">
-                                    <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+                                <div key={s.label} className="info-block p-3 text-center">
+                                    <p className={`text-2xl font-heading font-bold ${s.color}`}>{s.value}</p>
                                     <p className="text-xs text-muted-foreground mt-0.5 leading-tight">{s.label}</p>
                                 </div>
                             ))}
                         </div>
 
                         {/* Details */}
-                        <div className="space-y-0 border border-border/40 rounded-xl overflow-hidden mb-5">
+                        <div className="space-y-0 border border-border/40 rounded-md overflow-hidden mb-5">
                             {[
                                 { label: 'College', value: manageModal.college || '-', icon: <Building2 className="w-3.5 h-3.5" /> },
                                 { label: 'Enrollment ID', value: manageModal.enrollmentId || '-', icon: <IdCard className="w-3.5 h-3.5" /> },
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
             {/* Revoke All Access Modal */}
             {revokeAllModal && (
                 <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setRevokeAllModal(false)}>
-                    <div className="bg-card border border-border rounded-2xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
+                    <div className="bg-card border border-border rounded-md p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
                         <h3 className="font-bold text-foreground mb-1">Revoke All Ambassador Access?</h3>
                         <p className="text-sm text-muted-foreground mb-4">
                             This immediately blocks <strong>{ambassadors.length}</strong> ambassador{ambassadors.length === 1 ? '' : 's'} from the dashboard and removes them from the public leaderboard.
@@ -356,7 +356,7 @@ export default function AdminDashboard() {
             {/* External Referrals Modal */}
             {extRefModal && (
                 <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setExtRefModal(null)}>
-                    <div className="bg-card border border-border rounded-2xl p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
+                    <div className="bg-card border border-border rounded-md p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
                         <h3 className="font-bold text-foreground mb-1">Add External Referrals</h3>
                         <p className="text-sm text-muted-foreground mb-4">For <strong>{extRefModal.name}</strong> (from Unstop or other platforms)</p>
                         <Label className="text-sm text-muted-foreground mb-1.5 block">Referral Count</Label>
@@ -395,9 +395,9 @@ export default function AdminDashboard() {
                                 <p className="text-sm mt-1">All applications have been reviewed.</p>
                             </div>
                         ) : (
-                            <div className="space-y-3">
+                            <div className="info-section divide-y divide-border/60">
                                 {applications.map(app => (
-                                    <div key={app.id} className="glass-card rounded-xl p-5 border border-border/50 flex flex-col sm:flex-row sm:items-center gap-4">
+                                    <div key={app.id} className="info-block p-5 flex flex-col sm:flex-row sm:items-center gap-4">
                                         {/* Info */}
                                         <div className="flex-1 min-w-0">
                                             <p className="font-semibold text-foreground">{app.name}</p>
@@ -465,11 +465,11 @@ export default function AdminDashboard() {
                                 ))}
                             </div>
                         </div>
-                        <div className="space-y-3">
+                        <div className="info-section divide-y divide-border/60">
                             {submissions
                                 .filter(s => subFilter === 'ALL' || s.status === subFilter)
                                 .map(sub => (
-                                    <div key={sub.id} className="glass-card rounded-xl p-5 border border-border/50 flex flex-col sm:flex-row sm:items-center gap-4">
+                                    <div key={sub.id} className="info-block p-5 flex flex-col sm:flex-row sm:items-center gap-4">
                                         {/* Screenshot thumb */}
                                         <button onClick={() => setScreenshotModal(sub.screenshotUrl)} className="relative w-20 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-secondary/50 border border-border/50 hover:border-primary/40 transition-colors group">
                                             <img src={sub.screenshotUrl} alt="screenshot" className="w-full h-full object-cover" />
@@ -564,9 +564,9 @@ export default function AdminDashboard() {
                                 )}
                             </div>
                         </div>
-                        <div className="space-y-3">
+                        <div className="info-section divide-y divide-border/60">
                             {ambassadors.map(amb => (
-                                <div key={amb.id} className="glass-card rounded-xl p-4 sm:p-5 border border-border/50 flex flex-col sm:flex-row sm:items-center gap-4">
+                                <div key={amb.id} className="info-block p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
                                     <div className="flex items-center gap-3 flex-1 min-w-0">
                                         <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold flex-shrink-0">
                                             {amb.name.charAt(0)}
