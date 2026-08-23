@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigationType } from 'react-router-dom';
 import { useAuth, redirectPathForUser } from '@/lib/auth-context';
 
 interface ProtectedRouteProps {
@@ -6,12 +6,18 @@ interface ProtectedRouteProps {
 }
 
 // Gates the public marketing homepage ("/"). A logged-in visitor is bound to their
-// dashboard as the site's real "home" — reloading, hitting back, or landing on "/"
-// from a stale bookmark all resolve to their dashboard instead of the landing page,
-// the same pattern Unstop and similar platforms use. Logged-out visitors see the
-// landing page as normal.
+// dashboard as the site's real "home" for reload/back-button navigation — but can
+// still explicitly click through to view the landing page (e.g. the navbar's Home
+// link), since that's a normal in-app link click, not a reload or back operation.
+//
+// React Router reports the navigation "action" for a route change: 'POP' covers a
+// fresh page load, a hard reload, and browser back/forward; 'PUSH' covers a normal
+// in-app navigate()/<Link> click. Redirecting only on 'POP' means a click to "/"
+// stays on the landing page, while reloading or going back to "/" lands on the
+// dashboard, matching the requested Unstop-style behavior exactly.
 export function LandingRoute({ children }: ProtectedRouteProps) {
     const { isAuthenticated, user, loading } = useAuth();
+    const navigationType = useNavigationType();
 
     if (loading) {
         return (
@@ -21,7 +27,7 @@ export function LandingRoute({ children }: ProtectedRouteProps) {
         );
     }
 
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && navigationType === 'POP') {
         return <Navigate to={redirectPathForUser(user)} replace />;
     }
 
