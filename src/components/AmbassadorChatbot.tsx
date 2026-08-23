@@ -176,7 +176,7 @@ export default function AmbassadorChatbot() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.92, y: 20 }}
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                        className="w-[360px] sm:w-[400px] h-[560px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-border/60"
+                        className="w-[360px] sm:w-[400px] h-[560px] flex flex-col rounded-md overflow-hidden shadow-2xl border border-border/60"
                         style={{
                             background: 'linear-gradient(180deg, hsl(345 20% 7%) 0%, hsl(0 0% 4%) 100%)',
                             boxShadow: '0 25px 50px rgba(0,0,0,0.6), 0 0 40px hsl(345 100% 59% / 0.12)',
@@ -338,7 +338,7 @@ export default function AmbassadorChatbot() {
                 onClick={() => setOpen(v => !v)}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
-                className="w-14 h-14 rounded-2xl bg-primary shadow-lg shadow-primary/40 flex items-center justify-center text-white relative"
+                className="w-14 h-14 rounded-md bg-primary shadow-lg shadow-primary/40 flex items-center justify-center text-white relative"
                 aria-label={open ? 'Close chatbot' : 'Open ambassador chatbot'}
                 style={{ boxShadow: '0 8px 30px hsl(345 100% 59% / 0.45)' }}
             >
