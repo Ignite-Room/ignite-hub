@@ -13,7 +13,8 @@ import { maskEmail } from '@/lib/utils';
 import { api } from '@/lib/api';
 import OtpCodeInput from '@/components/OtpCodeInput';
 import igniteLogo from '@/assets/ignite-logo.png';
-import AuthSidebar from '@/components/auth/AuthSidebar';
+import Navbar from '@/components/Navbar';
+import AuthStats from '@/components/auth/AuthStats';
 import AuthBackground from '@/components/auth/AuthBackground';
 import WelcomeBackSplash from '@/components/auth/WelcomeBackSplash';
 
@@ -171,13 +172,16 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
     }
 
     return (
-        <div className="min-h-screen bg-background flex items-stretch relative overflow-hidden">
+        <div className="min-h-screen bg-background relative overflow-hidden">
             <AuthBackground />
+            <Navbar />
 
-            <AuthSidebar stats={stats} />
+            <div className="flex flex-col items-center justify-center px-4 pt-32 pb-16 relative z-10">
+                <Link to="/" className="flex items-center gap-2.5 mb-8">
+                    <img src={igniteLogo} alt="Ignite Room" className="h-9 w-auto" />
+                    <span className="text-2xl font-bold text-gradient">Ignite Room</span>
+                </Link>
 
-            {/* Right: auth card */}
-            <div className="flex-1 flex items-center justify-center px-4 py-12 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -185,12 +189,6 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
                     className="w-full max-w-md relative"
                 >
                     <div className="glass-card rounded-md p-6 sm:p-8 border border-border/50 shadow-2xl">
-                        {/* Logo (mobile only, sidebar covers desktop) */}
-                        <div className="flex items-center gap-2.5 mb-8 lg:hidden">
-                            <img src={igniteLogo} alt="Ignite Room" className="h-8 w-auto" />
-                            <Link to="/" className="text-xl font-bold text-gradient">Ignite Room</Link>
-                        </div>
-
                         {step === 'credentials' && variant === 'general' && (
                             <div className="flex items-center gap-6 mb-6 border-b border-border/50">
                                 <span className="text-foreground font-semibold text-sm pb-3 border-b-2 border-primary">Sign in</span>
@@ -457,6 +455,8 @@ export default function LoginPage({ variant = 'general' }: LoginPageProps) {
                         </AnimatePresence>
                     </div>
                 </motion.div>
+
+                {step === 'credentials' && <AuthStats stats={stats} />}
             </div>
         </div>
     );
