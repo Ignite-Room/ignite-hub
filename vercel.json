@@ -25,6 +25,14 @@
       "destination": "https://chess3d-snowy.vercel.app/chess/:path*"
     },
     {
+      "source": "/hackarena-2027",
+      "destination": "/hackarena-2027.html"
+    },
+    {
+      "source": "/hackarena-2027/:path*",
+      "destination": "/hackarena-2027.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

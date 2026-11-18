@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { Calendar, MapPin, Users, ArrowUpRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -177,38 +178,31 @@ function UpcomingEventsTeaser() {
 
       <div className="relative z-10 text-center space-y-4">
         <span className="inline-flex px-4 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary">
-          Upcoming Events
+          Upcoming · Campus Edition
         </span>
 
-        <h3 className="text-2xl md:text-3xl font-bold">
-          Something exciting is brewing
+        <h3 className="text-2xl md:text-4xl font-bold">
+          HackArena – 2027 Edition
         </h3>
 
-        <p className="text-muted-foreground max-w-xl mx-auto">
-          New hackathons, meetups, and community-driven experiences are on the
-          way. Stay tuned.
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Our national hackathon goes to campuses across India. Colleges host
+          idea-pitching rounds from 10 Feb to 25 Apr 2027, and the best teams
+          meet for a 36-hour Grand Finale in Bangalore with a ₹1.5 Lakh cash
+          prize pool. College applications open 25 Nov 2026.
         </p>
 
-        <div className="max-w-md mx-auto space-y-3 pt-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-3 rounded-full bg-muted overflow-hidden">
-              <motion.div
-                className="h-full bg-primary/40"
-                animate={{ x: ['-100%', '100%'] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 1.8,
-                  delay: i * 0.2,
-                  ease: 'linear',
-                }}
-              />
-            </div>
-          ))}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+          <Button asChild size="lg" className="rounded-full group/btn">
+            <Link to="/hackarena-2027">
+              Explore HackArena 2027
+              <ArrowUpRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="rounded-full">
+            <Link to="/hackarena-2027/apply">Apply as a college</Link>
+          </Button>
         </div>
-
-        <p className="text-sm text-muted-foreground pt-4">
-          Announcing soon
-        </p>
       </div>
     </motion.div>
   )

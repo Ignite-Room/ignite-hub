@@ -82,6 +82,13 @@ const AdminEventDetail = lazy(() => import("./pages/admin/AdminEventDetail"));
 const AdminPayoutsPage = lazy(() => import("./pages/admin/AdminPayoutsPage"));
 const AdminPayoutDetailPage = lazy(() => import("./pages/admin/AdminPayoutDetailPage"));
 
+// HackArena – 2027 Edition (own dark-themed layout, lazy so the main site bundle doesn't grow)
+const HackArenaHome = lazy(() => import("./hackarena/pages/HackArenaHome"));
+const HackArenaApply = lazy(() => import("./hackarena/pages/HackArenaApply"));
+const HackArenaRules = lazy(() => import("./hackarena/pages/HackArenaRules"));
+const HackArenaCampus = lazy(() => import("./hackarena/pages/HackArenaCampus"));
+const HackArenaFinalists = lazy(() => import("./hackarena/pages/HackArenaFinalists"));
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -117,6 +124,15 @@ const App = () => (
             <Route path="/accessibility" element={<Accessibility />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/app" element={<AppComingSoon />} />
+
+            {/* ── HackArena – 2027 Edition ───────────────────────── */}
+            <Route path="/hackarena-2027" element={<HackArenaHome />} />
+            <Route path="/hackarena-2027/apply" element={<HackArenaApply />} />
+            <Route path="/hackarena-2027/rules" element={<HackArenaRules />} />
+            <Route path="/hackarena-2027/campus/:slug" element={<HackArenaCampus />} />
+            <Route path="/hackarena-2027/finalists" element={<HackArenaFinalists />} />
+            <Route path="/hackarena2027" element={<Navigate to="/hackarena-2027" replace />} />
+            <Route path="/hackarena" element={<Navigate to="/hackarena-2027" replace />} />
             <Route path="/careers" element={<CareersPage />} />
             <Route path="/careers/:slug" element={<RoleDetailPage />} />
             <Route path="/careers/:slug/apply" element={<ApplyPage />} />
