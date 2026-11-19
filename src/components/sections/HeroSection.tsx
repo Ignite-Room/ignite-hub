@@ -8,6 +8,7 @@ import { api } from '@/lib/api';
 import heroDashboardCard from '@/assets/figma/hero-dashboard-card.png';
 import heroBadgeLive from '@/assets/figma/hero-badge-live.png';
 import heroBadgeCrew from '@/assets/figma/hero-badge-crew.png';
+import { SHOW_LOGIN } from '@/lib/feature-flags';
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -63,15 +64,28 @@ export default function HeroSection() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-12"
             >
-              <Button
-                variant="default"
-                size="lg"
-                className="group rounded-full cursor-pointer gap-2"
-                onClick={() => navigate(isAuthenticated && user ? redirectPathForUser(user) : '/login')}
-              >
-                {isAuthenticated && user ? 'Go to Ignite Room' : 'Login to Ignite Room'}
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </Button>
+              {/* Login hidden for now (SHOW_LOGIN in src/lib/feature-flags.ts) */}
+              {SHOW_LOGIN ? (
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="group rounded-full cursor-pointer gap-2"
+                  onClick={() => navigate(isAuthenticated && user ? redirectPathForUser(user) : '/login')}
+                >
+                  {isAuthenticated && user ? 'Go to Ignite Room' : 'Login to Ignite Room'}
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </Button>
+              ) : (
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="group rounded-full cursor-pointer gap-2"
+                  onClick={() => navigate('/hackarena-2027')}
+                >
+                  HackArena 2027
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="lg"

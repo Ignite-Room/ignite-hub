@@ -39,7 +39,7 @@ export const HA = {
   // TODO(confirm): brief marks this as "to confirm, this was the 2.0 contact".
   contactEmail: 'admin@igniteroom.in',
   /** Public path of the Campus Round Rule Book PDF. Empty = hide the download button. */
-  rulebookPdfUrl: '',
+  rulebookPdfUrl: '/ha2027/HackArena-2027-Campus-Round-Rule-Book.pdf',
   socials: {
     instagram: 'https://www.instagram.com/igniteroom.india/',
     linkedin: 'https://www.linkedin.com/company/ignite-room/',

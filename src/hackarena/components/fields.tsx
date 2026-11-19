@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes, useId } from 'react';
 
 const base =
-  'w-full rounded-xl border bg-background/70 px-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-colors [color-scheme:dark]';
+  'w-full rounded-2xl border bg-background px-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/60 transition-colors dark:[color-scheme:dark]';
 
 function borderFor(error?: string) {
   return error ? 'border-destructive/70' : 'border-border';

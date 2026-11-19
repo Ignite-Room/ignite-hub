@@ -7,7 +7,7 @@ import RevealOnScroll from '@/components/design-system/RevealOnScroll';
 import { HA } from '../config';
 import { FAQ_COLLEGES, FAQ_STUDENTS } from '../content';
 import { Sponsor, submitForm } from '../api';
-import { PrimaryButton, Section, SectionHeading, SponsorLogo } from '../components/bits';
+import { PrimaryButton, Section, SectionHeading, Serif, SponsorLogo } from '../components/bits';
 import { EMAIL_RE, Honeypot, MultiChoice, PHONE_RE, TextArea, TextField, normPhone } from '../components/fields';
 
 // ── Sponsors ───────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ function LogoGrid({ items, big = false }: { items: Sponsor[]; big?: boolean }) {
         ) : (
           <span className="font-heading font-bold text-foreground">{s.name}</span>
         );
-        const cls = `flex items-center justify-center rounded-2xl border border-border/80 bg-card/60 ${big ? 'h-32' : 'h-24'} px-4 transition-all hover:-translate-y-0.5 hover:border-primary/40`;
+        const cls = `flex items-center justify-center rounded-[22px] border border-border bg-card ${big ? 'h-32' : 'h-24'} px-4 transition-all hover:-translate-y-1 hover:-rotate-1 hover:border-primary/40`;
         return s.website ? (
           <a key={s.name} href={s.website} target="_blank" rel="noopener noreferrer" className={cls} title={s.name}>{inner}</a>
         ) : (
@@ -77,7 +77,7 @@ function PartnerForm({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <form onSubmit={submit} noValidate className="relative rounded-2xl border border-border/80 bg-card/60 p-6 md:p-8 grid gap-5 md:grid-cols-2">
+    <form onSubmit={submit} noValidate className="relative rounded-[28px] border border-border bg-card p-6 md:p-8 grid gap-5 md:grid-cols-2">
       <Honeypot value={hp} onChange={setHp} />
       <TextField label="Company name" required value={f.company} onChange={set('company')} error={errors.company} autoComplete="organization" maxLength={120} />
       <TextField label="Contact name" required value={f.name} onChange={set('name')} error={errors.name} autoComplete="name" maxLength={100} />
@@ -116,11 +116,12 @@ export function Sponsors({ sponsors }: { sponsors: Sponsor[] }) {
   const anyCurrent = title.length + tracks.length + partners.length > 0;
 
   const cta = (
-    <RevealOnScroll className="relative overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-primary/15 via-card/60 to-card/60 p-8 md:p-10">
+    <RevealOnScroll className="relative overflow-visible rounded-[32px] border-2 border-foreground bg-card p-8 md:p-10 shadow-[6px_6px_0_0_hsl(var(--foreground))]">
+      <span className="ha-mono absolute right-6 -top-3 rotate-[4deg] rounded-md border-2 border-foreground bg-[#FFE7A3] px-2 py-0.5 text-[11px] font-bold lowercase text-black">your logo here? 👋</span>
       <div className="grid gap-6 md:grid-cols-[1.4fr_1fr] items-center">
         <div>
           <Handshake className="h-8 w-8 text-primary" />
-          <h3 className="mt-5 font-heading text-2xl md:text-3xl font-extrabold">Partner with HackArena 2027</h3>
+          <h3 className="mt-5 font-heading text-3xl md:text-4xl font-extrabold tracking-tight">Partner with <Serif className="text-gradient pr-1">HackArena 2027</Serif></h3>
           <p className="mt-3 text-muted-foreground leading-relaxed max-w-xl">
             Put your brand in front of student builders across {HA.campusTarget} campuses in India, three stages and a {HA.finaleHours}-hour Grand Finale in {HA.finaleCity}.
             Title, track, finale and campus-round partnerships are open.
@@ -135,25 +136,25 @@ export function Sponsors({ sponsors }: { sponsors: Sponsor[] }) {
 
   return (
     <Section id="sponsors">
-      <SectionHeading n="08" eyebrow="Sponsors & partners" title={anyCurrent ? 'Backed by.' : <>Build this with <span className="text-gradient">us.</span></>} />
+      <SectionHeading n="07" eyebrow="sponsors & partners" title={anyCurrent ? <>Backed <Serif className="text-gradient pr-1">by.</Serif></> : <>Build this <Serif className="text-gradient pr-1">with us.</Serif></>} />
 
       {anyCurrent && (
         <div className="space-y-12 mb-14">
           {title.length > 0 && (
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">Presented by</div>
+              <div className="ha-mono text-[11px] lowercase text-muted-foreground mb-4">Presented by</div>
               <LogoGrid items={title} big />
             </div>
           )}
           {tracks.length > 0 && (
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">Track sponsors</div>
+              <div className="ha-mono text-[11px] lowercase text-muted-foreground mb-4">Track sponsors</div>
               <LogoGrid items={tracks} />
             </div>
           )}
           {partners.length > 0 && (
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">Powered by</div>
+              <div className="ha-mono text-[11px] lowercase text-muted-foreground mb-4">Powered by</div>
               <LogoGrid items={partners} />
             </div>
           )}
@@ -172,7 +173,7 @@ export function Sponsors({ sponsors }: { sponsors: Sponsor[] }) {
 
       {past.length > 0 && (
         <div className="mt-14">
-          <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">HackArena 2.0 partners</div>
+          <div className="ha-mono text-[11px] lowercase text-muted-foreground mb-4">HackArena 2.0 partners</div>
           <LogoGrid items={past} />
         </div>
       )}
@@ -189,10 +190,10 @@ export function Faq() {
     <Section id="faq" band>
       <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
         <div>
-          <SectionHeading n="09" eyebrow="FAQ" title="Questions, answered." lead={<>Still stuck? Write to <a href={`mailto:${HA.contactEmail}`} className="text-primary hover:underline">{HA.contactEmail}</a>.</>} />
+          <SectionHeading n="08" eyebrow="faq" title={<>Questions? <Serif className="text-gradient pr-1">Answered.</Serif></>} lead={<>Still confused? Slide into our inbox at <a href={`mailto:${HA.contactEmail}`} className="text-primary hover:underline">{HA.contactEmail}</a>.</>} />
         </div>
         <div>
-          <div role="tablist" aria-label="FAQ audience" className="inline-flex rounded-full border border-border bg-background/60 p-1 mb-6">
+          <div role="tablist" aria-label="FAQ audience" className="inline-flex rounded-full border border-border bg-card p-1 mb-6">
             {(['students', 'colleges'] as const).map((t) => (
               <button
                 key={t}
@@ -205,10 +206,10 @@ export function Faq() {
               </button>
             ))}
           </div>
-          <Accordion type="single" collapsible key={tab} className="rounded-2xl border border-border/80 bg-background/50 divide-y divide-border/70">
+          <Accordion type="single" collapsible key={tab} className="rounded-[28px] border border-border bg-card divide-y divide-border/70 overflow-hidden">
             {items.map((f, i) => (
               <AccordionItem key={f.q} value={`q${i}`} className="border-b-0 px-5">
-                <AccordionTrigger className="text-left font-heading text-base font-bold hover:no-underline hover:text-primary">{f.q}</AccordionTrigger>
+                <AccordionTrigger className="text-left font-heading text-base font-extrabold tracking-tight hover:no-underline hover:text-primary data-[state=open]:text-primary">{f.q}</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed text-[15px]">{f.a}</AccordionContent>
               </AccordionItem>
             ))}

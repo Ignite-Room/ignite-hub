@@ -3,10 +3,10 @@ import { useSEO, useStructuredData } from '@/hooks/use-seo';
 import HALayout from '../components/HALayout';
 import { HA, HA_DATES, getPhase } from '../config';
 import { useHAData } from '../api';
-import Hero from '../sections/Hero';
+import Hero, { HypeBand } from '../sections/Hero';
 import StatStrip from '../sections/StatStrip';
 import Campuses from '../sections/Campuses';
-import { CampusLeader, Finale, ForColleges, HowItWorks, KeyDates, Theme } from '../sections/Story';
+import { Finale, ForColleges, HowItWorks, KeyDates, Theme } from '../sections/Story';
 import { Faq, Sponsors } from '../sections/SponsorsFaq';
 
 export default function HackArenaHome() {
@@ -44,13 +44,13 @@ export default function HackArenaHome() {
   return (
     <HALayout>
       <Hero phase={phase} titleSponsor={sponsors.find((s) => s.tier === 'title')} />
+      <HypeBand />
       <StatStrip stats={data?.stats} />
       <HowItWorks />
       <Campuses campuses={data?.campuses ?? []} loading={isLoading} error={isError} phase={phase} onRetry={() => refetch()} />
       <KeyDates />
       <Theme trackSponsors={sponsors.filter((s) => s.tier === 'track')} />
       <ForColleges phase={phase} />
-      <CampusLeader />
       <Finale hasFinalists={(data?.finalists.length ?? 0) > 0} />
       <Sponsors sponsors={sponsors} />
       <Faq />

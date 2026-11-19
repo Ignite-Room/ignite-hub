@@ -8,9 +8,9 @@ The HackArena 2027 site (`/hackarena-2027`) reads campus cards, sponsor logos an
 2. **Add the script.** In the Sheet: **Extensions → Apps Script**. Delete what's in `Code.gs`, paste the whole of [`Code.gs`](./Code.gs) from this folder, and save.
 3. **Check the settings** at the top of the script (`CONFIG`):
    - `ADMIN_EMAIL`: who gets a copy of every application and partner request.
-   - `RULEBOOK_FILE_ID`: upload the Campus Round Rule Book PDF to Drive and paste its file ID (the long ID in its share link). The PDF is then attached to every confirmation email. Leave it blank to link to the web rule book instead.
+   - Rule book: nothing to do. The Campus Round Rule Book PDF is published on the website (`/ha2027/HackArena-2027-Campus-Round-Rule-Book.pdf`) and the script attaches it to every confirmation email from there. To send a different version, upload it to Drive and paste its file ID into `RULEBOOK_FILE_ID`.
    - `NYMBLE_GUIDE_URL` (optional): a how-to link included in approval emails.
-4. **Run `setup` once.** Pick `setup` in the function dropdown and click **Run**. Google asks for permissions: the script needs to edit this Sheet, send email as you, and read the rule book from Drive. `setup` creates the five tabs with headers, dropdowns and checkboxes, and installs the trigger that sends approval emails.
+4. **Run `setup` once.** Pick `setup` in the function dropdown and click **Run**. Google asks for permissions: the script needs to edit this Sheet, send email as you, and fetch the rule book PDF from the website. `setup` creates the five tabs with headers, dropdowns and checkboxes, and installs the trigger that sends approval emails.
 5. **Deploy.** **Deploy → New deployment → Select type: Web app**.
    - Execute as: **Me**
    - Who has access: **Anyone**

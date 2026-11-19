@@ -1,0 +1,113 @@
+/* HackArena 2027: editorial serif + mono accents, stickers, marquees. Works in light and dark. */
+
+.ha-serif {
+  font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.ha-mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Hollow display numerals */
+.ha-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px hsl(var(--foreground) / 0.28);
+}
+
+/* Highlighter-pen swipe behind a word */
+.ha-highlight {
+  background-image: linear-gradient(100deg, hsl(var(--primary) / 0) 0.5%, hsl(var(--primary) / 0.22) 2%, hsl(var(--primary) / 0.28) 96%, hsl(var(--primary) / 0) 99%);
+  background-size: 100% 0.62em;
+  background-position: 0 88%;
+  background-repeat: no-repeat;
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+  border-radius: 0.2em;
+}
+
+/* Film-grain texture over the whole page (very subtle) */
+.ha-grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.dark .ha-grain::before {
+  opacity: 0.07;
+}
+
+/* Sticker: die-cut edge + offset shadow (neo-brutal) */
+.ha-sticker {
+  border: 2px solid hsl(var(--foreground));
+  box-shadow: 3px 3px 0 0 hsl(var(--foreground));
+}
+
+@keyframes ha-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ha-marquee { animation: ha-marquee 30s linear infinite; }
+.ha-marquee-rev { animation: ha-marquee 36s linear infinite reverse; }
+
+@keyframes ha-spin { to { transform: rotate(360deg); } }
+.ha-spin-slow { animation: ha-spin 22s linear infinite; }
+
+@keyframes ha-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+.ha-wiggle-hover:hover .ha-wiggle-target,
+.ha-wiggle-hover:hover.ha-wiggle-target { animation: ha-wiggle 0.45s ease-in-out 2; }
+
+@keyframes ha-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.ha-float { animation: ha-float 5s ease-in-out infinite; }
+
+/* Button shine sweep */
+.ha-shine { position: relative; overflow: hidden; isolation: isolate; }
+.ha-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: translateX(-120%) skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: transform 0.7s ease;
+}
+.ha-shine:hover::after { transform: translateX(120%) skewX(-20deg); }
+
+/* Ticket notches */
+.ha-ticket { position: relative; }
+.ha-ticket::before,
+.ha-ticket::after {
+  content: '';
+  position: absolute;
+  top: var(--notch-y, 58%);
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  transform: translateY(-50%);
+}
+.ha-ticket::before { left: -12px; clip-path: inset(0 0 0 50%); }
+.ha-ticket::after { right: -12px; clip-path: inset(0 50% 0 0); }
+
+::selection { background: hsl(var(--primary) / 0.3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ha-marquee, .ha-marquee-rev, .ha-spin-slow, .ha-float { animation: none !important; }
+}
+
+@media print {
+  .ha-grain::before { display: none; }
+}

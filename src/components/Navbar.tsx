@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
 import { useAuth, redirectPathForUser } from '@/lib/auth-context';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { SHOW_LOGIN } from '@/lib/feature-flags';
 
 const navLinks = [
   { name: 'Home', href: '#home' },
@@ -90,7 +91,8 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-3">
             <ThemeToggle />
-            {isAuthenticated && user ? (
+            {/* Login hidden for now (SHOW_LOGIN in src/lib/feature-flags.ts) */}
+            {SHOW_LOGIN && (isAuthenticated && user ? (
               <>
                 <Button variant="outline" size="sm" className="rounded-full" onClick={() => navigate(redirectPathForUser(user))}>
                   Dashboard
@@ -104,7 +106,7 @@ export default function Navbar() {
                 Login
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Button>
-            )}
+            ))}
             <Button variant="default" size="sm" className="rounded-full" onClick={() => window.open('https://chat.whatsapp.com/HqqpmbtlbF7DESwKgd5Mc6', '_blank')}>
               Join Community
             </Button>
@@ -149,7 +151,8 @@ export default function Navbar() {
                   {link.name}
                 </a>
               ))}
-              {isAuthenticated && user ? (
+              {/* Login hidden for now (SHOW_LOGIN in src/lib/feature-flags.ts) */}
+              {SHOW_LOGIN && (isAuthenticated && user ? (
                 <>
                   <Button variant="outline" className="w-full mt-4 rounded-full" onClick={() => { setIsMobileMenuOpen(false); navigate(redirectPathForUser(user)); }}>
                     Dashboard
@@ -163,7 +166,7 @@ export default function Navbar() {
                   Login
                   <ArrowUpRight className="w-4 h-4" />
                 </Button>
-              )}
+              ))}
               <Button variant="default" className="w-full mt-2 rounded-full" onClick={() => { setIsMobileMenuOpen(false); navigate('/join-us'); }}>
                 Join Community
               </Button>

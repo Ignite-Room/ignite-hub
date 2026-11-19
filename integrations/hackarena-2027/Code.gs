@@ -29,6 +29,8 @@ var CONFIG = {
    * attaching the PDF.
    */
   RULEBOOK_FILE_ID: '',
+  /** Used when RULEBOOK_FILE_ID is blank: the PDF published on the website. */
+  RULEBOOK_URL: 'https://www.igniteroom.in/ha2027/HackArena-2027-Campus-Round-Rule-Book.pdf',
   /** Optional link to a Nymble how-to for colleges, used in the approval email. */
   NYMBLE_GUIDE_URL: '',
   TIMEZONE: 'Asia/Kolkata',
@@ -528,13 +530,20 @@ function adminEmail_(title, pairs) {
 }
 
 function rulebookAttachment_() {
-  if (!CONFIG.RULEBOOK_FILE_ID) return [];
+  var name = 'HackArena-2027-Campus-Round-Rule-Book.pdf';
   try {
-    return [DriveApp.getFileById(CONFIG.RULEBOOK_FILE_ID).getAs(MimeType.PDF).setName('HackArena-2027-Campus-Round-Rule-Book.pdf')];
+    if (CONFIG.RULEBOOK_FILE_ID) {
+      return [DriveApp.getFileById(CONFIG.RULEBOOK_FILE_ID).getAs(MimeType.PDF).setName(name)];
+    }
+    if (CONFIG.RULEBOOK_URL) {
+      var res = UrlFetchApp.fetch(CONFIG.RULEBOOK_URL, { muteHttpExceptions: true });
+      if (res.getResponseCode() === 200) return [res.getBlob().setName(name).setContentType('application/pdf')];
+      console.error('Rule book fetch returned ' + res.getResponseCode());
+    }
   } catch (err) {
     console.error('Rule book attachment failed', err);
-    return [];
   }
+  return [];
 }
 
 // ═════════════════════════════════════════════════════════════════════════════

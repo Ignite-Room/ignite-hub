@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Twitter, Instagram, Linkedin, Github, Mail, Flame, ArrowUpRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import igniteLogo from '@/assets/ignite-logo.png';
+import { SHOW_LOGIN } from '@/lib/feature-flags';
 
 const footerLinks = {
   community: [
@@ -140,15 +141,18 @@ export default function Footer() {
                   Play Chess <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </li>
-              <li>
-                <Link
-                  to="/staff-login"
-                  onClick={(e) => handleNavigation('/staff-login', e)}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Organizer &amp; Admin Login
-                </Link>
-              </li>
+              {/* Login hidden for now (SHOW_LOGIN in src/lib/feature-flags.ts) */}
+              {SHOW_LOGIN && (
+                <li>
+                  <Link
+                    to="/staff-login"
+                    onClick={(e) => handleNavigation('/staff-login', e)}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Organizer &amp; Admin Login
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
