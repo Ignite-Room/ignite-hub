@@ -52,12 +52,7 @@ export function Wordmark({ compact = false }: { compact?: boolean }) {
   return (
     <span className="flex items-center gap-2.5">
       <img src={igniteLogo} alt="" className={compact ? 'h-7 w-auto' : 'h-8 w-auto'} />
-      <span className="flex flex-col leading-none">
-        <span className="font-heading font-extrabold text-[15px] tracking-tight text-foreground">
-          HackArena<span className="text-primary"> 2027</span>
-        </span>
-        <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground mt-1">by Ignite Room</span>
-      </span>
+      <span className="font-heading font-extrabold text-[17px] leading-none tracking-tight text-foreground">HackArena</span>
     </span>
   );
 }

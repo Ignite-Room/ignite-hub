@@ -55,7 +55,8 @@ export default function Hero({ phase, titleSponsor }: { phase: HAPhase; titleSpo
             <span className="sr-only">{HA.name} · {HA.edition}</span>
             <span aria-hidden className="block text-[3.4rem] sm:text-7xl lg:text-[6.5rem] text-foreground">HackArena</span>
             <span aria-hidden className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-              <span className="text-[2.6rem] sm:text-6xl lg:text-[5rem] text-gradient">2027 Edition</span>
+              <span className="text-[2.6rem] sm:text-6xl lg:text-[5rem] text-foreground">2027</span>
+              <span className="text-[2.6rem] sm:text-6xl lg:text-[5rem] text-gradient">Edition</span>
             </span>
           </motion.h1>
 
