@@ -6,7 +6,7 @@ import { track } from '@vercel/analytics';
 import { useSEO } from '@/hooks/use-seo';
 import RevealOnScroll from '@/components/design-system/RevealOnScroll';
 import HALayout from '../components/HALayout';
-import { GridGlow, PrimaryButton, Serif } from '../components/bits';
+import { GridGlow, PrimaryButton } from '../components/bits';
 import { HA, HA_BASE, applyIsPrimary, getPhase } from '../config';
 import { RULEBOOK } from '../content';
 
@@ -26,7 +26,7 @@ function Chapter({ id, n, kicker, title, children }: { id: string; n: string; ki
   return (
     <section id={id} className="scroll-mt-28 border-t border-border pt-12 pb-4 first:border-t-0 first:pt-0">
       <RevealOnScroll>
-        <div className="ha-mono text-xs lowercase text-primary font-bold">({n}) — {kicker}</div>
+        <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">{n} · {kicker}</div>
         <h2 className="mt-3 font-heading text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-tight">{title}</h2>
       </RevealOnScroll>
       <div className="mt-7 space-y-6">{children}</div>
@@ -36,8 +36,8 @@ function Chapter({ id, n, kicker, title, children }: { id: string; n: string; ki
 
 function RuleTable({ head, rows }: { head: [string, string]; rows: { rule: string; detail: string }[] }) {
   return (
-    <div className="overflow-hidden rounded-[22px] border border-border bg-card">
-      <div className="ha-mono grid grid-cols-[0.8fr_1.6fr] gap-4 border-b-2 border-foreground/80 px-5 py-3 text-[11px] lowercase text-muted-foreground">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card">
+      <div className="font-mono grid grid-cols-[0.8fr_1.6fr] gap-4 border-b-2 border-foreground/80 px-5 py-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
         <span>{head[0]}</span>
         <span>{head[1]}</span>
       </div>
@@ -53,8 +53,8 @@ function RuleTable({ head, rows }: { head: [string, string]; rows: { rule: strin
 
 function Callout({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="rounded-[20px] border-l-4 border-primary bg-primary/10 px-5 py-4">
-      <div className="ha-mono text-[11px] font-bold lowercase text-primary">{label}</div>
+    <div className="rounded-2xl border-l-4 border-primary bg-primary/10 px-5 py-4">
+      <div className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-primary">{label}</div>
       <p className="mt-1 text-[15px] text-foreground/90 leading-relaxed">{children}</p>
     </div>
   );
@@ -83,11 +83,11 @@ function Checklist() {
   const count = done.filter(Boolean).length;
   const total = done.length;
   return (
-    <div className="rounded-[26px] border-2 border-foreground bg-card p-5 sm:p-7 shadow-[6px_6px_0_0_hsl(var(--foreground))]">
+    <div className="rounded-2xl border border-border bg-card p-5 sm:p-7">
       <div className="flex items-center justify-between gap-4">
-        <span className="ha-mono text-xs lowercase text-muted-foreground">tick them off as you go (saved on this device)</span>
-        <span className="ha-mono shrink-0 rounded-full bg-primary px-2.5 py-1 text-xs font-bold text-primary-foreground">
-          {count}/{total} {count === total ? '🎉' : ''}
+        <span className="text-xs text-muted-foreground">Tick items off as you go (saved on this device)</span>
+        <span className="font-mono shrink-0 rounded-full bg-primary px-2.5 py-1 text-xs font-bold text-primary-foreground">
+          {count}/{total}
         </span>
       </div>
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-secondary">
@@ -139,9 +139,9 @@ export default function HackArenaRules() {
           <Link to={HA_BASE} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors print:hidden">
             <ArrowLeft className="h-4 w-4" /> HackArena 2027
           </Link>
-          <div className="ha-mono mt-7 text-xs lowercase text-primary">hackarena · 2027 edition · campus edition</div>
+          <div className="font-mono mt-7 text-[11px] uppercase tracking-[0.2em] text-primary">HackArena · 2027 Edition · Campus Edition</div>
           <h1 className="mt-3 font-heading text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[0.95] tracking-[-0.045em]">
-            Campus Round<br /><Serif className="text-gradient pr-2 text-[1.08em]">Rule Book</Serif>
+            Campus Round<br /><span className="text-gradient">Rule Book</span>
           </h1>
           <p className="mt-5 max-w-2xl text-muted-foreground text-base md:text-lg leading-relaxed">
             Everything a college needs to apply, host its HackArena campus round, shortlist teams and send them on to the 5-day prototype round and the Grand Finale in Bangalore.
@@ -161,7 +161,7 @@ export default function HackArenaRules() {
               href={HA.rulebookPdfUrl}
               download
               onClick={() => track('ha_rulebook_download')}
-              className="ha-shine inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition-transform hover:-translate-y-0.5"
             >
               <Download className="h-4 w-4" /> Download the PDF
             </a>
@@ -182,7 +182,7 @@ export default function HackArenaRules() {
                   onClick={(e) => { e.preventDefault(); document.getElementById(t.id)?.scrollIntoView({ behavior: 'smooth' }); }}
                   className={`flex items-center gap-3 rounded-full px-3 py-2 text-sm transition-all ${active === t.id ? 'bg-primary text-primary-foreground font-bold translate-x-1' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
                 >
-                  <span className="ha-mono text-[11px]">{t.n}</span>
+                  <span className="font-mono text-[11px]">{t.n}</span>
                   {t.label}
                 </a>
               </li>
@@ -191,13 +191,13 @@ export default function HackArenaRules() {
         </nav>
 
         <article className="min-w-0">
-          <Chapter id="about" n="01" kicker="about" title={<>What HackArena 2027 Edition <Serif className="text-gradient pr-1">is</Serif></>}>
+          <Chapter id="about" n="01" kicker="about" title={<>What HackArena 2027 Edition <span className="text-gradient">is</span></>}>
             <p className="text-[17px] text-foreground/85 leading-relaxed">{R.intro}</p>
             <div className="grid gap-3 md:grid-cols-3">
               {R.stages.map((s, i) => (
-                <div key={s.label} className="relative rounded-[22px] border border-border border-t-4 border-t-primary bg-card p-5">
-                  <div className="ha-mono text-[11px] font-bold lowercase text-primary">{s.label}</div>
-                  <div className="mt-2"><Serif className="text-2xl">{s.title}</Serif></div>
+                <div key={s.label} className="relative rounded-2xl border border-border border-t-4 border-t-primary bg-card p-5">
+                  <div className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-primary">{s.label}</div>
+                  <div className="mt-2"><span className="font-heading text-2xl font-bold">{s.title}</span></div>
                   <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{s.body}</p>
                   {s.when && <p className="mt-2 text-sm font-bold">{s.when}</p>}
                   {i < 2 && <ArrowRight aria-hidden className="hidden md:block absolute -right-[18px] top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />}
@@ -205,8 +205,8 @@ export default function HackArenaRules() {
               ))}
             </div>
             <h3 className="pt-2 font-heading text-xl font-extrabold">Key dates</h3>
-            <div className="overflow-hidden rounded-[22px] border border-border bg-card">
-              <div className="ha-mono grid grid-cols-[1fr_1.4fr] gap-4 border-b-2 border-foreground/80 px-5 py-3 text-[11px] lowercase text-muted-foreground">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card">
+              <div className="font-mono grid grid-cols-[1fr_1.4fr] gap-4 border-b-2 border-foreground/80 px-5 py-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
                 <span>milestone</span>
                 <span>date / deadline</span>
               </div>
@@ -220,11 +220,11 @@ export default function HackArenaRules() {
             <Callout label="no common prototype timeline">{R.noCommonTimeline}</Callout>
           </Chapter>
 
-          <Chapter id="join" n="02" kicker="how a college joins" title={<>Apply, get approved, <Serif className="text-gradient pr-1">go live on Nymble</Serif></>}>
-            <ol className="overflow-hidden rounded-[22px] border border-border bg-card">
+          <Chapter id="join" n="02" kicker="how a college joins" title={<>Apply, get approved, <span className="text-gradient">go live on Nymble</span></>}>
+            <ol className="overflow-hidden rounded-2xl border border-border bg-card">
               {R.joinSteps.map((s, i) => (
                 <li key={s.title} className="flex gap-4 border-b border-border px-5 py-4 last:border-0">
-                  <span className="ha-mono text-sm font-bold text-primary">0{i + 1}</span>
+                  <span className="font-mono text-sm font-bold text-primary">0{i + 1}</span>
                   <span className="text-[15px] leading-relaxed"><b>{s.title}</b> <span className="text-foreground/80">{s.body}</span></span>
                 </li>
               ))}
@@ -232,9 +232,9 @@ export default function HackArenaRules() {
             <h3 className="pt-2 font-heading text-xl font-extrabold">Coordinator roles</h3>
             <div className="grid gap-4 md:grid-cols-2">
               {R.roles.map((r) => (
-                <div key={r.label} className="rounded-[22px] border border-border bg-card p-6">
-                  <div className="ha-mono text-[11px] font-bold lowercase text-primary">{r.label}</div>
-                  <div className="mt-1.5"><Serif className="text-2xl">{r.title}</Serif></div>
+                <div key={r.label} className="rounded-2xl border border-border bg-card p-6">
+                  <div className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-primary">{r.label}</div>
+                  <div className="mt-1.5"><span className="font-heading text-2xl font-bold">{r.title}</span></div>
                   <ul className="mt-4 space-y-2.5">
                     {r.points.map((p) => (
                       <li key={p} className="flex gap-2.5 text-sm text-foreground/85 leading-relaxed"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />{p}</li>
@@ -245,31 +245,31 @@ export default function HackArenaRules() {
             </div>
           </Chapter>
 
-          <Chapter id="participation" n="03" kicker="participation" title={<>Who can <Serif className="text-gradient pr-1">take part</Serif></>}>
+          <Chapter id="participation" n="03" kicker="participation" title={<>Who can <span className="text-gradient">take part</span></>}>
             <RuleTable head={['rule', 'detail']} rows={R.participation} />
             <h3 className="pt-2 font-heading text-xl font-extrabold">Theme</h3>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-[22px] border border-border bg-card p-6">
-                <div className="ha-mono text-[11px] font-bold lowercase text-primary">main theme</div>
-                <div className="mt-1.5"><Serif className="text-2xl">{R.theme.main.title}</Serif></div>
+              <div className="rounded-2xl border border-border bg-card p-6">
+                <div className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-primary">main theme</div>
+                <div className="mt-1.5"><span className="font-heading text-2xl font-bold">{R.theme.main.title}</span></div>
                 <p className="mt-2 text-sm text-foreground/85 leading-relaxed">{R.theme.main.body}</p>
               </div>
-              <div className="rounded-[22px] border-2 border-dashed border-border p-6">
-                <div className="ha-mono text-[11px] font-bold lowercase text-primary">sponsored tracks</div>
-                <div className="mt-1.5"><Serif className="text-2xl">{R.theme.tracks.title}</Serif></div>
+              <div className="rounded-2xl border-2 border-dashed border-border p-6">
+                <div className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-primary">sponsored tracks</div>
+                <div className="mt-1.5"><span className="font-heading text-2xl font-bold">{R.theme.tracks.title}</span></div>
                 <p className="mt-2 text-sm text-foreground/85 leading-relaxed">{R.theme.tracks.body}</p>
               </div>
             </div>
           </Chapter>
 
-          <Chapter id="hosting" n="04" kicker="hosting the campus round" title={<>Rules for the <Serif className="text-gradient pr-1">internal round</Serif></>}>
+          <Chapter id="hosting" n="04" kicker="hosting the campus round" title={<>Rules for the <span className="text-gradient">internal round</span></>}>
             <RuleTable head={['rule', 'detail']} rows={R.hosting} />
           </Chapter>
 
-          <Chapter id="shortlisting" n="05" kicker="shortlisting" title={<>20% of checked-in teams, <Serif className="text-gradient pr-1">up to 20</Serif></>}>
+          <Chapter id="shortlisting" n="05" kicker="shortlisting" title={<>20% of checked-in teams, <span className="text-gradient">up to 20</span></>}>
             <p className="text-[17px] text-foreground/85 leading-relaxed">{R.shortlistIntro}</p>
-            <div className="overflow-hidden rounded-[22px] border border-border bg-card">
-              <div className="ha-mono grid grid-cols-[1fr_0.8fr_1fr] gap-4 border-b-2 border-foreground/80 px-5 py-3 text-[11px] lowercase text-muted-foreground">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card">
+              <div className="font-mono grid grid-cols-[1fr_0.8fr_1fr] gap-4 border-b-2 border-foreground/80 px-5 py-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
                 <span>checked-in teams</span>
                 <span className="text-right">shortlisted</span>
                 <span>note</span>
@@ -285,7 +285,7 @@ export default function HackArenaRules() {
             <Callout label="same-day results">Shortlisted teams are announced on the same day as the campus round.</Callout>
           </Chapter>
 
-          <Chapter id="prototype" n="06" kicker="prototype round" title={<>5 days <Serif className="text-gradient pr-1">to build</Serif></>}>
+          <Chapter id="prototype" n="06" kicker="prototype round" title={<>5 days <span className="text-gradient">to build</span></>}>
             <ul className="space-y-3">
               {R.prototype.map((p) => (
                 <li key={p} className="flex gap-3 text-[16px] text-foreground/85 leading-relaxed"><span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />{p}</li>
@@ -293,18 +293,18 @@ export default function HackArenaRules() {
             </ul>
           </Chapter>
 
-          <Chapter id="finale" n="07" kicker="grand finale" title={<>36 hours <Serif className="text-gradient pr-1">in Bangalore</Serif></>}>
+          <Chapter id="finale" n="07" kicker="grand finale" title={<>36 hours <span className="text-gradient">in Bangalore</span></>}>
             <div className="grid gap-3 sm:grid-cols-3">
               {R.finale.map((f, i) => (
-                <div key={f.big} className={`rounded-[22px] border p-5 ${i === 0 ? 'border-primary/40 bg-primary/10' : 'border-border bg-card'}`}>
-                  <Serif className={`text-4xl ${i === 0 ? 'text-primary' : ''}`}>{f.big}</Serif>
+                <div key={f.big} className={`rounded-2xl border p-5 ${i === 0 ? 'border-primary/40 bg-primary/10' : 'border-border bg-card'}`}>
+                  <span className={`font-heading text-4xl font-extrabold ${i === 0 ? 'text-primary' : ''}`}>{f.big}</span>
                   <div className="mt-1 text-sm text-muted-foreground">{f.small}</div>
                 </div>
               ))}
             </div>
           </Chapter>
 
-          <Chapter id="after" n="08" kicker="sponsors, reporting & certificates" title={<>After approval, during <Serif className="text-gradient pr-1">and after the round</Serif></>}>
+          <Chapter id="after" n="08" kicker="sponsors, reporting & certificates" title={<>After approval, during <span className="text-gradient">and after the round</span></>}>
             <div>
               <h3 className="font-heading text-xl font-extrabold">College sponsors</h3>
               <p className="mt-2 text-[16px] text-foreground/85 leading-relaxed">
@@ -323,11 +323,11 @@ export default function HackArenaRules() {
             </div>
           </Chapter>
 
-          <Chapter id="checklist" n="09" kicker="checklist" title={<>College <Serif className="text-gradient pr-1">checklist</Serif></>}>
+          <Chapter id="checklist" n="09" kicker="checklist" title={<>College <span className="text-gradient">checklist</span></>}>
             <Checklist />
           </Chapter>
 
-          <div className="mt-14 rounded-[28px] border border-border bg-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 print:hidden">
+          <div className="mt-14 rounded-2xl border border-border bg-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 print:hidden">
             <div>
               <h2 className="font-heading text-2xl font-extrabold">Questions about the rules?</h2>
               <p className="mt-1 text-sm text-muted-foreground">Write to <a href={`mailto:${HA.contactEmail}`} className="text-primary hover:underline">{HA.contactEmail}</a>.</p>

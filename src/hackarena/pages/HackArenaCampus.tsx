@@ -109,21 +109,21 @@ export default function HackArenaCampus() {
                 <div className="rounded-2xl border border-border/80 bg-card/50 p-6 md:p-8">
                   <dl className="grid gap-6 sm:grid-cols-2">
                     <div>
-                      <dt className="flex items-center gap-2 ha-mono text-[11px] lowercase text-muted-foreground"><CalendarDays className="h-4 w-4 text-primary" />Round date</dt>
+                      <dt className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><CalendarDays className="h-4 w-4 text-primary" />Round date</dt>
                       <dd className="mt-2 font-heading text-xl font-bold">{formatDate(campus.roundDate, { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' })}</dd>
                     </div>
                     <div>
-                      <dt className="flex items-center gap-2 ha-mono text-[11px] lowercase text-muted-foreground"><MapPin className="h-4 w-4 text-primary" />Venue</dt>
+                      <dt className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><MapPin className="h-4 w-4 text-primary" />Venue</dt>
                       <dd className="mt-2 font-heading text-xl font-bold">{campus.venue || 'To be announced'}</dd>
                       <dd className="text-sm text-muted-foreground">{[campus.city, campus.state].filter(Boolean).join(', ')}</dd>
                     </div>
                     <div>
-                      <dt className="flex items-center gap-2 ha-mono text-[11px] lowercase text-muted-foreground"><Users className="h-4 w-4 text-primary" />Eligibility</dt>
+                      <dt className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><Users className="h-4 w-4 text-primary" />Eligibility</dt>
                       <dd className="mt-2 text-[15px] font-medium">Only students of this college · teams of 2–5</dd>
                     </div>
                     {campus.prototypeDue && (
                       <div>
-                        <dt className="flex items-center gap-2 ha-mono text-[11px] lowercase text-muted-foreground"><Timer className="h-4 w-4 text-primary" />Prototype due</dt>
+                        <dt className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><Timer className="h-4 w-4 text-primary" />Prototype due</dt>
                         <dd className="mt-2 text-[15px] font-medium">{formatDate(campus.prototypeDue)} (shortlisted teams)</dd>
                       </div>
                     )}
@@ -170,7 +170,7 @@ export default function HackArenaCampus() {
                   </div>
 
                   <div className="rounded-2xl border border-border/80 bg-card/50 p-6">
-                    <h2 className="ha-mono text-[11px] lowercase text-muted-foreground">Share with your batch</h2>
+                    <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Share with your batch</h2>
                     <div className="mt-4 grid grid-cols-2 gap-2">
                       <a
                         href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
@@ -189,7 +189,7 @@ export default function HackArenaCampus() {
 
                   {(campus.sponsorLogoUrl || campus.sponsorName) && (
                     <div className="rounded-2xl border border-border/80 bg-card/50 p-6">
-                      <h2 className="ha-mono text-[11px] lowercase text-muted-foreground">College sponsor</h2>
+                      <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">College sponsor</h2>
                       <div className="mt-4 flex h-16 items-center justify-center rounded-xl border border-border/70 bg-background/60 px-4">
                         {campus.sponsorLogoUrl ? <SponsorLogo src={campus.sponsorLogoUrl} alt={campus.sponsorName || 'College sponsor'} className="max-h-10 w-auto" /> : <span className="font-heading font-bold">{campus.sponsorName}</span>}
                       </div>
@@ -208,7 +208,7 @@ export default function HackArenaCampus() {
                   <ol className="mt-6 grid gap-2 sm:grid-cols-2">
                     {campus.shortlist.map((t, i) => (
                       <li key={`${t}-${i}`} className="flex items-center gap-3 rounded-xl border border-border/70 bg-background/50 px-4 py-3">
-                        <span className="ha-mono text-xs text-primary">{String(i + 1).padStart(2, '0')}</span>
+                        <span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, '0')}</span>
                         <span className="font-medium">{t}</span>
                       </li>
                     ))}

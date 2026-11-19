@@ -4,7 +4,7 @@ import { ArrowLeft, CheckCircle2, ClipboardList, FlaskConical, Loader2, Lock } f
 import { track } from '@vercel/analytics';
 import { useSEO } from '@/hooks/use-seo';
 import HALayout from '../components/HALayout';
-import { Countdown, GridGlow, PrimaryButton, Serif } from '../components/bits';
+import { Countdown, GridGlow, PrimaryButton } from '../components/bits';
 import { Choice, Consent, EMAIL_RE, Honeypot, PHONE_RE, SelectField, TextField, normPhone } from '../components/fields';
 import { HA, HA_BASE, HA_DATES, HA_ROUND_DATE_MAX, HA_ROUND_DATE_MIN, getPhase, isPreviewMode } from '../config';
 import { INDIAN_STATES } from '../content';
@@ -57,10 +57,10 @@ function validate(f: Form, c: { rules: boolean; offline: boolean; reporting: boo
 
 function Block({ n, title, sub, children }: { n: string; title: string; sub?: string; children: ReactNode }) {
   return (
-    <fieldset className="rounded-[26px] border border-border bg-card p-5 sm:p-7">
+    <fieldset className="rounded-2xl border border-border/80 bg-card/50 p-5 sm:p-7">
       <legend className="sr-only">{title}</legend>
       <div className="flex items-start gap-4 mb-6">
-        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary/50 ha-mono text-xs font-bold text-primary">{n}</span>
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary/50 font-mono text-xs font-bold text-primary">{n}</span>
         <div>
           <h2 className="font-heading text-xl font-bold">{title}</h2>
           {sub && <p className="mt-1 text-sm text-muted-foreground">{sub}</p>}
@@ -83,7 +83,7 @@ function NextSteps() {
     <ol className="space-y-4">
       {NEXT_STEPS.map((s, i) => (
         <li key={s} className="flex gap-3 text-sm leading-relaxed">
-          <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 ha-mono text-[11px] font-bold text-primary">{i + 1}</span>
+          <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 font-mono text-[11px] font-bold text-primary">{i + 1}</span>
           <span className="text-foreground/85">{s}</span>
         </li>
       ))}
@@ -141,7 +141,7 @@ function ApplicationForm({ preview }: { preview: boolean }) {
         <h2 className="mt-6 font-heading text-3xl md:text-4xl font-extrabold">Application received.</h2>
         <p className="mt-3 text-muted-foreground max-w-xl leading-relaxed">
           Thank you for applying to host a HackArena 2027 campus round at <span className="text-foreground font-semibold">{f.collegeName}</span>.
-          {ref && <> Your reference is <span className="ha-mono text-foreground">{ref}</span>.</>}
+          {ref && <> Your reference is <span className="font-mono text-foreground">{ref}</span>.</>}
         </p>
         <div className="mt-8 max-w-xl"><NextSteps /></div>
         <p className="mt-8 text-sm text-muted-foreground">
@@ -202,10 +202,10 @@ function ApplicationForm({ preview }: { preview: boolean }) {
         </div>
       </Block>
 
-      <fieldset className="rounded-[26px] border border-border bg-card p-5 sm:p-7 space-y-3">
+      <fieldset className="rounded-2xl border border-border/80 bg-card/50 p-5 sm:p-7 space-y-3">
         <legend className="sr-only">Consent</legend>
         <div className="flex items-start gap-4 mb-3">
-          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary/50 ha-mono text-xs font-bold text-primary">06</span>
+          <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary/50 font-mono text-xs font-bold text-primary">06</span>
           <h2 className="font-heading text-xl font-bold pt-1">Consent</h2>
         </div>
         <Consent checked={consent.rules} onChange={(v) => setConsent((c) => ({ ...c, rules: v }))} error={errors.consentRules}>
@@ -266,7 +266,7 @@ export default function HackArenaApply() {
             <ArrowLeft className="h-4 w-4" /> HackArena 2027
           </Link>
           <h1 className="mt-5 font-heading text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.02] tracking-tight">
-            Apply as a <Serif className="text-gradient pr-2 text-[1.08em]">college.</Serif>
+            Apply as a <span className="text-gradient">college.</span>
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground text-base md:text-lg leading-relaxed">
             A Faculty SPOC (Dean, Faculty Coordinator or HOD) applies together with a Student Coordinator. It takes about 5 minutes.
@@ -321,11 +321,11 @@ export default function HackArenaApply() {
 
           <aside className="lg:sticky lg:top-24 h-fit space-y-5">
             <div className="rounded-2xl border border-border/80 bg-card/50 p-6">
-              <h2 className="ha-mono text-[11px] lowercase text-primary font-bold">(after you apply)</h2>
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">After you apply</h2>
               <div className="mt-5"><NextSteps /></div>
             </div>
             <div className="rounded-2xl border border-border/80 bg-card/50 p-6 text-sm">
-              <h2 className="ha-mono text-[11px] lowercase text-primary font-bold">(at a glance)</h2>
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">At a glance</h2>
               <dl className="mt-4 space-y-3">
                 {[
                   ['Format', 'Offline idea pitching'],

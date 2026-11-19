@@ -3,7 +3,7 @@ import { Building2, RotateCcw, Search, X } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { HA_BASE, HAPhase, todayIST } from '../config';
 import { Campus, CampusStatus, STATUS_META, STATUS_ORDER, effectiveCampus, sortCampuses } from '../api';
-import { CampusCard, PrimaryButton, Section, SectionHeading, Serif } from '../components/bits';
+import { CampusCard, PrimaryButton, Section, SectionHeading } from '../components/bits';
 
 const MONTHS = [
   { v: '02', label: 'February' },
@@ -12,7 +12,7 @@ const MONTHS = [
 ];
 
 const selectCls =
-  'h-11 rounded-full border border-border bg-card px-4 pr-9 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60 appearance-none bg-no-repeat bg-[length:14px] bg-[right_14px_center]';
+  'h-11 rounded-full border border-border bg-card/70 px-4 pr-9 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/60 appearance-none bg-no-repeat bg-[length:14px] bg-[right_14px_center]';
 const chevron = {
   backgroundImage:
     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
@@ -66,8 +66,8 @@ export default function Campuses({
     <Section id="campuses" band>
       <SectionHeading
         n="02"
-        eyebrow="campus events"
-        title={<>Find your <Serif className="text-gradient pr-1">campus round.</Serif></>}
+        eyebrow="Campus events"
+        title={<>Find your <span className="text-gradient">campus round.</span></>}
         lead="Every approved college appears here as soon as its registration page goes live. Register on your own college's page: all team members must be from the same college."
       />
 
@@ -78,15 +78,10 @@ export default function Campuses({
           ))}
         </div>
       ) : campuses.length === 0 ? (
-        <div className="relative overflow-hidden rounded-[32px] border-2 border-dashed border-border bg-card/60 px-6 py-14 md:py-20 text-center">
+        <div className="relative overflow-hidden rounded-3xl border border-dashed border-border bg-background/50 px-6 py-14 md:py-20 text-center">
           <div aria-hidden className="absolute left-1/2 top-0 -translate-x-1/2 h-40 w-[480px] bg-primary/15 blur-3xl" />
-          <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
-            {['🏫', '🎤', '💡', '💻', '🚀'].map((e, i) => (
-              <span key={e} className="ha-float absolute text-3xl opacity-70" style={{ left: `${[8, 86, 14, 88, 50][i]}%`, top: `${[18, 22, 70, 66, 84][i]}%`, animationDelay: `${i * 0.7}s` }}>{e}</span>
-            ))}
-          </div>
           <Building2 className="relative mx-auto h-10 w-10 text-primary" />
-          <h3 className="relative mt-5 font-heading text-2xl md:text-4xl font-extrabold tracking-tight">Campus rounds are <Serif className="text-gradient pr-1">loading…</Serif></h3>
+          <h3 className="relative mt-5 font-heading text-2xl md:text-3xl font-extrabold">Campus rounds are coming soon</h3>
           <p className="relative mx-auto mt-3 max-w-xl text-muted-foreground leading-relaxed">
             {error
               ? "We couldn't load the campus list just now."
@@ -108,7 +103,7 @@ export default function Campuses({
           {/* Stations: campuses per city / region */}
           {cityCounts.length > 1 && (
             <div className="mb-8">
-              <div className="ha-mono text-[11px] lowercase text-muted-foreground mb-3">(stations) pick a city 📍</div>
+              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">Stations</div>
               <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap snap-x">
                 {cityCounts.map(([name, count]) => {
                   const active = city === name;
@@ -117,12 +112,12 @@ export default function Campuses({
                       key={name}
                       onClick={() => setCity(active ? '' : name)}
                       aria-pressed={active}
-                      className={`snap-start shrink-0 inline-flex items-center gap-2.5 rounded-full border px-4 py-2.5 text-sm font-semibold transition-all ${
-                        active ? 'border-primary bg-primary text-primary-foreground -rotate-1' : 'border-border bg-card text-foreground/85 hover:border-primary/50 hover:-rotate-1'
+                      className={`snap-start shrink-0 inline-flex items-center gap-2.5 rounded-xl border px-4 py-2.5 text-sm transition-colors ${
+                        active ? 'border-primary bg-primary/15 text-foreground' : 'border-border bg-card/60 text-foreground/85 hover:border-primary/50'
                       }`}
                     >
                       <span className="font-semibold">{name}</span>
-                      <span className={`rounded-md px-1.5 py-0.5 ha-mono text-[11px] ${active ? 'bg-primary-foreground text-primary' : 'bg-muted text-muted-foreground'}`}>{count}</span>
+                      <span className={`rounded-md px-1.5 py-0.5 font-mono text-[11px] ${active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>{count}</span>
                     </button>
                   );
                 })}
@@ -139,7 +134,7 @@ export default function Campuses({
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search your college"
-                className="h-11 w-full rounded-full border border-border bg-card pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+                className="h-11 w-full rounded-full border border-border bg-card/70 pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
               />
             </label>
             <label>
@@ -174,7 +169,7 @@ export default function Campuses({
 
           {filtered.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((c, i) => <CampusCard key={c.slug} campus={c} index={i} />)}
+              {filtered.map((c) => <CampusCard key={c.slug} campus={c} />)}
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">

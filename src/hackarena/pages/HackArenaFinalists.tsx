@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Trophy } from 'lucide-react';
 import { useSEO } from '@/hooks/use-seo';
 import HALayout from '../components/HALayout';
-import { GridGlow, PrimaryButton, Serif } from '../components/bits';
+import { GridGlow, PrimaryButton } from '../components/bits';
 import { HA_BASE } from '../config';
 import { useHAData } from '../api';
 
@@ -26,7 +26,7 @@ export default function HackArenaFinalists() {
             <ArrowLeft className="h-4 w-4" /> Grand Finale
           </Link>
           <h1 className="mt-5 font-heading text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.02] tracking-tight">
-            Heading to <Serif className="text-gradient pr-2 text-[1.08em]">Bangalore.</Serif>
+            Heading to <span className="text-gradient">Bangalore.</span>
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground text-base md:text-lg">The teams selected for the 36-hour Grand Finale, 19–20 June 2027.</p>
 
@@ -43,7 +43,7 @@ export default function HackArenaFinalists() {
             <ol className="mt-10 grid gap-3 sm:grid-cols-2">
               {finalists.map((f, i) => (
                 <li key={`${f.team}-${i}`} className="flex items-center gap-4 rounded-2xl border border-border/80 bg-card/50 p-5">
-                  <span className="ha-mono text-sm text-primary">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, '0')}</span>
                   <div>
                     <div className="font-heading text-lg font-bold">{f.team}</div>
                     <div className="text-sm text-muted-foreground">{[f.college, f.city].filter(Boolean).join(' · ')}</div>
